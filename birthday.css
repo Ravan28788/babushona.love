@@ -1,0 +1,3649 @@
+:root {
+  /* --- warm paper (Act 1 + the tree's dawn) --- */
+  --paper-0:  #fff6ee;
+  --paper-1:  #f9e2d2;
+  --paper-2:  #f2c9b8;
+
+  /* --- rose flood (Acts 2–3) --- */
+  --rose-deep: #a80f43;
+  --rose:      #d4235c;
+  --rose-lift: #ff5f86;
+  --wine:      #6e0a31;
+
+  /* --- accents / ink --- */
+  --gold-1:    #ffcf6a;
+  --gold-2:    #e8a23d;
+  --ink:       #7a4a55;   /* dusty rose ink        */
+  --ink-soft:  #a9808a;   /* muted eyebrow / sub   */
+  --cream:     #fff3ea;
+
+  --ease-out:  cubic-bezier(.2,.7,.2,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html, body{ height:100%; }
+
+body{
+  background:#12060c;                 /* seam colour under everything */
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  cursor:auto;
+}
+
+.scene{
+  position:fixed; inset:0; overflow:hidden;
+  background: #090312 url('./images/yuvi_misty_theme_bg.jpg') no-repeat center center / cover;
+}
+
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ============================================================
+   THE TREE CANVAS (Act 4) — z0, transparent until it plays
+   ============================================================ */
+.tree{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  display:block;
+  z-index:1;
+}
+
+/* ============================================================
+   ACT 1 — THE INVITATION
+   ============================================================ */
+.hero{
+  position:absolute; inset:0;
+  z-index:3;
+  overflow:hidden;
+}
+/* Pure full-screen romantic theme wallpaper edge-to-edge */
+.hero__bg{
+  position:absolute; inset:0;
+  background: #090312 url('./images/yuvi_misty_theme_bg.jpg') no-repeat center center / cover;
+  overflow:hidden;
+  z-index:0;
+}
+
+/* drifting light motes (JS fills this with a few spans) */
+.hero__motes{ position:absolute; inset:0; pointer-events:none; z-index:2; }
+.mote{
+  position:absolute; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,236,214,.9), rgba(255,206,180,.15) 55%, transparent 72%);
+  will-change:transform, opacity;
+}
+
+.hero__eyebrow{
+  position:absolute; top:75px; left:0; right:0;
+  text-align:center;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic; font-weight:700;
+  font-size:clamp(16px, 3.4vw, 24px);
+  letter-spacing:.06em;
+  color:#ffffff;
+  text-shadow:0 0 12px #ff2a70, 0 2px 14px rgba(0,0,0,0.85);
+  opacity:0;                          /* GSAP reveals */
+  z-index:15;
+}
+
+/* ---- the target heart (GSAP animates .target on the hit → fall → burst) ---- */
+.targetWrap{
+  position:absolute; top:33%; left:0; right:0;
+  display:flex; justify-content:center;
+  transform:translateY(-50%);         /* centre at 33% — wrap is NOT animated */
+  pointer-events:none;
+  z-index:10;
+}
+.target{
+  position:relative;
+  width:clamp(120px, 27vw, 208px);
+  aspect-ratio:100/92;
+  will-change:transform;
+  transform-origin:50% 60%;
+}
+.target__heart{ position:absolute; inset:0; display:block; }
+
+/* radial bloom behind the heart — swells on the beat */
+.heart__glow{
+  position:absolute; left:50%; top:52%;
+  width:230%; aspect-ratio:1; transform:translate(-50%,-50%) scale(1);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,120,150,.55), rgba(255,90,130,.18) 42%, transparent 68%);
+  filter:blur(4px);
+  pointer-events:none;
+  will-change:transform, opacity;
+}
+.heart__svg{
+  width:100%; height:100%; display:block;
+  transform-origin:50% 60%;           /* the beat scales THIS, not the wrapper */
+  filter:
+    drop-shadow(0 10px 22px rgba(168,15,64,.34))
+    drop-shadow(0 3px 6px rgba(120,10,48,.30));
+  will-change:transform;
+}
+
+/* ---- the bow + arrow rig ----
+   Placed lower-left and rotated by JS to aim at the heart, so the shot travels
+   on a DIAGONAL. The whole rig (left/top + rotation around the grip) is set in
+   JS from measured geometry; everything below is in the rig's own space. */
+.archery{
+  position:absolute; top:0; left:0;    /* JS sets left/top so the grip anchors */
+  width:clamp(100px, 18vw, 168px);     /* smaller, daintier bow — delicate against the heart */
+  cursor:grab;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:none;                   /* we own the drag gesture */
+  will-change:transform;
+  z-index: 20;
+}
+.archery:active{ cursor:grabbing; }
+.archery:focus-visible{ outline:none; }
+.archery:focus-visible .bow{ filter:drop-shadow(0 0 0 3px rgba(255,255,255,.85)) drop-shadow(0 10px 18px rgba(120,50,20,.4)); }
+.bow{
+  display:block; width:100%; height:auto;
+  filter:drop-shadow(0 12px 18px rgba(90,40,15,.3));
+  overflow:visible;
+}
+
+/* the aim line rides inside the rig, so it points straight at the heart */
+.aim{
+  position:absolute; left:50%; bottom:32%;
+  width:2px; height:190%; margin-left:-1px;
+  transform-origin:bottom center;
+  background:linear-gradient(0deg, rgba(255,214,150,.6) 0%, rgba(255,150,170,.22) 52%, transparent 78%);
+  opacity:0; pointer-events:none;
+}
+
+/* the arrow overlaps the bow at the nock and flies to the heart */
+.arrow{
+  position:absolute; left:0; right:0; margin-inline:auto;
+  bottom:36%;                          /* JS re-anchors the tail to the nock */
+  width:17.5%; height:auto;
+  overflow:visible;
+  will-change:transform;
+  filter:drop-shadow(0 5px 7px rgba(90,40,15,.36));
+}
+.arrow__wings{ transform-box:fill-box; transform-origin:50% 90%; }
+.arrow__wings .wingL,
+.arrow__wings .wingR{ transform-box:fill-box; }
+.wingL{ transform-origin:88% 60%; animation:flapL 2.6s ease-in-out infinite; }
+.wingR{ transform-origin:12% 60%; animation:flapR 2.6s ease-in-out infinite; }
+@keyframes flapL{ 0%,100%{ transform:rotate(0deg); } 50%{ transform:rotate(-11deg); } }
+@keyframes flapR{ 0%,100%{ transform:rotate(0deg); } 50%{ transform:rotate(11deg); } }
+
+/* ---- the draw / release hint ---- */
+.hero__hint{
+  position:absolute; bottom:8.5%; left:0; right:0;
+  text-align:center;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-weight:700; font-style:italic;
+  font-size:clamp(14px, 3.2vw, 20px);
+  letter-spacing:.16em; text-transform:uppercase;
+  color:#ffdeeb;
+  text-shadow:0 0 12px #ff2a70, 0 2px 10px rgba(0,0,0,0.85);
+  opacity:0;                          /* GSAP reveals */
+}
+.hero__ring{ display:none; }
+
+/* ============================================================
+   ACT 2 — THE FLOOD (the burst circle)
+   ============================================================ */
+.flood{
+  position:absolute; left:50%; top:50%;
+  width:140px; height:140px; margin:-70px 0 0 -70px;
+  border-radius:50%;
+  background:radial-gradient(circle at 40% 34%, var(--rose-lift), var(--rose) 46%, var(--rose-deep) 100%);
+  z-index:5;
+  opacity:0; transform:scale(.001);
+  will-change:transform, opacity;
+  pointer-events:none;
+}
+
+/* ============================================================
+   ACT 3 — THE WISH FIELD (rose world + kinetic type)
+   ============================================================ */
+.field{
+  position:absolute; inset:0;
+  z-index:4;                          /* below the flood; revealed once it covers */
+  opacity:0;
+  /* purely decorative — must never intercept the tap on the heart beneath it.
+     An opacity:0 element is still hit-testable, so without this the invisible
+     field (z4, above the hero z3) swallows every Act-1 tap. */
+  pointer-events:none;
+  overflow:hidden;
+  background:
+    radial-gradient(120% 100% at 50% 8%, #d5265f 0%, var(--rose) 42%, var(--rose-deep) 78%, var(--wine) 100%);
+  color:#fff;
+}
+.blob{
+  position:absolute; border-radius:50%;
+  filter:blur(46px); opacity:0;
+  mix-blend-mode:screen;
+  will-change:transform, opacity;
+}
+.blob--1{ width:58vmax; height:58vmax; left:-18vmax; top:-16vmax;
+  background:radial-gradient(circle, rgba(255,130,160,.9), transparent 62%); }
+.blob--2{ width:46vmax; height:46vmax; right:-14vmax; top:22vmax;
+  background:radial-gradient(circle, rgba(255,90,120,.75), transparent 64%); }
+.blob--3{ width:52vmax; height:52vmax; left:24vmax; bottom:-22vmax;
+  background:radial-gradient(circle, rgba(180,20,70,.8), transparent 66%); }
+
+/* faint grid — a hair of parallax gives the flood depth, not flatness */
+.fgrid{
+  position:absolute; inset:-6%;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size:clamp(38px,7vw,74px) clamp(38px,7vw,74px);
+  will-change:transform;
+}
+.fvignette{
+  position:absolute; inset:0;
+  background:radial-gradient(128% 96% at 50% 44%, transparent 50%, rgba(70,6,28,.5) 100%);
+}
+
+/* the camera — everything on the flood rides a slow continuous push */
+.camera{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  gap:clamp(4px,1.2vh,12px);
+  padding:0 6vw; text-align:center;
+  will-change:transform;
+}
+.kEyebrow{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic; font-weight:500;
+  font-size:clamp(15px, 3.6vw, 27px);
+  letter-spacing:.08em;
+  color:#ffd7c8;
+  opacity:0; transform:translateY(10px);
+  margin-bottom:clamp(2px,1vh,10px);
+}
+
+.headline{ font-family:"Fraunces", Georgia, serif; line-height:.92; }
+.hl__line{ display:block; }
+/* the mask each headline word hinges out of. Padded to clear ascenders +
+   descenders so glyphs never peek past the clip edge when parked. */
+.mask{
+  display:inline-block; overflow:hidden;
+  padding:.14em .06em;
+  margin:-.14em -.06em;
+}
+.hl__word{
+  display:inline-block;
+  white-space:nowrap;
+  font-weight:900;
+  font-size:clamp(38px, 9.5vw, 110px);
+  letter-spacing:-.02em;
+  color:#fff6f1;
+  text-shadow:0 6px 34px rgba(60,4,24,.34), 0 2px 3px rgba(90,8,36,.42);
+}
+/* each glyph hinges up on its own bottom edge, under its own perspective */
+.hl__ch{ display:inline-block; will-change:transform; }
+
+/* gold hand-drawn underline under the second word */
+.uline{
+  width:clamp(150px, 40vw, 380px); height:auto;
+  margin-top:clamp(4px,1.4vh,14px);
+  color:var(--gold-1);
+  filter:drop-shadow(0 2px 8px rgba(255,180,90,.5));
+}
+.kSub{
+  margin-top:clamp(12px,2.4vh,26px);
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-weight:500; font-style:italic;
+  font-size:clamp(14px, 3.4vw, 24px);
+  letter-spacing:.05em;
+  color:#ffdfd2;
+  opacity:0; transform:translateY(10px);
+}
+
+/* cinema bars — closed = black, they open as the wish lands */
+.bar{
+  position:absolute; left:0; right:0; height:16vh;
+  background:#12040b; z-index:3; will-change:transform; pointer-events:none;
+}
+.bar--top{ top:0; }
+.bar--bot{ bottom:0; }
+
+/* ============================================================
+   THE HANDOFF BLOOM (rose wish → dawn of the tree)
+   ============================================================ */
+.bloom{
+  position:absolute; left:50%; top:50%;
+  width:60px; height:60px; margin:-30px 0 0 -30px;
+  border-radius:50%;
+  background:radial-gradient(circle, #fff 0%, #fff2d6 30%, rgba(255,214,150,.85) 55%, rgba(255,190,150,0) 74%);
+  z-index:8; opacity:0; transform:scale(.001);
+  will-change:transform, opacity; pointer-events:none;
+}
+
+/* ============================================================
+   ACT 4 — THE HAND-LETTERED WISH (over the tree)
+   ============================================================ */
+.wish{
+  position:absolute;
+  left:5.5%; bottom:10%;
+  max-width:46%;
+  z-index:6;
+  pointer-events:none;
+  color:var(--ink);
+  /* hard gate: wish__hero keeps opacity:1 (its clip-path drives the write-on),
+     so without this its clipped sliver + drop-shadow would leak into Acts 1–3. */
+  visibility:hidden;
+}
+.wish.is-in{ visibility:visible; }
+.wish::before{
+  content:""; position:absolute; inset:-18% -24% -24% -16%;
+  background:radial-gradient(84% 98% at 34% 52%, rgba(255,250,243,.94), rgba(255,250,243,.6) 48%, rgba(255,250,243,0) 80%);
+  z-index:-1; opacity:0; transition:opacity 1s ease;
+}
+.wish.is-in::before{ opacity:1; }
+.wish__eyebrow{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic; font-weight:600;
+  font-size:clamp(13px, 3.2vw, 24px);
+  letter-spacing:.05em; color:#9c4f63;
+  text-shadow:0 1px 2px #fff8f1, 0 0 8px rgba(255,248,241,.95);
+}
+.wish__heroWrap{ position:relative; display:inline-block; }
+.wish__heroWrap::before{
+  content:""; position:absolute; left:-12%; right:-12%; top:-26%; bottom:-22%;
+  background:radial-gradient(60% 70% at 46% 52%, rgba(255,214,168,.5), rgba(255,150,150,.2) 52%, transparent 74%);
+  filter:blur(14px); z-index:-1; opacity:0; pointer-events:none;
+}
+.wish__heroWrap::after{
+  content:"\2726";
+  position:absolute; right:-1%; top:-14%;
+  font-size:clamp(15px, 3.6vw, 32px);
+  color:#ffe1a0; text-shadow:0 0 12px rgba(255,205,120,.95);
+  opacity:0; pointer-events:none;
+}
+.wish__hero{
+  font-family:"Great Vibes", cursive; font-weight:400;
+  font-size:clamp(34px, 6.2vw, 64px);
+  line-height:.98; margin:-.02em 0 .06em;
+  /* one consistent rose, top-lit — every letter reads the same (no per-glyph
+     colour shift, which is what made the old rose→gold version look messy).
+     Deep enough to hold up against the tree's bright bloom behind it. */
+  background:linear-gradient(180deg, #e85a83 0%, #c41f52 50%, #9c0f42 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  /* a crisp cream edge for legibility over the tree + one soft drop */
+  filter:
+    drop-shadow(0 1px 1px rgba(255,252,248,.98))
+    drop-shadow(0 2px 6px rgba(130,18,55,.45));
+  clip-path:inset(0 100% -28% -10%);
+  transform-origin:8% 60%;             /* breathe from the start of the line */
+}
+.wish__rule{
+  display:block; width:clamp(46px, 13vw, 110px); height:2px;
+  margin:.12em 0 .48em;
+  background:linear-gradient(90deg, var(--gold-2), rgba(232,162,61,0));
+  box-shadow:0 0 8px rgba(255,247,240,.9);
+  transform-origin:left center;
+}
+.wish__sub{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-weight:600; font-size:clamp(12px, 2.9vw, 20px);
+  letter-spacing:.03em; color:#6e3f4a;
+  text-shadow:0 1px 2px #fff8f1, 0 0 8px rgba(255,248,241,.98);
+}
+.wish__eyebrow, .wish__rule, .wish__sub{
+  opacity:0; transform:translateY(12px); filter:blur(5px);
+  transition:opacity .8s ease, transform .9s var(--ease-out), filter .8s ease;
+}
+.wish__rule{ transform:translateY(12px) scaleX(.3); }
+.wish.is-in .wish__eyebrow,
+.wish.is-in .wish__sub{ opacity:1; transform:translateY(0); filter:blur(0); }
+.wish.is-in .wish__rule{ opacity:1; transform:translateY(0) scaleX(1); }
+.wish.is-in .wish__rule{ transition-delay:1.35s; }
+.wish.is-in .wish__sub{  transition-delay:1.55s; }
+.wish.is-in .wish__hero{
+  animation:write 1.2s cubic-bezier(.62,.04,.24,1) .35s forwards,
+            wishBreath 4s ease-in-out 1.9s infinite;
+}
+/* a gentle living breath — transform only, so it can never wash the fill out */
+@keyframes wishBreath{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.02); } }
+.wish.is-in .wish__heroWrap::before{ animation:hlin .8s ease .3s forwards, hlpulse 3.4s ease-in-out 1.7s infinite; }
+.wish.is-in .wish__heroWrap::after{ animation:twk 2.6s ease-in-out 1.6s infinite; }
+@keyframes write{ from{ clip-path:inset(0 100% -28% -10%); } to{ clip-path:inset(0 -10% -28% -10%); } }
+@keyframes sheen{ 0%,18%{ background-position:0% 50%; } 60%,100%{ background-position:100% 50%; } }
+@keyframes hlin{ from{ opacity:0; transform:scale(.86); } to{ opacity:.92; transform:scale(1); } }
+@keyframes hlpulse{ 0%,100%{ opacity:.72; } 50%{ opacity:1; } }
+@keyframes twk{ 0%,100%{ opacity:0; transform:scale(.5) rotate(-12deg); } 45%{ opacity:1; transform:scale(1.05) rotate(16deg); } }
+
+/* ============================================================
+   MUSIC TOGGLE
+   ============================================================ */
+.music-toggle{
+  position:fixed; top:20px; right:20px; z-index:100;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 16px 8px 10px; border-radius:999px;
+  font:600 12.5px/1 "Cormorant Garamond", Georgia, serif; letter-spacing:.08em; text-transform:uppercase;
+  color:#8a4a5a; background:rgba(255,248,242,.78);
+  border:1px solid rgba(150,60,80,.2);
+  box-shadow:0 6px 20px -8px rgba(120,20,50,.35);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  cursor:pointer; outline:none;
+  transition:all .3s var(--ease-out);
+}
+.music-toggle:hover{
+  background:rgba(255,252,248,.95);
+  box-shadow:0 8px 24px -6px rgba(120,20,50,.45);
+  transform:scale(1.03);
+}
+.music-toggle__disc{
+  display:flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:50%;
+  background:linear-gradient(135deg, #ffd9e4, #f4577f);
+  color:#fff;
+  transition:transform .4s ease;
+}
+.music-toggle.is-playing .music-toggle__disc{
+  animation:spinDisc 3.5s linear infinite;
+  background:linear-gradient(135deg, #ff80aa, #d4235c);
+}
+@keyframes spinDisc{
+  from{ transform:rotate(0deg); }
+  to{ transform:rotate(360deg); }
+}
+.music-toggle__label{
+  color:#7a3f4e;
+  font-weight:600;
+}
+
+@media (max-width: 820px), (max-aspect-ratio: 1/1){
+  .wish{
+    max-width:88%;
+    left:6%; bottom:6%;
+  }
+  .wish__hero{
+    font-size:clamp(34px, 9vw, 56px);
+  }
+}
+
+@media (max-width: 600px){
+  .music-toggle{
+    top: 14px;
+    right: 14px;
+    padding: 6px 12px 6px 8px;
+    font-size: 11px;
+  }
+  .replay{
+    right: 14px;
+    bottom: 14px;
+    padding: 7px 12px 7px 9px;
+    font-size: 11px;
+  }
+}
+
+/* ============================================================
+   REPLAY
+   ============================================================ */
+.replay{
+  position:absolute; right:20px; bottom:18px; z-index:7;
+  display:inline-flex; align-items:center; gap:7px;
+  padding:9px 15px 9px 12px; border-radius:999px;
+  font:600 12.5px/1 "Cormorant Garamond", Georgia, serif; letter-spacing:.12em; text-transform:uppercase;
+  color:#8a4a5a; background:rgba(255,248,242,.72);
+  border:1px solid rgba(150,60,80,.18);
+  box-shadow:0 6px 20px -8px rgba(120,20,50,.4);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  cursor:pointer; opacity:0; transform:translateY(8px);
+  transition:opacity .5s ease, transform .5s var(--ease-out), background .3s ease;
+}
+.replay.is-shown{ opacity:1; transform:translateY(0); }
+.replay:hover{ background:rgba(255,252,248,.92); }
+.replay svg{ opacity:.8; }
+
+/* ============================================================
+   THE LENS — grain + vignette over every act
+   ============================================================ */
+.grade{ position:absolute; inset:0; z-index:9; pointer-events:none; }
+.grade__vignette{
+  position:absolute; inset:0;
+  background:radial-gradient(125% 95% at 50% 42%, transparent 54%, rgba(60,18,30,.14) 84%, rgba(40,12,22,.3) 100%);
+  mix-blend-mode:multiply;
+}
+.grade__grain{
+  position:absolute; inset:0;
+  background:url('./textures/grain.png') repeat;
+  background-size:300px; opacity:.05; mix-blend-mode:overlay;
+}
+
+/* ============================================================
+   REDUCED MOTION — skip the film, hand over the finished tree
+   ============================================================ */
+@media (prefers-reduced-motion: reduce){
+  .hero, .flood, .field, .bloom, .hero__ring{ display:none !important; }
+  .wish__eyebrow, .wish__rule, .wish__sub{ opacity:1; transform:none; filter:none; transition:none; }
+  .wish__hero{ clip-path:none; filter:drop-shadow(0 0 5px rgba(255,252,248,.98)) drop-shadow(0 2px 4px rgba(130,18,55,.5)) drop-shadow(0 4px 14px rgba(150,28,70,.32)); }
+  .wish.is-in .wish__hero{ animation:none; }
+  .wish.is-in .wish__heroWrap::before{ animation:none; opacity:.9; }
+  .wish.is-in .wish__heroWrap::after{ animation:none; opacity:0; }
+}
+
+/* ============================================================
+   TOP NAVIGATION BAR
+   ============================================================ */
+.top-nav{
+  position:fixed; top:16px; left:50%; transform:translateX(-50%);
+  z-index:1500;
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 8px; border-radius:999px;
+  background:rgba(255, 248, 242, 0.88);
+  border:1px solid rgba(168, 80, 105, 0.22);
+  box-shadow:0 8px 24px -4px rgba(120, 20, 50, 0.2);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  max-width:94vw; overflow-x:auto; scrollbar-width:none;
+}
+.top-nav::-webkit-scrollbar{ display:none; }
+.nav-pill{
+  font:700 12px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.05em; text-transform:uppercase;
+  padding:7px 14px; border-radius:999px;
+  color:#7a3f4e; background:transparent;
+  border:none; cursor:pointer; outline:none; white-space:nowrap;
+  transition:all .25s ease;
+}
+.nav-pill:hover{
+  background:rgba(255, 220, 232, 0.5);
+  color:#d4235c;
+}
+.nav-pill.active{
+  background:linear-gradient(135deg, #ff6f97, #d4235c);
+  color:#ffffff;
+  box-shadow:0 4px 14px rgba(212, 35, 92, 0.38);
+}
+
+.nav-pill.is-locked {
+  opacity: 0.62;
+  filter: grayscale(0.4);
+  cursor: not-allowed !important;
+  border: 1px dashed rgba(255, 42, 112, 0.45) !important;
+}
+
+.nav-pill.shake-locked {
+  animation: lockShake 0.4s ease;
+}
+
+@keyframes lockShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.nav-pill.just-unlocked {
+  animation: unlockGlow 1.2s ease forwards;
+}
+
+@keyframes unlockGlow {
+  0% { transform: scale(1.15); box-shadow: 0 0 25px #ffd700; border-color: #ffd700; }
+  100% { transform: scale(1); box-shadow: none; }
+}
+
+/* Floating Journey Lock Notification Toast */
+.journey-lock-toast {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: linear-gradient(135deg, rgba(26, 6, 22, 0.96), rgba(50, 10, 36, 0.96));
+  border: 1.5px solid #ff2a70;
+  border-radius: 999px;
+  padding: 8px 20px;
+  color: #fff;
+  font: 700 12.5px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-shadow: 0 8px 30px rgba(255, 42, 112, 0.5);
+  z-index: 3000;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+}
+
+.journey-lock-toast.is-shown {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.mission-tab-btn.is-locked {
+  opacity: 0.65;
+  cursor: not-allowed !important;
+  border: 1.5px dashed rgba(255, 77, 121, 0.4) !important;
+  filter: grayscale(0.4);
+}
+
+/* Start Quest Button on Act 3 Tree */
+.start-quest-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  margin-top:14px; padding:10px 22px;
+  font:700 13px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.06em; text-transform:uppercase;
+  color:#ffffff;
+  background:linear-gradient(135deg, #ff4f81, #d4235c);
+  border:1px solid rgba(255, 255, 255, 0.4);
+  border-radius:999px;
+  box-shadow:0 6px 20px rgba(212, 35, 92, 0.45);
+  cursor:pointer; pointer-events:auto;
+  animation:questPulse 2.2s infinite ease-in-out;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.start-quest-btn:hover{
+  transform:scale(1.04);
+  box-shadow:0 8px 28px rgba(212, 35, 92, 0.6);
+}
+@keyframes questPulse{
+  0%,100%{ box-shadow:0 6px 20px rgba(212, 35, 92, 0.4); }
+  50%{ box-shadow:0 6px 28px rgba(255, 79, 129, 0.75); }
+}
+
+/* ============================================================
+   MODALS OVERLAY
+   ============================================================ */
+body.modal-active .scene{
+  visibility:hidden;
+}
+
+.modal-overlay{
+  position:fixed; inset:0; z-index:2000;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(18, 4, 11, 0.94);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  opacity:0; pointer-events:none;
+  transition:opacity .25s ease;
+  padding:16px;
+}
+.modal-overlay.is-open{
+  opacity:1; pointer-events:auto;
+}
+.modal-close-btn{
+  position:absolute; top:14px; right:16px;
+  width:34px; height:34px; border-radius:50%;
+  border:none; background:rgba(0,0,0,0.06);
+  color:#6e2034; font-size:22px; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s ease;
+}
+.modal-close-btn:hover{
+  background:#ff4d79; color:#fff;
+  transform:rotate(90deg);
+}
+
+/* ============================================================
+   LOVE QUESTIONS QUEST MODAL
+   ============================================================ */
+.quest-card{
+  position:relative; max-width:520px; width:100%;
+  background:linear-gradient(150deg, #fffaf5 0%, #ffeef3 100%);
+  border:1.5px solid rgba(255, 180, 200, 0.5);
+  border-radius:28px; padding:36px 28px 30px;
+  text-align:center;
+  box-shadow:0 24px 70px rgba(120, 20, 50, 0.4);
+  overflow:hidden;
+  transition:transform .3s ease;
+}
+.card-flip{
+  animation:cardPop .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes cardPop{
+  0%{ transform:scale(0.92); opacity:0; }
+  100%{ transform:scale(1); opacity:1; }
+}
+
+.quest-progress{ margin-bottom:18px; }
+.quest-badge{
+  display:inline-block; font:700 12px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:#b82a56; background:rgba(255, 190, 210, 0.35);
+  padding:5px 14px; border-radius:999px; margin-bottom:10px;
+}
+.quest-progress-track{
+  width:100%; height:6px; border-radius:999px;
+  background:rgba(230, 180, 195, 0.25);
+  overflow:hidden;
+}
+.quest-progress-fill{
+  height:100%; border-radius:999px;
+  background:linear-gradient(90deg, #ff7597, #d4235c);
+  transition:width .4s ease;
+}
+
+.quest-emoji{
+  font-size:52px; margin-bottom:12px;
+  animation:emojiFloat 2.4s ease-in-out infinite;
+}
+@keyframes emojiFloat{
+  0%,100%{ transform:translateY(0) scale(1); }
+  50%{ transform:translateY(-8px) scale(1.08); }
+}
+
+.quest-title{
+  font:700 clamp(20px, 4.5vw, 26px)/1.2 "Fraunces", Georgia, serif;
+  color:#3a0c1a; margin-bottom:10px;
+}
+.quest-sub{
+  font:italic 500 15px/1.4 "Cormorant Garamond", Georgia, serif;
+  color:#824555; margin-bottom:26px;
+}
+
+/* Button Arena & Runaway NO Button */
+.btn-arena{
+  position:relative; min-height:120px;
+  display:flex; align-items:center; justify-content:center; gap:24px;
+}
+.btn-yes{
+  padding:14px 34px; border-radius:999px; border:none;
+  font:700 18px/1 "Fraunces", Georgia, serif;
+  color:#ffffff;
+  background:linear-gradient(135deg, #ff3366, #d81159);
+  box-shadow:0 8px 24px rgba(216, 17, 89, 0.45);
+  cursor:pointer; outline:none;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;
+  animation:yesGlow 2s infinite ease-in-out;
+}
+.btn-yes:hover{
+  transform:scale(1.06);
+  box-shadow:0 10px 30px rgba(216, 17, 89, 0.65);
+}
+@keyframes yesGlow{
+  0%,100%{ box-shadow:0 8px 24px rgba(216, 17, 89, 0.4); }
+  50%{ box-shadow:0 8px 32px rgba(255, 51, 102, 0.7); }
+}
+
+.btn-no-wrap{
+  position:relative; display:inline-block;
+}
+.btn-no{
+  padding:12px 28px; border-radius:999px;
+  border:1.5px solid rgba(160, 60, 90, 0.2);
+  background:rgba(255, 255, 255, 0.85);
+  font:600 16px/1 "Fraunces", Georgia, serif;
+  color:#8a606d; cursor:pointer; outline:none;
+  user-select:none; -webkit-user-select:none;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1);
+}
+.tease-bubble{
+  position:absolute; bottom:110%; left:50%; transform:translateX(-50%);
+  background:#ffeaa7; color:#d63031;
+  font:700 12px/1 "Fraunces", Georgia, serif;
+  padding:6px 12px; border-radius:999px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  white-space:nowrap; opacity:0; pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease;
+  z-index:10;
+}
+.tease-bubble.is-shown{
+  opacity:1; transform:translateX(-50%) translateY(-6px);
+}
+
+/* Congratulations Toast Banner */
+.congrats-toast{
+  position:absolute; inset:0; border-radius:28px;
+  background:linear-gradient(150deg, rgba(255, 250, 245, 0.98), rgba(255, 235, 242, 0.98));
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:24px; opacity:0; pointer-events:none;
+  transform:scale(0.9);
+  transition:all .32s cubic-bezier(.34,1.56,.64,1);
+  z-index:20;
+}
+.congrats-toast.is-shown{
+  opacity:1; pointer-events:auto; transform:scale(1);
+}
+.congrats-icon{ font-size:46px; margin-bottom:12px; }
+.congrats-msg{
+  font:700 20px/1.3 "Fraunces", Georgia, serif;
+  color:#b81446; text-align:center;
+}
+
+/* Floating Confetti Hearts */
+.floating-heart-burst{
+  position:fixed; z-index:9999; pointer-events:none;
+  user-select:none; will-change:transform, opacity;
+}
+
+/* ============================================================
+   LOVE CAR MINI-GAME MODAL
+   ============================================================ */
+.game-container{
+  position:relative; max-width:440px; width:100%;
+  background:#1e0817; border-radius:24px;
+  border:2px solid rgba(255, 70, 130, 0.4);
+  box-shadow:0 24px 70px rgba(0,0,0,0.7);
+  overflow:hidden;
+}
+.game-mission-tabs{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:8px 10px; background:#12040e;
+  border-bottom:1px solid rgba(255, 100, 150, 0.2);
+}
+.mission-tab-btn{
+  flex:1; padding:7px 10px; border-radius:999px;
+  border:1px solid rgba(255, 255, 255, 0.15);
+  background:rgba(255, 255, 255, 0.08);
+  color:#ffb8cb; font:700 11.5px/1 "Fraunces", Georgia, serif;
+  cursor:pointer; transition:all .2s ease;
+  white-space:nowrap;
+}
+.mission-tab-btn:hover{
+  background:rgba(255, 255, 255, 0.16); color:#fff;
+}
+.mission-tab-btn.active{
+  background:linear-gradient(135deg, #ff3377, #d81159);
+  color:#fff; border-color:#ff6f97;
+  box-shadow:0 3px 12px rgba(216, 17, 89, 0.45);
+}
+.game-hud{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; background:rgba(35, 10, 26, 0.95);
+  border-bottom:1px solid rgba(255, 100, 150, 0.25);
+  font-family:"Fraunces", Georgia, serif;
+}
+.hud-item{
+  display:flex; flex-direction:column; align-items:center;
+}
+.hud-label{
+  font-size:10px; text-transform:uppercase; letter-spacing:.08em;
+  color:#ff9ebb;
+}
+.hud-val{
+  font-size:16px; font-weight:700; color:#ffffff;
+  text-shadow:0 0 8px rgba(255, 150, 200, 0.8);
+}
+.game-close-btn{
+  background:rgba(255,255,255,0.1); border:none; color:#fff;
+  width:28px; height:28px; border-radius:50%; font-size:18px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.game-canvas-wrap{
+  position:relative; width:100%; height:520px; max-height:70vh;
+}
+#gameCanvas{
+  width:100%; height:100%; display:block;
+}
+
+/* Mobile Touch Controls */
+.game-touch-controls{
+  position:absolute; bottom:14px; left:0; right:0;
+  display:flex; justify-content:space-between; padding:0 20px;
+  pointer-events:none;
+}
+.touch-btn{
+  pointer-events:auto;
+  padding:12px 20px; border-radius:999px;
+  background:rgba(255, 255, 255, 0.82);
+  border:1.5px solid rgba(255, 50, 100, 0.35);
+  font:700 13px/1 "Fraunces", Georgia, serif;
+  color:#68102b; box-shadow:0 6px 16px rgba(0,0,0,0.3);
+  cursor:pointer; user-select:none;
+  transition:transform .1s ease, background .1s ease;
+}
+.touch-btn:active{
+  transform:scale(0.92);
+  background:#ff3366; color:#fff;
+}
+.boost-btn{
+  background:linear-gradient(135deg, #ff3366, #ff7597);
+  color:#fff;
+  transition: all .2s ease;
+}
+.boost-btn.has-charge {
+  background: linear-gradient(135deg, #ff4757, #ffa502) !important;
+  color: #fff !important;
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 14px rgba(255, 165, 2, 0.7) !important;
+  animation: boostGlowPulse 1.2s infinite alternate;
+}
+@keyframes boostGlowPulse {
+  0% { box-shadow: 0 0 8px rgba(255, 71, 87, 0.5); }
+  100% { box-shadow: 0 0 18px rgba(255, 165, 2, 0.9); }
+}
+.boost-btn.is-active-nitro {
+  background: linear-gradient(135deg, #ff0055, #ff9f43) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 25px #ff0055, 0 0 35px #ff9f43 !important;
+  animation: nitroPulse 0.35s infinite alternate !important;
+}
+@keyframes nitroPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  100% { transform: scale(1.06); filter: brightness(1.25); }
+}
+
+/* ============================================================
+   MISTY CARE COLLISION POPUP MODAL ("Misty babu dhyaan se aao!")
+   ============================================================ */
+.misty-care-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: careFadeIn 0.3s ease;
+}
+
+@keyframes careFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.care-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 4, 15, 0.88);
+  backdrop-filter: blur(8px);
+}
+
+.care-card {
+  position: relative;
+  z-index: 2;
+  width: 92%;
+  max-width: 400px;
+  background: linear-gradient(150deg, #ffffff, #fff2f7);
+  border: 2.5px solid #ff2a70;
+  border-radius: 26px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 16px 50px rgba(255, 42, 112, 0.45);
+  animation: careCardPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes careCardPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.care-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(255, 42, 112, 0.12);
+  border: 1px solid rgba(255, 42, 112, 0.3);
+  font: 700 11px/1 -apple-system, sans-serif;
+  color: #ff2a70;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.care-avatar-wrap {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  border: 3px solid #ff2a70;
+  box-shadow: 0 6px 20px rgba(255, 42, 112, 0.35);
+}
+
+.care-misty-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.care-heart-fx {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 20px;
+  animation: heartBeat 1.2s infinite;
+}
+
+.care-title {
+  font: 800 20px/1.2 "Fraunces", Georgia, serif;
+  color: #ff2a70;
+  margin: 0 0 10px;
+}
+
+.care-text {
+  font: 500 13.5px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #4a1525;
+  margin: 0 0 18px;
+}
+
+.care-ok-btn {
+  background: linear-gradient(135deg, #ff2a70, #ff5e7e);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 26px;
+  font: 800 14px/1 "Fraunces", Georgia, serif;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255, 42, 112, 0.45);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.care-ok-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255, 42, 112, 0.6);
+}
+
+/* ============================================================
+   NITRO BOOST "KISS YUVI" RECHARGE MODAL
+   ============================================================ */
+.nitro-kiss-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: careFadeIn 0.3s ease;
+}
+
+.nitro-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 3, 14, 0.88);
+  backdrop-filter: blur(8px);
+}
+
+.nitro-card {
+  position: relative;
+  z-index: 2;
+  width: 92%;
+  max-width: 400px;
+  background: #ffffff;
+  border: 2.5px solid #ff4757;
+  border-radius: 26px;
+  padding: 22px 18px;
+  text-align: center;
+  box-shadow: 0 16px 50px rgba(255, 71, 87, 0.45);
+  animation: careCardPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nitro-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: #f1f2f6;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  color: #666;
+}
+
+.nitro-yuvi-avatar {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 10px;
+  background: linear-gradient(135deg, #fff2f2, #ffe4e6);
+  border: 2.5px solid #ff4757;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.nitro-heart {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 18px;
+}
+
+.nitro-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 71, 87, 0.12);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  font: 700 10.5px/1 -apple-system, sans-serif;
+  color: #ff4757;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.nitro-title {
+  font: 800 19px/1.2 "Fraunces", Georgia, serif;
+  color: #2f3542;
+  margin: 0 0 8px;
+}
+
+.nitro-speech {
+  font: 500 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #57606f;
+  margin: 0 0 16px;
+  background: #f8f9fa;
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+.nitro-kiss-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.nitro-kiss-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 2px solid #ff4757;
+  border-radius: 14px;
+  padding: 10px 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nitro-kiss-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  background: #fff5f5;
+  box-shadow: 0 6px 16px rgba(255, 71, 87, 0.35);
+}
+
+.nk-icon {
+  font-size: 22px;
+}
+
+.nk-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #ff4757;
+}
+
+.nitro-fx-stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* Game Win Mission Modal */
+.mission-win-modal{
+  position:absolute; inset:0;
+  background:rgba(20, 4, 15, 0.94);
+  backdrop-filter:blur(10px);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px; opacity:0; pointer-events:none;
+  transform:scale(0.92);
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  z-index:30; overflow:hidden;
+}
+.mission-win-modal.is-shown{
+  opacity:1; pointer-events:auto; transform:scale(1);
+}
+.win-fx-container{
+  position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:5;
+}
+.floating-heart-balloon{
+  position:absolute; pointer-events:none; z-index:10;
+  user-select:none; will-change:transform, opacity;
+  filter:drop-shadow(0 4px 10px rgba(255, 42, 112, 0.4));
+}
+.flying-kiss-mark{
+  position:absolute; pointer-events:none; z-index:12;
+  user-select:none; will-change:transform, opacity;
+  filter:drop-shadow(0 4px 12px rgba(255, 51, 102, 0.5));
+}
+.floating-flower-petal{
+  position:absolute; pointer-events:none; z-index:11;
+  user-select:none; will-change:transform, opacity;
+  filter:drop-shadow(0 4px 8px rgba(255, 105, 180, 0.45));
+}
+.win-card{
+  position:relative; z-index:20; max-width:440px; width:100%;
+  background:linear-gradient(150deg, rgba(255, 250, 245, 0.98), rgba(255, 235, 244, 0.98));
+  border:2px solid #ff4d79; border-radius:28px;
+  padding:24px 20px 20px; text-align:center;
+  box-shadow:0 20px 60px rgba(160, 20, 60, 0.6);
+}
+.win-badge{
+  display:inline-block; font:700 11px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.08em; text-transform:uppercase;
+  background:rgba(212, 35, 92, 0.15); color:#b81446;
+  padding:5px 14px; border-radius:999px; margin-bottom:10px;
+}
+.win-avatar-box{
+  position:relative; width:84px; height:84px; margin:0 auto 10px;
+  border-radius:50%; border:3px solid #ff2a70;
+  box-shadow:0 8px 24px rgba(255, 42, 112, 0.45);
+}
+.win-misty-img{
+  width:100%; height:100%; border-radius:50%; object-fit:cover; display:block;
+}
+.win-crown{
+  position:absolute; top:-14px; right:-6px; font-size:26px;
+  transform:rotate(18deg);
+}
+.win-title{
+  font:900 clamp(19px, 4.2vw, 25px)/1.2 "Fraunces", Georgia, serif;
+  color:#ff2a70; margin-bottom:6px;
+  text-shadow:0 0 16px rgba(255, 77, 121, 0.4);
+}
+.win-flower-reaction{
+  font-size:20px; letter-spacing:3px; margin-bottom:8px;
+  animation:flowerPulse 2s ease-in-out infinite;
+}
+@keyframes flowerPulse {
+  0%, 100% { transform:scale(1); }
+  50% { transform:scale(1.08); }
+}
+.win-love-words{
+  font:italic 14px/1.38 "Cormorant Garamond", Georgia, serif;
+  color:#5a182a; margin-bottom:10px; font-weight:600;
+}
+.win-kisses-tag{
+  font:700 12px/1.3 "Fraunces", Georgia, serif;
+  color:#d4235c; margin-bottom:16px;
+}
+.win-actions-row{
+  display:flex; flex-direction:column; gap:10px;
+  align-items:center; justify-content:center;
+}
+.win-next-mission-btn{
+  width:100%; max-width:320px;
+  padding:12px 22px; border-radius:999px; border:none;
+  background:linear-gradient(135deg, #10b981, #059669);
+  color:#fff; font:700 14px/1 "Fraunces", Georgia, serif;
+  box-shadow:0 6px 20px rgba(16, 185, 129, 0.45);
+  cursor:pointer; transition:transform .2s ease, box-shadow .2s ease;
+}
+.win-next-mission-btn:hover{
+  transform:scale(1.04);
+  box-shadow:0 8px 24px rgba(16, 185, 129, 0.6);
+}
+.claim-gifts-btn{
+  width:100%; max-width:320px;
+  padding:12px 22px; border-radius:999px; border:none;
+  background:linear-gradient(135deg, #ff3377, #ff9933);
+  color:#fff; font:700 14px/1 "Fraunces", Georgia, serif;
+  box-shadow:0 8px 26px rgba(255, 51, 119, 0.55);
+  cursor:pointer; transition:transform .2s ease;
+}
+.claim-gifts-btn:hover{ transform:scale(1.04); }
+
+/* Yuvi & Misty Special Reunion Modal */
+.yuvi-card{
+  max-width:460px;
+  background:linear-gradient(155deg, rgba(255, 250, 248, 0.98), rgba(255, 230, 245, 0.98));
+  border:2.5px solid #ff2a70;
+}
+.yuvi-avatar-duo{
+  position:relative; width:100px; height:100px; margin:0 auto 10px;
+}
+.avatar-pair-wrap{
+  width:100%; height:100%; border-radius:50%;
+  border:3.5px solid #ff2a70; overflow:hidden;
+  box-shadow:0 10px 28px rgba(255, 42, 112, 0.45);
+  position:relative;
+}
+.duo-avatar-img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.duo-heart-float{
+  position:absolute; bottom:-6px; right:-6px; font-size:24px;
+  filter:drop-shadow(0 2px 8px rgba(255, 42, 112, 0.5));
+}
+.reunion-hug-toast{
+  font:700 12.5px/1.3 "Fraunces", Georgia, serif;
+  color:#b81446; background:rgba(255, 42, 112, 0.1);
+  padding:6px 14px; border-radius:999px; display:inline-block;
+  margin-bottom:12px;
+}
+.yuvi-dialogue-box{
+  background:rgba(255, 255, 255, 0.92);
+  border:1.5px solid rgba(255, 80, 130, 0.35);
+  border-radius:18px; padding:16px 14px;
+  margin-bottom:14px; text-align:center;
+  box-shadow:0 6px 20px rgba(180, 20, 60, 0.08);
+}
+.yuvi-speaker-tag{
+  font:700 12px/1 "Fraunces", Georgia, serif;
+  color:#a0123e; margin-bottom:8px;
+}
+.yuvi-question-text{
+  font:italic 14.5px/1.45 "Cormorant Garamond", Georgia, serif;
+  color:#420e1d; font-weight:700; margin-bottom:14px;
+}
+.yuvi-btn-arena{
+  position:relative; min-height:80px;
+  display:flex; align-items:center; justify-content:center;
+  gap:16px;
+}
+.btn-yuvi-yes{
+  padding:11px 22px; border-radius:999px; border:none;
+  background:linear-gradient(135deg, #ff2a70, #ff6b35);
+  color:#fff; font:700 13px/1 "Fraunces", Georgia, serif;
+  box-shadow:0 6px 18px rgba(255, 42, 112, 0.45);
+  cursor:pointer; transition:transform .2s ease;
+}
+.btn-yuvi-yes:hover{ transform:scale(1.05); }
+.btn-yuvi-no-wrap{
+  position:relative;
+}
+.btn-yuvi-no{
+  padding:9px 18px; border-radius:999px;
+  background:#fff; border:1.5px solid #d4235c;
+  color:#d4235c; font:700 12px/1 "Fraunces", Georgia, serif;
+  cursor:pointer; transition:transform .2s ease;
+  white-space:nowrap;
+}
+.yuvi-tease-bubble{
+  position:absolute; bottom:calc(100% + 8px); left:50%;
+  transform:translateX(-50%) scale(0);
+  background:#1a0814; color:#fff;
+  font:700 11px/1 "Fraunces", Georgia, serif;
+  padding:5px 10px; border-radius:8px;
+  white-space:nowrap; pointer-events:none;
+  transition:transform .2s ease;
+  z-index:10;
+}
+.yuvi-tease-bubble.is-shown{
+  transform:translateX(-50%) scale(1);
+}
+.yuvi-actions-row{
+  display:flex; flex-direction:column; gap:10px;
+  align-items:center; justify-content:center;
+}
+
+/* Mid-Game Milestone Toast */
+.mission-milestone-toast{
+  position:absolute; top:125px; left:50%; transform:translateX(-50%) translateY(-20px);
+  max-width:390px; width:92%;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 235, 243, 0.98));
+  border:2.5px solid #ff2a70; border-radius:20px;
+  box-shadow:0 14px 40px rgba(216, 17, 89, 0.55);
+  display:flex; align-items:center; gap:14px;
+  padding:10px 14px; z-index:100;
+  opacity:0; pointer-events:none;
+  transition:all .35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor:pointer;
+}
+.mission-milestone-toast.is-shown{
+  opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0);
+}
+.milestone-photo-wrap{
+  position:relative; width:52px; height:52px; flex-shrink:0;
+  border-radius:50%; border:2.5px solid #ff2a70;
+  overflow:hidden; box-shadow:0 4px 12px rgba(255, 42, 112, 0.35);
+}
+.milestone-photo-wrap img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.milestone-heart-badge{
+  position:absolute; bottom:-4px; right:-4px; font-size:14px;
+}
+.milestone-content{ flex:1; }
+.milestone-tag{
+  font:700 11px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:#d4235c; margin-bottom:3px;
+}
+.milestone-msg{
+  font:700 13px/1.3 "Fraunces", Georgia, serif;
+  color:#3a0c1a; margin-bottom:2px;
+}
+.milestone-next{
+  font:italic 11px/1.2 "Cormorant Garamond", Georgia, serif;
+  color:#824555;
+}
+
+/* Global Click Particle */
+.global-click-particle{
+  position:fixed; pointer-events:none; z-index:10000;
+  user-select:none; -webkit-user-select:none;
+  will-change:transform, opacity;
+}
+
+/* ============================================================
+   BIRTHDAY GIFTS & PHOTO GALLERY MODAL
+   ============================================================ */
+.gifts-container{
+  position:relative; max-width:920px; width:100%; max-height:90vh;
+  overflow-y:auto; border-radius:28px;
+  background:linear-gradient(160deg, #fff7f2 0%, #ffeaf1 100%);
+  border:1.5px solid rgba(255, 180, 200, 0.5);
+  box-shadow:0 24px 80px rgba(100, 15, 40, 0.45);
+  padding:36px 30px;
+}
+.gifts-header{ text-align:center; margin-bottom:30px; }
+.gifts-badge{
+  display:inline-block; font:700 12px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.1em; text-transform:uppercase;
+  background:rgba(212, 35, 92, 0.12); color:#b81446;
+  padding:6px 16px; border-radius:999px; margin-bottom:12px;
+}
+.gifts-title{
+  font:700 clamp(24px, 5vw, 36px)/1.2 "Fraunces", Georgia, serif;
+  color:#420e1e; margin-bottom:8px;
+}
+.gifts-sub{
+  font:italic 16px/1.4 "Cormorant Garamond", Georgia, serif;
+  color:#7e4352; max-width:600px; margin:0 auto;
+}
+
+/* 3-Card Gifts Grid */
+.gifts-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:20px; margin-bottom:34px;
+}
+.gift-card{
+  background:rgba(255, 255, 255, 0.88);
+  border:1.5px solid rgba(255, 170, 195, 0.35);
+  border-radius:22px; padding:22px;
+  box-shadow:0 12px 30px rgba(120, 20, 50, 0.08);
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  position:relative; transition:all .3s ease;
+  cursor:pointer;
+}
+.gift-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 40px rgba(120, 20, 50, 0.16);
+  border-color:#ff6f97;
+}
+.gift-badge{
+  font:700 11px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.08em; text-transform:uppercase;
+  background:#ffe3ed; color:#b81446;
+  padding:4px 10px; border-radius:999px; margin-bottom:12px;
+}
+.gift-photo-wrap{
+  position:relative; width:100%; height:160px; border-radius:14px;
+  overflow:hidden; margin-bottom:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
+  background:#1a0810;
+}
+.gift-thumb-img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .35s ease;
+}
+.gift-card:hover .gift-thumb-img{
+  transform:scale(1.08);
+}
+.gift-zoom-hint{
+  position:absolute; bottom:8px; right:8px;
+  background:rgba(0, 0, 0, 0.65); backdrop-filter:blur(4px);
+  color:#fff; font:700 10px/1 "Fraunces", Georgia, serif;
+  padding:4px 8px; border-radius:999px; opacity:0.85;
+}
+
+.gift-item-title{
+  font:700 17px/1.2 "Fraunces", Georgia, serif;
+  color:#3a0b18; margin-bottom:8px;
+}
+.gift-item-desc{
+  font:italic 14px/1.4 "Cormorant Garamond", Georgia, serif;
+  color:#754552; margin-bottom:14px;
+}
+.gift-tap-hint{
+  font:700 11px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.06em; text-transform:uppercase;
+  color:#ff3366; background:rgba(255, 51, 102, 0.1);
+  padding:4px 12px; border-radius:999px; margin-top:auto;
+}
+.gift-card.is-unboxed .gift-tap-hint{
+  background:rgba(46, 204, 113, 0.15); color:#27ae60;
+  content:"Unboxed! 💖";
+}
+
+/* Lightbox Full Photo Modal */
+.gift-lightbox-overlay{
+  position:fixed; inset:0; z-index:3000;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(12, 3, 8, 0.94);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  padding:20px; opacity:0; pointer-events:none;
+  transition:opacity .25s ease;
+}
+.gift-lightbox-overlay.is-open{
+  opacity:1; pointer-events:auto;
+}
+.gift-lightbox-card{
+  position:relative; max-width:640px; width:100%;
+  background:linear-gradient(160deg, #fffaf7 0%, #ffeef4 100%);
+  border:2px solid rgba(255, 120, 160, 0.6);
+  border-radius:28px; padding:28px 24px;
+  box-shadow:0 24px 80px rgba(160, 15, 60, 0.5);
+  text-align:center; transform:scale(0.92);
+  transition:transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.gift-lightbox-overlay.is-open .gift-lightbox-card{
+  transform:scale(1);
+}
+.lightbox-badge{
+  display:inline-block; font:700 11px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.1em; text-transform:uppercase;
+  background:#ffe3ed; color:#b81446;
+  padding:5px 14px; border-radius:999px; margin-bottom:14px;
+}
+.lightbox-img-wrap{
+  width:100%; max-height:380px; height:320px;
+  border-radius:18px; overflow:hidden;
+  margin-bottom:18px; box-shadow:0 12px 35px rgba(0,0,0,0.18);
+  background:#11040a; display:flex; align-items:center; justify-content:center;
+}
+.lightbox-img-wrap img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.lightbox-title{
+  font:700 clamp(20px, 4vw, 26px)/1.2 "Fraunces", Georgia, serif;
+  color:#3a0918; margin-bottom:8px;
+}
+.lightbox-desc{
+  font:italic 15px/1.45 "Cormorant Garamond", Georgia, serif;
+  color:#68303f; max-width:540px; margin:0 auto 16px;
+}
+.lightbox-footer{
+  display:flex; justify-content:center;
+}
+.lightbox-tag{
+  font:700 12px/1 "Fraunces", Georgia, serif;
+  color:#ff2a70; background:rgba(255, 42, 112, 0.1);
+  padding:6px 16px; border-radius:999px;
+}
+
+/* ============================================================
+   MISTY'S ROMANTIC MEMORIES GALLERY & VIDEO SHOWCASE
+   ============================================================ */
+.gallery-showcase-section{
+  margin-bottom:36px;
+  background:linear-gradient(170deg, rgba(255, 255, 255, 0.7), rgba(255, 240, 246, 0.9));
+  border:1.5px solid rgba(255, 180, 205, 0.5);
+  border-radius:26px;
+  padding:28px 24px 32px;
+  box-shadow:0 14px 40px rgba(120, 20, 50, 0.08);
+}
+.gallery-sec-header{
+  text-align:center; margin-bottom:24px;
+}
+.gallery-sec-title{
+  font:700 clamp(22px, 4vw, 30px)/1.2 "Fraunces", Georgia, serif;
+  color:#3c0b1a; margin-bottom:6px;
+}
+.gallery-sec-sub{
+  font:italic 15px/1.4 "Cormorant Garamond", Georgia, serif;
+  color:#783e4e; max-width:580px; margin:0 auto;
+}
+
+/* Dual Column Grid: Polaroid Album (Left) & Video Reel (Right) */
+.gallery-dual-grid{
+  display:grid; grid-template-columns:1.15fr 0.85fr;
+  gap:24px; align-items:start;
+}
+@media (max-width: 820px){
+  .gallery-dual-grid{ grid-template-columns:1fr; }
+}
+
+.album-card, .video-card{
+  background:rgba(255, 255, 255, 0.95);
+  border:1.5px solid rgba(255, 170, 195, 0.35);
+  border-radius:22px; padding:20px;
+  box-shadow:0 10px 28px rgba(100, 20, 45, 0.06);
+  display:flex; flex-direction:column; align-items:center;
+}
+
+.album-badge-bar{
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px;
+}
+.album-pill{
+  font:700 11px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing:.08em; text-transform:uppercase;
+  background:#ffe3ed; color:#b81446;
+  padding:4px 10px; border-radius:999px;
+}
+.photo-counter-badge, .video-badge-tag{
+  font:600 12px/1 "Fraunces", Georgia, serif;
+  color:#d4235c; background:rgba(212, 35, 92, 0.08);
+  padding:4px 10px; border-radius:999px;
+}
+
+/* Polaroid Container */
+.polaroid-wrapper{
+  width:100%; display:flex; justify-content:center;
+  margin-bottom:14px;
+}
+.polaroid-frame{
+  background:#ffffff; padding:12px 12px 18px;
+  border-radius:8px; box-shadow:0 12px 30px rgba(0,0,0,0.12);
+  width:100%; max-width:280px; position:relative;
+  transition:transform .3s ease;
+}
+.polaroid-frame:hover{
+  transform:rotate(-1deg) scale(1.01);
+}
+.polaroid-pin{
+  position:absolute; top:-12px; left:50%; transform:translateX(-50%);
+  font-size:22px; z-index:10;
+}
+.polaroid-img-box{
+  width:100%; height:320px; overflow:hidden;
+  border-radius:5px; background:#ffeef3;
+  position:relative; display:flex; align-items:center; justify-content:center;
+}
+.polaroid-img-box img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:opacity .25s ease, transform .25s ease;
+}
+.polaroid-caption{
+  margin-top:10px; text-align:center; min-height:58px;
+}
+.polaroid-name{
+  font:400 24px/1.1 "Great Vibes", cursive;
+  color:#b81446; margin-bottom:4px;
+}
+.polaroid-note{
+  font:italic 13px/1.35 "Cormorant Garamond", Georgia, serif;
+  color:#754552;
+}
+
+/* Floating Navigation Arrows */
+.photo-nav-btn{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:34px; height:34px; border-radius:50%;
+  border:1px solid rgba(255, 255, 255, 0.8);
+  background:rgba(255, 255, 255, 0.88);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  color:#b81446; font-size:16px; font-weight:bold;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; z-index:8;
+  box-shadow:0 4px 12px rgba(0,0,0,0.16);
+  transition:all .2s ease;
+}
+.photo-nav-btn:hover{
+  background:#ff3366; color:#ffffff;
+  transform:translateY(-50%) scale(1.1);
+  box-shadow:0 6px 16px rgba(216, 17, 89, 0.4);
+}
+.photo-nav-btn.prev-btn{ left:8px; }
+.photo-nav-btn.next-btn{ right:8px; }
+
+/* Photo Dot Indicators */
+.photo-dots{
+  display:flex; gap:6px; justify-content:center;
+  align-items:center; margin-bottom:12px;
+}
+.photo-dot{
+  width:8px; height:8px; border-radius:50%;
+  background:rgba(212, 35, 92, 0.22);
+  cursor:pointer; transition:all .22s ease;
+}
+.photo-dot:hover{
+  background:rgba(212, 35, 92, 0.55);
+}
+.photo-dot.active{
+  width:22px; border-radius:999px;
+  background:linear-gradient(90deg, #ff6f97, #d4235c);
+  box-shadow:0 2px 8px rgba(212, 35, 92, 0.35);
+}
+
+/* Photo Thumbnail Strip */
+.photo-thumbnails{
+  display:flex; gap:8px; justify-content:flex-start;
+  overflow-x:auto; max-width:100%;
+  padding:4px 6px 10px; margin-bottom:14px;
+  scrollbar-width:thin; scrollbar-color:#ff8fac transparent;
+}
+.photo-thumbnails::-webkit-scrollbar{ height:4px; }
+.photo-thumbnails::-webkit-scrollbar-thumb{ background:#ff8fac; border-radius:999px; }
+
+.photo-thumb{
+  width:46px; height:60px; flex-shrink:0;
+  border-radius:6px; overflow:hidden;
+  cursor:pointer; border:2px solid transparent;
+  opacity:0.6; transition:all .2s ease;
+  background:#ffeef3;
+}
+.photo-thumb:hover{
+  opacity:0.9; transform:translateY(-2px);
+}
+.photo-thumb.active{
+  border-color:#d4235c; opacity:1;
+  transform:scale(1.08) translateY(-2px);
+  box-shadow:0 4px 12px rgba(212, 35, 92, 0.38);
+}
+.photo-thumb img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+.album-actions{
+  margin-top:4px;
+}
+.upload-photo-btn{
+  padding:9px 20px; border-radius:999px; border:none;
+  background:linear-gradient(135deg, #ff4f81, #d4235c);
+  color:#fff; font:700 12px/1 "Fraunces", Georgia, serif;
+  letter-spacing:.04em;
+  box-shadow:0 4px 14px rgba(212, 35, 92, 0.35);
+  cursor:pointer; transition:all .2s ease;
+}
+.upload-photo-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 6px 18px rgba(212, 35, 92, 0.5);
+}
+
+/* Video Player Showcase */
+.video-player-wrap{
+  width:100%; display:flex; flex-direction:column;
+  align-items:center;
+}
+.video-frame{
+  background:#ffffff; padding:12px 12px 14px;
+  border-radius:8px; box-shadow:0 12px 30px rgba(0,0,0,0.12);
+  width:100%; max-width:280px; position:relative;
+  margin-bottom:12px;
+}
+video#mistyVideo{
+  width:100%; height:320px; object-fit:cover;
+  border-radius:5px; background:#12050c;
+  display:block;
+}
+.video-caption-box{
+  text-align:center; max-width:280px; min-height:58px;
+}
+
+/* Handwritten Romantic Love Letter */
+.love-letter-card{
+  background:#fffdf9;
+  border:1.5px solid #ebd9c8;
+  border-radius:18px; padding:28px 24px;
+  box-shadow:0 8px 24px rgba(120, 40, 20, 0.06);
+  position:relative;
+}
+.letter-stamp{
+  display:inline-block; font:700 11px/1 "Fraunces", Georgia, serif;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:#a84020; border:1.5px dashed #a84020;
+  padding:4px 10px; border-radius:4px; margin-bottom:16px;
+}
+.letter-title{
+  font:400 32px/1.2 "Great Vibes", cursive;
+  color:#851a36; margin-bottom:14px;
+}
+.letter-body{
+  font:italic 16px/1.6 "Cormorant Garamond", Georgia, serif;
+  color:#4a2a32; margin-bottom:20px;
+}
+.letter-sign{
+  text-align:right; font:italic 16px/1.3 "Cormorant Garamond", Georgia, serif;
+  color:#732d40;
+}
+.letter-sign span{
+  font:400 26px/1.2 "Great Vibes", cursive;
+  color:#b81446;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px){
+  .top-nav{
+    top:10px; padding:4px 6px;
+  }
+  .nav-pill{
+    padding:5px 10px; font-size:10.5px;
+  }
+  .quest-card{
+    padding:28px 18px 24px;
+  }
+  .btn-arena{
+    gap:14px;
+  }
+  .btn-yes{
+    padding:12px 24px; font-size:16px;
+  }
+  .btn-no{
+    padding:10px 20px; font-size:14px;
+  }
+  .gifts-container{
+    padding:22px 14px;
+  }
+  .gallery-showcase-section{
+    padding:18px 12px;
+  }
+  .polaroid-img-box{
+    height:280px;
+  }
+  .polaroid-frame{
+    max-width:100%;
+  }
+  video#mistyVideo{
+    height:280px;
+  }
+  .video-frame{
+    max-width:100%;
+  }
+  .letter-title{
+    font-size:26px;
+  }
+  .mission-milestone-toast{
+    width:95%; padding:8px 12px; top:115px; z-index:100;
+  }
+  .milestone-photo-wrap{
+    width:44px; height:44px;
+  }
+  .milestone-msg{
+    font-size:12px;
+  }
+  .lightbox-img-wrap{
+    height:220px;
+  }
+  .gift-photo-wrap{
+    height:140px;
+  }
+}
+
+/* VIP Pay 143 Nav Pill */
+.nav-pay-pill{
+  background:linear-gradient(135deg, #ff2a70, #f39c12) !important;
+  color:#ffffff !important;
+  font-weight:700 !important;
+  border-color:rgba(255, 255, 255, 0.4) !important;
+  box-shadow:0 4px 16px rgba(255, 42, 112, 0.45);
+  animation:navPayPulse 2.4s ease-in-out infinite alternate;
+}
+@keyframes navPayPulse{
+  0%{ transform:scale(1); box-shadow:0 4px 14px rgba(255, 42, 112, 0.4); }
+  100%{ transform:scale(1.05); box-shadow:0 6px 20px rgba(243, 156, 18, 0.65); }
+}
+
+/* Yuvi & Misty Reunion Modal */
+.yuvi-reunion-modal .yuvi-card{
+  max-width:480px;
+  background:linear-gradient(160deg, #fffafd 0%, #fff0f5 50%, #ffe4ec 100%);
+  border:2.5px solid #ff2a70;
+  box-shadow:0 22px 65px rgba(212, 35, 92, 0.45);
+}
+.yuvi-avatar-duo{
+  position:relative; width:96px; height:96px; margin:0 auto 12px;
+}
+.avatar-pair-wrap{
+  position:relative; width:100%; height:100%; border-radius:50%;
+  border:3px solid #ff2a70;
+  box-shadow:0 8px 24px rgba(255, 42, 112, 0.45);
+}
+.duo-avatar-img{
+  width:100%; height:100%; border-radius:50%; object-fit:cover; display:block;
+}
+.duo-heart-float{
+  position:absolute; top:-10px; right:-8px; font-size:26px;
+  animation:heartFloatDuo 2s ease-in-out infinite alternate;
+}
+@keyframes heartFloatDuo{
+  0%{ transform:translateY(0) scale(1) rotate(0deg); }
+  100%{ transform:translateY(-6px) scale(1.15) rotate(12deg); }
+}
+.reunion-hug-toast{
+  background:linear-gradient(135deg, rgba(255, 42, 112, 0.14), rgba(255, 133, 162, 0.22));
+  border:1px solid rgba(255, 42, 112, 0.35);
+  border-radius:14px; padding:8px 14px;
+  font:700 13px/1.3 "Fraunces", Georgia, serif;
+  color:#b81446; margin-bottom:14px;
+  box-shadow:0 4px 12px rgba(255, 42, 112, 0.12);
+}
+.yuvi-dialogue-box{
+  background:rgba(255, 255, 255, 0.92);
+  border:1.5px solid #ffccd8;
+  border-radius:18px; padding:16px 18px;
+  margin-bottom:14px; text-align:left;
+  box-shadow:0 6px 18px rgba(184, 20, 70, 0.08);
+}
+.yuvi-speaker-tag{
+  font:700 13px/1.3 "Fraunces", Georgia, serif;
+  color:#8b1538; display:flex; align-items:center; gap:6px; margin-bottom:8px;
+}
+.speaker-avatar{
+  font-size:18px;
+}
+.yuvi-question-text{
+  font:italic 600 15px/1.45 "Cormorant Garamond", Georgia, serif;
+  color:#3a0d18; margin:0 0 14px;
+}
+.yuvi-btn-arena{
+  position:relative; display:flex; align-items:center; justify-content:center;
+  gap:12px; min-height:56px;
+}
+.btn-yuvi-yes{
+  background:linear-gradient(135deg, #ff2a70, #ff6584);
+  color:#fff; border:none; border-radius:999px;
+  padding:11px 22px; font:700 13.5px/1.2 "Fraunces", Georgia, serif;
+  cursor:pointer; box-shadow:0 4px 16px rgba(255, 42, 112, 0.4);
+  transition:all .18s ease; flex-shrink:0;
+}
+.btn-yuvi-yes:hover{
+  transform:scale(1.05); box-shadow:0 6px 20px rgba(255, 42, 112, 0.6);
+}
+.btn-yuvi-no-wrap{
+  position:relative; display:inline-block;
+}
+.yuvi-tease-bubble{
+  position:absolute; top:-30px; left:50%;
+  transform:translateX(-50%);
+  background:#331422; color:#fff;
+  font:600 11px/1.2 "Fraunces", Georgia, serif;
+  padding:4px 10px; border-radius:8px;
+  white-space:nowrap; opacity:0; pointer-events:none;
+  transition:opacity .2s ease;
+  box-shadow:0 4px 10px rgba(0,0,0,0.3);
+}
+.yuvi-tease-bubble::after{
+  content:""; position:absolute; bottom:-4px; left:50%;
+  transform:translateX(-50%);
+  border-width:4px 4px 0 4px; border-style:solid;
+  border-color:#331422 transparent transparent transparent;
+}
+.yuvi-tease-bubble.is-visible{
+  opacity:1;
+}
+.btn-yuvi-no{
+  background:#f6f0f3; color:#747d8c;
+  border:1.5px solid #e0d0d8; border-radius:999px;
+  padding:10px 18px; font:600 12.5px/1.2 "Fraunces", Georgia, serif;
+  cursor:pointer; transition:transform .15s ease;
+  user-select:none;
+}
+.yuvi-actions-row{
+  margin-top:14px; text-align:center;
+}
+
+/* VIP 143 UPI Payment Section */
+.vip-payment-section{
+  margin-top:40px; padding:36px 24px;
+  background:linear-gradient(155deg, rgba(255, 255, 255, 0.98), rgba(255, 240, 246, 0.98));
+  border:2.5px solid #ff85a2; border-radius:32px;
+  box-shadow:0 20px 60px rgba(212, 35, 92, 0.2), inset 0 0 20px rgba(255, 133, 162, 0.1);
+  text-align:center; position:relative; overflow:hidden;
+}
+.vip-payment-section::before{
+  content:""; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+  background:radial-gradient(circle, rgba(255, 42, 112, 0.05) 0%, transparent 60%);
+  pointer-events:none; animation:vipShimmer 10s ease-in-out infinite alternate;
+}
+@keyframes vipShimmer{
+  0%{ transform:translate(0, 0) rotate(0deg); }
+  100%{ transform:translate(5%, 5%) rotate(180deg); }
+}
+.vip-header{
+  max-width:680px; margin:0 auto 28px; position:relative; z-index:2;
+}
+.vip-badge{
+  display:inline-block;
+  background:linear-gradient(135deg, rgba(255, 42, 112, 0.15), rgba(243, 156, 18, 0.2));
+  border:1px solid rgba(255, 42, 112, 0.4);
+  color:#b81446; font:700 11.5px/1 "Fraunces", Georgia, serif;
+  letter-spacing:.08em; text-transform:uppercase;
+  padding:6px 16px; border-radius:999px; margin-bottom:12px;
+}
+.vip-title{
+  font:900 clamp(22px, 4.5vw, 32px)/1.2 "Fraunces", Georgia, serif;
+  color:#ff2a70; margin-bottom:12px;
+  text-shadow:0 2px 14px rgba(255, 42, 112, 0.25);
+}
+.love-143-explain{
+  display:inline-flex; align-items:center; gap:8px;
+  background:linear-gradient(135deg, rgba(255, 42, 112, 0.12), rgba(255, 133, 162, 0.2));
+  border:1.5px solid rgba(255, 42, 112, 0.35);
+  border-radius:18px; padding:10px 20px;
+  font:700 clamp(14px, 3.2vw, 17px)/1.4 "Fraunces", Georgia, serif;
+  color:#b81446; margin:8px auto 14px;
+  box-shadow:0 6px 20px rgba(255, 42, 112, 0.12);
+}
+.heart-pulse{
+  display:inline-block; animation:heartPulseIcon 1.2s ease-in-out infinite;
+}
+@keyframes heartPulseIcon{
+  0%, 100%{ transform:scale(1); }
+  50%{ transform:scale(1.3); }
+}
+.vip-sub{
+  font:italic 15px/1.5 "Cormorant Garamond", Georgia, serif;
+  color:#5a182a; max-width:580px; margin:0 auto;
+}
+.payment-card-wrap{
+  max-width:540px; margin:0 auto; position:relative; z-index:2;
+}
+
+/* Chocolate Love Promise Pop-Up Banner in Big Letters */
+.chocolate-promise-popup {
+  position: relative;
+  background: linear-gradient(135deg, #43141f 0%, #7a1532 50%, #c01848 100%);
+  border: 2.5px solid #ffd700;
+  border-radius: 24px;
+  padding: 18px 20px;
+  margin: 0 auto 24px;
+  max-width: 520px;
+  box-shadow: 0 12px 35px rgba(192, 24, 72, 0.45), 0 0 20px rgba(255, 215, 0, 0.35);
+  animation: chocoPopupPulse 2.4s ease-in-out infinite alternate;
+  text-align: center;
+  overflow: hidden;
+}
+@keyframes chocoPopupPulse {
+  0% { transform: scale(1); box-shadow: 0 10px 30px rgba(192, 24, 72, 0.4), 0 0 16px rgba(255, 215, 0, 0.25); }
+  100% { transform: scale(1.02); box-shadow: 0 16px 45px rgba(192, 24, 72, 0.6), 0 0 26px rgba(255, 215, 0, 0.5); }
+}
+.cpp-tag {
+  display: inline-block;
+  background: rgba(255, 215, 0, 0.2);
+  border: 1px solid #ffd700;
+  color: #ffea79;
+  font: 800 11px/1 -apple-system, sans-serif;
+  letter-spacing: 0.08em;
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.cpp-big-title {
+  font: 900 clamp(19px, 4.5vw, 25px)/1.25 "Fraunces", Georgia, serif;
+  color: #fff9d2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 215, 0, 0.4);
+  margin: 0 0 8px;
+  letter-spacing: 0.02em;
+}
+.cpp-sub-desc {
+  font: 500 clamp(13px, 3vw, 15px)/1.45 "Segoe UI", system-ui, sans-serif;
+  color: #ffd4e2;
+  margin: 0;
+}
+.cpp-sub-desc strong {
+  color: #ffffff;
+  text-shadow: 0 0 6px #ff2a70;
+}
+.cpp-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cpp-decor .d-item {
+  position: absolute;
+  font-size: 20px;
+  animation: floatChoco 3s ease-in-out infinite alternate;
+}
+.cpp-decor .d1 { top: 8px; left: 12px; }
+.cpp-decor .d2 { bottom: 8px; left: 16px; animation-delay: 0.6s; }
+.cpp-decor .d3 { top: 8px; right: 14px; animation-delay: 1.2s; }
+.cpp-decor .d4 { bottom: 8px; right: 12px; animation-delay: 1.8s; }
+@keyframes floatChoco {
+  0% { transform: translateY(0) rotate(-6deg); }
+  100% { transform: translateY(-8px) rotate(8deg); }
+}
+
+/* Heart Photo Frame holding QR Code */
+.heart-frame-container{
+  margin-bottom:28px;
+}
+.heart-frame-outer{
+  position:relative; display:inline-block; padding:16px;
+  background:linear-gradient(135deg, #ff2a70 0%, #ff85a2 35%, #f5a623 70%, #ff4d79 100%);
+  border-radius:38px;
+  box-shadow:0 14px 40px rgba(255, 42, 112, 0.38), 0 0 24px rgba(245, 166, 35, 0.3);
+  animation:heartFrameGlow 3s ease-in-out infinite alternate;
+}
+@keyframes heartFrameGlow{
+  0%{ box-shadow:0 12px 36px rgba(255, 42, 112, 0.35), 0 0 20px rgba(245, 166, 35, 0.25); }
+  100%{ box-shadow:0 16px 48px rgba(255, 42, 112, 0.55), 0 0 32px rgba(245, 166, 35, 0.45); }
+}
+.heart-frame-inner{
+  background:#ffffff; border-radius:24px; padding:14px;
+  box-shadow:inset 0 2px 8px rgba(0, 0, 0, 0.06);
+  display:flex; align-items:center; justify-content:center;
+}
+.payment-qr-img{
+  width:240px; max-width:100%; height:auto;
+  border-radius:16px; display:block; object-fit:contain;
+}
+.heart-sparkle{
+  position:absolute; user-select:none; pointer-events:none;
+}
+.heart-sparkle.s1{
+  top:-12px; left:-10px; font-size:24px;
+  animation:floatSparkle 2.4s ease-in-out infinite;
+}
+.heart-sparkle.s2{
+  top:-14px; right:-10px; font-size:26px;
+  animation:floatSparkle 2.8s ease-in-out infinite 0.4s;
+}
+.heart-sparkle.s3{
+  bottom:-10px; left:-10px; font-size:22px;
+  animation:floatSparkle 2.2s ease-in-out infinite 0.8s;
+}
+.heart-sparkle.s4{
+  bottom:-14px; right:-10px; font-size:26px;
+  animation:floatSparkle 2.6s ease-in-out infinite 1.2s;
+}
+@keyframes floatSparkle{
+  0%, 100%{ transform:translateY(0) scale(1) rotate(0deg); opacity:.9; }
+  50%{ transform:translateY(-8px) scale(1.2) rotate(15deg); opacity:1; }
+}
+.qr-receiver-name{
+  font:700 17px/1.3 "Fraunces", Georgia, serif;
+  color:#8b1538; margin-top:14px;
+}
+.upi-id-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255, 255, 255, 0.95);
+  border:1.5px dashed #ff4d79; border-radius:999px;
+  padding:7px 16px; margin-top:10px;
+  box-shadow:0 4px 14px rgba(255, 77, 121, 0.15);
+}
+.upi-label{
+  font:700 12px/1 "Fraunces", Georgia, serif; color:#888; text-transform:uppercase;
+}
+.upi-text{
+  font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size:15px; font-weight:700; color:#b81446;
+  user-select:all;
+}
+.copy-upi-btn{
+  background:#ff2a70; color:#ffffff; border:none;
+  border-radius:999px; padding:4px 12px; font:700 12px/1 "Fraunces", Georgia, serif;
+  cursor:pointer; transition:all .2s ease;
+}
+.copy-upi-btn:hover{
+  background:#d81e57; transform:scale(1.05);
+}
+.amount-tag{
+  display:block; margin:12px auto 0;
+  font:600 15px/1.4 "Fraunces", Georgia, serif;
+  color:#1b5e20; background:rgba(46, 125, 50, 0.1);
+  border:1px solid rgba(46, 125, 50, 0.25);
+  padding:7px 20px; border-radius:999px; max-width:fit-content;
+}
+
+/* UTR Verification Form */
+.utr-verify-box{
+  background:rgba(255, 255, 255, 0.95);
+  border:2px solid #ffccd8; border-radius:24px;
+  padding:24px 20px; box-shadow:0 10px 30px rgba(184, 20, 70, 0.12);
+  text-align:center;
+}
+.utr-box-title{
+  font:700 18px/1.2 "Fraunces", Georgia, serif; color:#ff2a70; margin-bottom:6px;
+}
+.utr-box-desc{
+  font:italic 14px/1.4 "Cormorant Garamond", Georgia, serif; color:#5a182a;
+  margin-bottom:14px;
+}
+.utr-input-group{
+  display:flex; flex-direction:column; gap:10px; max-width:400px; margin:0 auto;
+}
+.utr-input{
+  width:100%; padding:13px 16px; font-size:15px;
+  border:2px solid #ffccd8; border-radius:14px; outline:none;
+  font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  text-align:center; letter-spacing:1px; background:#fffafa;
+  color:#2d3436; transition:border-color .25s ease, box-shadow .25s ease;
+}
+.utr-input:focus{
+  border-color:#ff2a70; box-shadow:0 0 0 3px rgba(255, 42, 112, 0.2);
+  background:#ffffff;
+}
+.submit-utr-btn{
+  width:100%; padding:14px 20px;
+  background:linear-gradient(135deg, #27ae60, #2ecc71);
+  color:#ffffff; border:none; border-radius:14px;
+  font:700 15px/1.2 "Fraunces", Georgia, serif; cursor:pointer;
+  box-shadow:0 6px 20px rgba(39, 174, 96, 0.35);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.submit-utr-btn:hover{
+  transform:translateY(-2px); box-shadow:0 8px 24px rgba(39, 174, 96, 0.45);
+}
+.utr-error-msg{
+  margin-top:10px; font:600 13px/1.3 "Fraunces", Georgia, serif;
+  color:#d63031; background:rgba(214, 48, 49, 0.1);
+  border-radius:10px; padding:6px 12px; display:inline-block;
+}
+
+/* Payment Success Revealed Card */
+.payment-success-card{
+  background:linear-gradient(150deg, #ffffff 0%, #fff4f8 100%);
+  border:3px solid #ff2a70; border-radius:28px;
+  padding:30px 22px; box-shadow:0 18px 50px rgba(255, 42, 112, 0.35);
+  text-align:center; animation:successPopIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes successPopIn{
+  0%{ opacity:0; transform:scale(0.85); }
+  100%{ opacity:1; transform:scale(1); }
+}
+.success-icon-wrap{
+  font-size:36px; margin-bottom:10px;
+  animation:heartPulseIcon 1.4s ease-in-out infinite;
+}
+.success-title{
+  font:900 clamp(20px, 4vw, 26px)/1.2 "Fraunces", Georgia, serif;
+  color:#27ae60; margin-bottom:10px;
+}
+.success-143-banner{
+  background:linear-gradient(135deg, #ff2a70, #ff6584);
+  color:#ffffff; padding:14px 20px; border-radius:18px;
+  font:900 clamp(16px, 3.5vw, 19px)/1.3 "Fraunces", Georgia, serif;
+  letter-spacing:.5px; box-shadow:0 8px 24px rgba(255, 42, 112, 0.4);
+  margin:14px 0; animation:bannerPulse 2s ease-in-out infinite;
+}
+@keyframes bannerPulse{
+  0%, 100%{ transform:scale(1); }
+  50%{ transform:scale(1.03); }
+}
+.success-desc{
+  font:italic 15px/1.5 "Cormorant Garamond", Georgia, serif;
+  color:#5a182a; margin-bottom:18px; font-weight:600;
+}
+
+/* Instagram DM Box */
+.insta-dm-box{
+  background:linear-gradient(135deg, rgba(131, 58, 180, 0.08), rgba(253, 29, 29, 0.08), rgba(252, 176, 69, 0.08));
+  border:2px solid rgba(225, 48, 108, 0.35);
+  border-radius:20px; padding:20px 16px; margin-top:20px;
+  box-shadow:0 8px 24px rgba(225, 48, 108, 0.12);
+}
+.insta-badge{
+  display:inline-block; font:700 11px/1 "Fraunces", Georgia, serif;
+  letter-spacing:.08em; text-transform:uppercase;
+  background:linear-gradient(135deg, #833ab4, #fd1d1d);
+  color:#ffffff; padding:4px 12px; border-radius:999px; margin-bottom:8px;
+}
+.insta-title{
+  font:700 17px/1.3 "Fraunces", Georgia, serif; color:#833ab4; margin-bottom:6px;
+}
+.insta-desc{
+  font:italic 13.5px/1.4 "Cormorant Garamond", Georgia, serif; color:#5a182a;
+  margin-bottom:14px;
+}
+.insta-dm-btn{
+  display:inline-block; padding:13px 28px;
+  background:linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color:#ffffff !important; text-decoration:none;
+  font:700 15px/1.2 "Fraunces", Georgia, serif; border-radius:999px;
+  box-shadow:0 8px 24px rgba(220, 39, 67, 0.4);
+  transition:all .2s ease;
+}
+.insta-dm-btn:hover{
+  transform:translateY(-2px) scale(1.04);
+  box-shadow:0 12px 30px rgba(220, 39, 67, 0.55);
+}
+
+/* Mobile adjustments */
+@media (max-width:640px){
+  .vip-payment-section{
+    padding:24px 14px; margin-top:30px;
+  }
+  .payment-qr-img{
+    width:200px;
+  }
+  .upi-id-pill{
+    flex-wrap:wrap; justify-content:center;
+  }
+  .success-143-banner{
+    font-size:15px; padding:12px 14px;
+  }
+  .insta-dm-btn{
+    width:100%; box-sizing:border-box; text-align:center;
+  }
+  .yuvi-btn-arena{
+    flex-direction:column; gap:10px;
+  }
+}
+
+/* ============================================================
+   INTERACTIVE JOURNEY MAP PROGRESS BAR
+   ============================================================ */
+.journey-map-bar{
+  position:relative; width:100%;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 240, 248, 0.96));
+  border:1.5px solid #ffb3c6; border-radius:18px;
+  padding:10px 16px 20px; margin-bottom:10px;
+  box-shadow:0 4px 16px rgba(255, 77, 121, 0.12);
+  box-sizing:border-box;
+}
+.map-track{
+  position:relative; width:92%; margin:12px auto 0; height:8px;
+}
+.map-track-line{
+  position:absolute; inset:0;
+  background:#ffe0eb; border-radius:999px;
+}
+.map-progress-fill{
+  position:absolute; left:0; top:0; height:100%;
+  background:linear-gradient(90deg, #ff6584, #ff2a70, #ffd700);
+  border-radius:999px; transition:width .25s ease-out;
+  box-shadow:0 0 10px rgba(255, 42, 112, 0.6);
+}
+.map-node{
+  position:absolute; top:50%; transform:translate(-50%, -50%);
+  display:flex; flex-direction:column; align-items:center;
+  pointer-events:none; z-index:2;
+}
+.node-icon{
+  font-size:16px; line-height:1;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+.node-text{
+  font:700 9.5px/1 "Fraunces", Georgia, serif;
+  color:#b81446; margin-top:4px; white-space:nowrap;
+}
+.map-node-finish .rose-icon{
+  font-size:22px; animation:rosePulse 1.8s ease-in-out infinite;
+}
+@keyframes rosePulse{
+  0%, 100%{ transform:scale(1); }
+  50%{ transform:scale(1.25) rotate(8deg); }
+}
+.rose-label{
+  background:#ff2a70; color:#fff !important;
+  padding:2px 6px; border-radius:999px; font-size:9px !important;
+  box-shadow:0 2px 8px rgba(255, 42, 112, 0.4);
+}
+.map-runner-pin{
+  position:absolute; top:50%; transform:translate(-50%, -50%);
+  z-index:5; pointer-events:none; transition:left .25s ease-out;
+}
+.runner-icon{
+  display:inline-block; font-size:20px; line-height:1;
+  filter:drop-shadow(0 3px 8px rgba(255, 42, 112, 0.5));
+  animation:runnerBounce .6s ease-in-out infinite alternate;
+}
+@keyframes runnerBounce{
+  0%{ transform:translateY(0) scale(1); }
+  100%{ transform:translateY(-5px) scale(1.1); }
+}
+
+/* ============================================================
+   PRE-MISSION START SCREEN OVERLAY
+   ============================================================ */
+.mission-start-overlay{
+  position:absolute; inset:0; z-index:25;
+  background:rgba(20, 4, 15, 0.88);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  display:flex; align-items:center; justify-content:center;
+  padding:16px; opacity:0; pointer-events:none;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+}
+.mission-start-overlay.is-shown{
+  opacity:1; pointer-events:auto;
+}
+.start-card{
+  background:linear-gradient(155deg, #ffffff 0%, #fff4f8 100%);
+  border:2.5px solid #ff4d79; border-radius:28px;
+  padding:24px 20px; max-width:440px; width:100%;
+  text-align:center; box-shadow:0 20px 60px rgba(255, 42, 112, 0.4);
+  animation:startPopIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes startPopIn{
+  0%{ transform:scale(0.85); opacity:0; }
+  100%{ transform:scale(1); opacity:1; }
+}
+.start-badge{
+  display:inline-block;
+  background:rgba(255, 42, 112, 0.12); border:1px solid rgba(255, 42, 112, 0.3);
+  color:#b81446; font:700 11px/1 "Fraunces", Georgia, serif;
+  letter-spacing:.08em; text-transform:uppercase;
+  padding:5px 14px; border-radius:999px; margin-bottom:10px;
+}
+.start-title{
+  font:900 clamp(18px, 4vw, 24px)/1.2 "Fraunces", Georgia, serif;
+  color:#ff2a70; margin-bottom:12px;
+}
+
+/* Full Map Preview inside Start Overlay */
+.full-map-preview{
+  background:linear-gradient(135deg, rgba(255, 235, 243, 0.9), rgba(255, 248, 252, 0.9));
+  border:1.5px dashed #ff85a2; border-radius:18px;
+  padding:12px 10px; margin-bottom:12px;
+}
+.map-preview-title{
+  font:700 10.5px/1 "Fraunces", Georgia, serif;
+  color:#8b1538; letter-spacing:.06em; margin-bottom:10px;
+}
+.map-preview-track{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:4px;
+}
+.p-step{
+  display:flex; flex-direction:column; align-items:center;
+}
+.p-icon{
+  font-size:20px;
+}
+.p-label{
+  font:700 9px/1.2 "Fraunces", Georgia, serif;
+  color:#5a182a; margin-top:4px; text-align:center;
+}
+.p-arrow{
+  color:#ff4d79; font-weight:900; font-size:12px;
+}
+.p-winner .p-label{
+  color:#d4235c; font-weight:800;
+}
+.rose-winner{
+  font-size:24px; animation:rosePulse 1.8s ease-in-out infinite;
+}
+.start-desc{
+  font:italic 13.5px/1.45 "Cormorant Garamond", Georgia, serif;
+  color:#4a1525; margin-bottom:14px; font-weight:600;
+}
+.start-highlights-row{
+  display:flex; flex-direction:column; gap:6px;
+  margin-bottom:16px;
+}
+.sh-pill{
+  background:rgba(255, 255, 255, 0.9);
+  border:1px solid #ffccd8; border-radius:10px;
+  padding:6px 10px; font:600 12px/1.2 "Fraunces", Georgia, serif;
+  color:#333; text-align:left;
+}
+.sh-pill strong{
+  color:#b81446;
+}
+.btn-start-mission{
+  width:100%; padding:14px 20px;
+  background:linear-gradient(135deg, #ff2a70, #ff6584);
+  color:#ffffff; border:none; border-radius:14px;
+  font:700 16px/1.2 "Fraunces", Georgia, serif; cursor:pointer;
+  box-shadow:0 8px 24px rgba(255, 42, 112, 0.45);
+  transition:all .18s ease;
+}
+.btn-start-mission:hover{
+  transform:scale(1.03); box-shadow:0 10px 28px rgba(255, 42, 112, 0.6);
+}
+
+/* ============================================================
+   LIVE HUG & KISS VIDEO ANIMATION (Gift #4 & Reunion)
+   ============================================================ */
+.live-hug-container{
+  position:relative; overflow:hidden;
+}
+.live-hug-img{
+  animation: liveEmbraceSway 6s ease-in-out infinite alternate;
+  will-change: transform, filter;
+  transform-origin: center center;
+}
+@keyframes liveEmbraceSway{
+  0%{
+    transform: scale(1.02) translate(0px, 0px) rotate(0deg);
+    filter: brightness(1) contrast(1.02) saturate(1.08);
+  }
+  25%{
+    transform: scale(1.06) translate(-4px, -3px) rotate(-0.4deg);
+    filter: brightness(1.06) contrast(1.04) saturate(1.15);
+  }
+  50%{
+    transform: scale(1.04) translate(4px, -2px) rotate(0.35deg);
+    filter: brightness(1.03) contrast(1.03) saturate(1.1);
+  }
+  75%{
+    transform: scale(1.07) translate(5px, 3px) rotate(0.45deg);
+    filter: brightness(1.07) contrast(1.05) saturate(1.18);
+  }
+  100%{
+    transform: scale(1.02) translate(0px, 0px) rotate(0deg);
+    filter: brightness(1) contrast(1.02) saturate(1.08);
+  }
+}
+
+.live-kiss-fx{
+  position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:4;
+}
+.live-kiss{
+  position:absolute; user-select:none; pointer-events:none;
+  animation:floatLiveKiss 2.6s cubic-bezier(.25,1,.5,1) infinite;
+  opacity:0;
+}
+.live-kiss.k1{ top:45%; left:35%; font-size:22px; animation-delay:0s; }
+.live-kiss.k2{ top:35%; left:55%; font-size:20px; animation-delay:0.7s; }
+.live-kiss.k3{ top:50%; left:50%; font-size:24px; animation-delay:1.4s; }
+.live-kiss.k4{ top:40%; left:40%; font-size:22px; animation-delay:2.1s; }
+
+@keyframes floatLiveKiss{
+  0%{ transform:translate(0, 0) scale(0.4); opacity:0; }
+  25%{ opacity:1; transform:translate(0px, -15px) scale(1.2); }
+  100%{ transform:translate(0px, -65px) scale(1.4); opacity:0; }
+}
+
+.live-sparkle{
+  position:absolute; font-size:18px; pointer-events:none;
+  animation:sparkleGlow 2s ease-in-out infinite alternate;
+}
+.live-sparkle.sp1{ top:20%; left:25%; animation-delay:0.3s; }
+.live-sparkle.sp2{ top:25%; right:25%; animation-delay:1s; }
+
+@keyframes sparkleGlow{
+  0%{ transform:scale(0.8) rotate(0deg); opacity:0.4; }
+  100%{ transform:scale(1.3) rotate(30deg); opacity:1; }
+}
+
+.live-animation-pill{
+  position:absolute; top:10px; right:10px; z-index:5;
+  background:rgba(20, 4, 15, 0.75);
+  border:1px solid rgba(255, 42, 112, 0.6);
+  border-radius:999px; padding:4px 10px;
+  font:700 10.5px/1 "Fraunces", Georgia, serif; color:#ffffff;
+  display:inline-flex; align-items:center; gap:6px;
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+.live-blip{
+  width:7px; height:7px; border-radius:50%;
+  background:#ff2a70; box-shadow:0 0 8px #ff2a70;
+  animation:blipPulse 1.2s ease-in-out infinite;
+}
+@keyframes blipPulse{
+  0%, 100%{ transform:scale(1); opacity:1; }
+  50%{ transform:scale(1.4); opacity:0.5; }
+}
+
+/* Lightbox Live Layer */
+.lightbox-img-wrap.live-hug-active img{
+  animation:liveEmbraceSway 4s ease-in-out infinite alternate;
+}
+.lightbox-live-fx{
+  position:absolute; inset:0; pointer-events:none; z-index:6;
+}
+.lightbox-live-badge{
+  position:absolute; top:14px; right:14px; z-index:7;
+  background:rgba(20, 4, 15, 0.8);
+  border:1.5px solid #ff2a70; border-radius:999px;
+  padding:6px 14px; font:700 12px/1 "Fraunces", Georgia, serif;
+  color:#ffffff; display:inline-flex; align-items:center; gap:6px;
+  backdrop-filter:blur(8px);
+}
+
+/* Reunion Duo Live Kiss Bursts */
+.live-reunion-duo .avatar-pair-wrap.live-hug-pulse{
+  animation:liveEmbraceSway 3.5s ease-in-out infinite alternate;
+}
+.reunion-kiss-bursts{
+  position:absolute; inset:0; pointer-events:none; z-index:4;
+}
+.rk-kiss{
+  position:absolute; font-size:22px;
+  animation:floatLiveKiss 2.4s ease-in-out infinite;
+}
+.rk-kiss.rk1{ top:40%; left:30%; animation-delay:0s; }
+.rk-kiss.rk2{ top:30%; left:60%; animation-delay:0.6s; }
+.rk-kiss.rk3{ top:50%; left:50%; animation-delay:1.2s; }
+.rk-kiss.rk4{ top:35%; left:40%; animation-delay:1.8s; }
+.reunion-live-pill{
+  position:absolute; bottom:-12px; left:50%;
+  transform:translateX(-50%);
+  background:#ff2a70; color:#fff;
+  border-radius:999px; padding:3px 10px;
+  font:700 10px/1 "Fraunces", Georgia, serif;
+  display:inline-flex; align-items:center; gap:5px;
+  white-space:nowrap; box-shadow:0 3px 10px rgba(255, 42, 112, 0.4);
+}
+
+/* ============================================================
+   TOP HEADER BAR & LIVE INDIA DIGITAL CLOCK (IST)
+   ============================================================ */
+.top-header-bar {
+  position: fixed;
+  top: 10px;
+  left: 0;
+  right: 0;
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  pointer-events: none;
+  gap: 12px;
+}
+
+.top-header-bar > * {
+  pointer-events: auto;
+}
+
+.top-header-bar .top-nav {
+  position: static;
+  transform: none;
+  margin: 0 auto;
+}
+
+/* Live India Time Digital Clock Widget */
+.live-clock-widget {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  background: rgba(255, 248, 242, 0.94);
+  border: 1px solid rgba(255, 42, 112, 0.35);
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(255, 42, 112, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace, sans-serif;
+  user-select: none;
+}
+
+.clock-flag {
+  font-size: 15px;
+}
+
+.clock-time {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #b81446;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 10px rgba(255, 42, 112, 0.3);
+}
+
+.clock-tz {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  background: #ff2a70;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.midnight-glow-tag {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #ff2a70, #ff758c);
+  padding: 2px 8px;
+  border-radius: 999px;
+  animation: midnightPulse 1s ease-in-out infinite alternate;
+  box-shadow: 0 0 12px #ff2a70;
+}
+
+@keyframes midnightPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  100% { transform: scale(1.08); filter: brightness(1.25); }
+}
+
+/* ============================================================
+   ROMANTIC MUSIC PLAYER WIDGET WITH PLAYLIST CHANGER
+   ============================================================ */
+.music-player-widget {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(25, 6, 18, 0.9);
+  border: 1px solid rgba(255, 42, 112, 0.45);
+  border-radius: 999px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 16px rgba(255, 42, 112, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 90vw;
+}
+
+.music-player-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(255, 42, 112, 0.4);
+}
+
+.mp-disc-wrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #333 30%, #111 70%, #ff2a70 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.mp-disc-wrap.is-spinning {
+  animation: spinDisc 3s linear infinite;
+}
+
+@keyframes spinDisc {
+  100% { transform: rotate(360deg); }
+}
+
+.mp-track-info {
+  display: flex;
+  flex-direction: column;
+  max-width: 150px;
+  overflow: hidden;
+  line-height: 1.25;
+}
+
+.mp-track-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mp-track-artist {
+  font-size: 10px;
+  color: #ff94b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mp-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.mp-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.mp-btn:hover {
+  background: rgba(255, 42, 112, 0.6);
+  transform: scale(1.1);
+}
+
+.mp-btn.mp-play {
+  background: #ff2a70;
+  width: 32px;
+  height: 32px;
+  font-size: 13px;
+  box-shadow: 0 0 10px rgba(255, 42, 112, 0.6);
+}
+
+.mp-btn.mp-play:hover {
+  background: #ff0055;
+  transform: scale(1.15);
+}
+
+/* ============================================================
+   INSTAGRAM CONTACT & DM CARD IN PAYMENT SECTION
+   ============================================================ */
+.insta-contact-card {
+  margin-top: 24px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 240, 245, 0.95));
+  border: 1.5px solid rgba(225, 48, 108, 0.35);
+  border-radius: 20px;
+  padding: 22px 20px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(225, 48, 108, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.insta-id-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1.5px solid rgba(225, 48, 108, 0.3);
+  border-radius: 999px;
+  padding: 8px 18px;
+  box-shadow: 0 4px 16px rgba(225, 48, 108, 0.12);
+  margin-bottom: 14px;
+}
+
+.insta-logo-svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.insta-id-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.insta-id-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.insta-id-handle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #e1306c;
+  letter-spacing: 0.02em;
+}
+
+.copy-insta-btn {
+  background: #f1f2f6;
+  border: 1px solid #ced6e0;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2f3542;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-insta-btn:hover {
+  background: #e1306c;
+  color: #fff;
+  border-color: #e1306c;
+}
+
+.insta-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #2d3436;
+  margin: 6px 0 8px;
+}
+
+.insta-desc {
+  font-size: 13px;
+  color: #636e72;
+  margin-bottom: 16px;
+  line-height: 1.45;
+}
+
+.insta-dm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #ffffff !important;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 12px 24px;
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(220, 39, 67, 0.4);
+  transition: all 0.25s ease;
+}
+
+.insta-dm-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 28px rgba(220, 39, 67, 0.55);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .top-header-bar {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    top: 6px;
+  }
+  .live-clock-widget {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+  .clock-time {
+    font-size: 12px;
+  }
+  .music-player-widget {
+    bottom: 12px;
+    right: 12px;
+    padding: 6px 10px;
+    gap: 8px;
+  }
+  .mp-track-info {
+    max-width: 100px;
+  }
+}
+
+/* ============================================================
+   LIVE WALLPAPER PILL & LAUNCH BUTTON
+   ============================================================ */
+.nav-wallpaper-pill {
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(255, 42, 112, 0.18), rgba(120, 40, 200, 0.22)) !important;
+  border: 1px solid rgba(255, 42, 112, 0.4) !important;
+  color: #b81446 !important;
+  display: inline-flex;
+  align-items: center;
+}
+.nav-wallpaper-pill:hover {
+  background: linear-gradient(135deg, #ff2a70, #9b51e0) !important;
+  color: #fff !important;
+  box-shadow: 0 0 14px rgba(255, 42, 112, 0.5);
+}
+
+.launch-live-wallpaper-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff2a70, #8a2be2);
+  color: #ffffff !important;
+  text-decoration: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(255, 42, 112, 0.4);
+  transition: all 0.25s ease;
+}
+.launch-live-wallpaper-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+}
+
+/* ============================================================
+   ROMANTIC LOVE PHOTO PUZZLE MODAL & GAMEPLAY
+   ============================================================ */
+.puzzle-container {
+  position: relative;
+  width: 95vw;
+  max-width: 660px;
+  max-height: 94vh;
+  overflow-y: auto;
+  background: linear-gradient(145deg, #fffcfb, #fff0f5);
+  border: 2px solid rgba(255, 42, 112, 0.35);
+  border-radius: 28px;
+  padding: 24px 20px;
+  box-shadow: 0 16px 50px rgba(120, 20, 50, 0.28), 0 0 24px rgba(255, 42, 112, 0.2);
+  text-align: center;
+  margin: auto;
+  scrollbar-width: thin;
+}
+
+.puzzle-header {
+  margin-bottom: 14px;
+}
+
+.puzzle-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 42, 112, 0.12);
+  border: 1px solid rgba(255, 42, 112, 0.3);
+  font: 700 11px/1 -apple-system, sans-serif;
+  color: #ff2a70;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.puzzle-title {
+  font: 800 24px/1.2 "Fraunces", Georgia, serif;
+  color: #4a1525;
+  margin: 0 0 4px;
+}
+
+.puzzle-sub {
+  font: 500 13px/1.4 "Cormorant Garamond", Georgia, serif;
+  color: #8a4558;
+  margin: 0;
+}
+
+/* Puzzle Mandatory Notice Banner */
+.puzzle-mandatory-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #fffbf2 0%, #fff0f5 100%);
+  border: 1.5px solid #ff9f43;
+  border-left: 5px solid #ff4757;
+  border-radius: 16px;
+  padding: 10px 14px;
+  margin: 12px auto 6px;
+  text-align: left;
+  box-shadow: 0 4px 14px rgba(255, 117, 151, 0.12);
+  max-width: 96%;
+}
+.pmb-icon-wrap {
+  font-size: 26px;
+  flex-shrink: 0;
+  animation: pmbPulse 2s infinite ease-in-out;
+}
+@keyframes pmbPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+.pmb-text-wrap {
+  flex: 1;
+}
+.pmb-heading {
+  font: 800 11.5px/1.2 -apple-system, sans-serif;
+  color: #c0392b;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+.pmb-body {
+  font: 500 12px/1.45 "Segoe UI", system-ui, sans-serif;
+  color: #4a2830;
+  margin: 0;
+}
+.pmb-highlight {
+  display: inline-block;
+  color: #b33939;
+  font-weight: 700;
+  margin-top: 3px;
+}
+
+/* Puzzle HUD */
+.puzzle-hud {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 42, 112, 0.2);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(255, 42, 112, 0.08);
+}
+
+.phud-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #555;
+}
+
+.phud-label {
+  font-weight: 600;
+}
+
+.phud-val {
+  font-weight: 800;
+  color: #b81446;
+}
+
+.puzzle-peek-btn {
+  background: #fff;
+  border: 1px solid #ff2a70;
+  color: #ff2a70;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.puzzle-peek-btn:hover {
+  background: #ff2a70;
+  color: #fff;
+}
+
+/* Puzzle Skip Buttons */
+.puzzle-skip-btn {
+  background: #f8f9fa;
+  border: 1.5px solid #dcdde1;
+  color: #718093;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.puzzle-skip-btn.is-locked {
+  background: #f1f2f6;
+  border-color: #dcdde1;
+  color: #718093;
+}
+.puzzle-skip-btn.is-unlocked {
+  background: linear-gradient(135deg, #10ac84, #1dd1a1) !important;
+  border-color: #10ac84 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(16, 172, 132, 0.4);
+  animation: skipBtnPulse 1.5s infinite alternate;
+}
+@keyframes skipBtnPulse {
+  0% { transform: scale(1); box-shadow: 0 4px 12px rgba(16, 172, 132, 0.3); }
+  100% { transform: scale(1.05); box-shadow: 0 6px 18px rgba(16, 172, 132, 0.6); }
+}
+
+.puzzle-actions-footer {
+  margin-top: 14px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.puzzle-big-skip-btn {
+  width: 100%;
+  max-width: 460px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  border: 2px dashed #ffb8b8;
+  background: #fff8f8;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.3s ease;
+}
+.puzzle-big-skip-btn .skip-big-text {
+  font: 700 14px/1.2 "Fraunces", Georgia, serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.puzzle-big-skip-btn .skip-big-sub {
+  font-size: 11.5px;
+  opacity: 0.85;
+}
+.puzzle-big-skip-btn.is-locked {
+  border-color: #e0e0e0;
+  background: #fafafa;
+  color: #7f8c8d;
+}
+.puzzle-big-skip-btn.is-locked:hover {
+  border-color: #ff9f43;
+  background: #fff9f0;
+}
+.puzzle-big-skip-btn.is-unlocked {
+  border: 2px solid #10ac84 !important;
+  background: linear-gradient(135deg, #e8f8f5, #d1f2eb) !important;
+  color: #0e6251 !important;
+  box-shadow: 0 6px 20px rgba(16, 172, 132, 0.25);
+  animation: bigSkipPulse 2s infinite ease-in-out;
+}
+@keyframes bigSkipPulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(16, 172, 132, 0.35); }
+}
+
+.win-skip-btn {
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #10ac84, #1dd1a1);
+  color: #ffffff;
+  border: none;
+  font: 700 13px/1 "Fraunces", Georgia, serif;
+  box-shadow: 0 6px 18px rgba(16, 172, 132, 0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.win-skip-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 22px rgba(16, 172, 132, 0.55);
+}
+
+/* Romantic Photo Picker Gallery */
+.puzzle-photo-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.picker-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #a81c4e;
+  letter-spacing: 0.02em;
+}
+
+.picker-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 4px 6px;
+  scrollbar-width: thin;
+}
+
+.picker-thumb {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: #ffffff;
+  border: 2px solid rgba(255, 42, 112, 0.25);
+  border-radius: 12px;
+  padding: 5px 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.picker-thumb img {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.picker-thumb span {
+  font-size: 10px;
+  font-weight: 700;
+  color: #555;
+  white-space: nowrap;
+}
+
+.picker-thumb:hover {
+  transform: translateY(-2px);
+  border-color: #ff2a70;
+  box-shadow: 0 4px 12px rgba(255, 42, 112, 0.25);
+}
+
+.picker-thumb.is-active {
+  border-color: #ff2a70;
+  background: #fff0f5;
+  box-shadow: 0 0 14px rgba(255, 42, 112, 0.45);
+}
+
+.picker-thumb.is-active span {
+  color: #ff2a70;
+}
+
+/* Yuvi Tip Banner */
+.puzzle-tip-banner {
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  border: 1.5px solid #ff9800;
+  color: #d35400;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin: 6px auto 12px;
+  max-width: 92%;
+  box-shadow: 0 4px 12px rgba(230, 81, 0, 0.15);
+  animation: bannerFade 0.4s ease;
+}
+
+@keyframes bannerFade {
+  0% { transform: translateY(-8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Puzzle Stage & Board - Enlarged and Beautiful */
+.puzzle-stage {
+  position: relative;
+  width: 100%;
+  max-width: min(480px, 88vw);
+  margin: 0 auto 16px;
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18), 0 0 24px rgba(255, 42, 112, 0.3);
+  border: 3.5px solid #ff2a70;
+  overflow: hidden;
+  background: #111;
+}
+
+@media (min-width: 768px) {
+  .puzzle-stage {
+    max-width: 500px;
+  }
+}
+
+.puzzle-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  gap: 3px;
+  background: rgba(255, 42, 112, 0.35);
+  padding: 3px;
+}
+
+.puzzle-piece {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.puzzle-piece:hover {
+  transform: scale(0.97);
+  filter: brightness(1.1);
+}
+
+.puzzle-piece.is-selected {
+  outline: 3px solid #ffd700;
+  transform: scale(0.94);
+  box-shadow: 0 0 18px #ffd700, inset 0 0 10px rgba(255, 215, 0, 0.6);
+  z-index: 5;
+  animation: selectedPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes selectedPulse {
+  0% { outline-color: #ffd700; }
+  100% { outline-color: #ff2a70; }
+}
+
+.puzzle-piece.is-matched {
+  box-shadow: inset 0 0 0 1.5px rgba(46, 204, 113, 0.85);
+}
+
+.matched-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(46, 204, 113, 0.9);
+  color: #fff;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+
+.puzzle-piece.yuvi-hint-solved {
+  animation: yuviHintFlash 2s ease-in-out forwards;
+}
+
+@keyframes yuviHintFlash {
+  0% { outline: 4px solid #ffd700; transform: scale(1.08); filter: brightness(1.3); }
+  50% { outline: 4px solid #ff2a70; transform: scale(1.04); filter: brightness(1.2); }
+  100% { outline: none; transform: scale(1); filter: brightness(1); }
+}
+
+.puzzle-board.is-completed-glowing {
+  gap: 0;
+  padding: 0;
+  border-radius: 20px;
+  box-shadow: 0 0 35px #ff2a70;
+}
+
+/* Reference Preview */
+.puzzle-ref-preview {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.puzzle-ref-preview img {
+  width: 85%;
+  height: 85%;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  border: 2px solid #ff2a70;
+}
+
+.ref-badge {
+  margin-top: 8px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 42, 112, 0.85);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* Help Area */
+.puzzle-help-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.puzzle-help-btn {
+  background: linear-gradient(135deg, #ff2a70, #ff758c);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font: 800 13.5px/1 "Fraunces", Georgia, serif;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255, 42, 112, 0.4);
+  transition: all 0.25s ease;
+  max-width: 95%;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.puzzle-help-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 26px rgba(255, 42, 112, 0.6);
+  background: linear-gradient(135deg, #ff0055, #ff5e7e);
+}
+
+.help-hint-text {
+  font-size: 11.5px;
+  color: #8a4558;
+  font-weight: 600;
+}
+
+/* Puzzle Win Card */
+.puzzle-win-card {
+  margin-top: 16px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 22px;
+  border: 2px solid #ff2a70;
+  box-shadow: 0 10px 30px rgba(255, 42, 112, 0.25);
+  animation: winCardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes winCardPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Yuvi Help Kiss Modal */
+.puzzle-help-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ph-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 4, 14, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.ph-card {
+  position: relative;
+  z-index: 2;
+  width: 92vw;
+  max-width: 440px;
+  background: #ffffff;
+  border: 2px solid #ff2a70;
+  border-radius: 26px;
+  padding: 24px 20px;
+  box-shadow: 0 16px 45px rgba(255, 42, 112, 0.35);
+  text-align: center;
+  animation: phCardPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes phCardPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.ph-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: #f1f2f6;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  color: #666;
+}
+
+.ph-yuvi-avatar {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 10px;
+  background: linear-gradient(135deg, #ffeef4, #ffd6e7);
+  border: 2px solid #ff2a70;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(255, 42, 112, 0.25);
+}
+
+.ph-yuvi-emoji {
+  font-size: 36px;
+}
+
+.ph-blush {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 20px;
+  animation: heartBeat 1.4s ease-in-out infinite;
+}
+
+.ph-title {
+  font: 800 18px/1.2 "Fraunces", Georgia, serif;
+  color: #4a1525;
+  margin: 0 0 8px;
+}
+
+.ph-speech {
+  font: 600 13.5px/1.45 "Cormorant Garamond", Georgia, serif;
+  color: #6a2538;
+  margin: 0 0 16px;
+  background: #fff8fb;
+  border: 1px solid rgba(255, 42, 112, 0.2);
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+/* Progress bar in help modal */
+.ph-progress-box {
+  margin-bottom: 16px;
+}
+
+.ph-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.ph-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #f1f2f6;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.ph-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff758c, #ff2a70);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(255, 42, 112, 0.6);
+}
+
+/* Kiss action buttons */
+.ph-kiss-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ph-kiss-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #fff2f7, #ffe4ee);
+  border: 1.5px solid rgba(255, 42, 112, 0.35);
+  border-radius: 16px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 90px;
+}
+
+.ph-kiss-btn:hover {
+  transform: translateY(-3px) scale(1.06);
+  border-color: #ff2a70;
+  box-shadow: 0 6px 18px rgba(255, 42, 112, 0.35);
+  background: #fff;
+}
+
+.ph-kiss-btn:active {
+  transform: scale(0.96);
+}
+
+.pk-icon {
+  font-size: 26px;
+}
+
+.pk-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #b81446;
+}
+
+/* Floating Kiss Stage */
+.ph-kisses-fx-stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ph-floating-kiss {
+  position: absolute;
+  font-size: 32px;
+  pointer-events: none;
+  user-select: none;
+}
+
+
+
+
+
