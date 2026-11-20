@@ -200,6 +200,18 @@ function toggleMusic() {
   }
 }
 
+
+// Reliable initial audio setup
+if (bgMusic && PLAYLIST.length) {
+  if (!bgMusic.getAttribute('src')) {
+    bgMusic.src = PLAYLIST[0].src;
+  }
+  bgMusic.preload = 'auto';
+  bgMusic.load();
+  bgMusic.addEventListener('play', () => updatePlayState(true));
+  bgMusic.addEventListener('pause', () => updatePlayState(false));
+}
+
 function nextTrack() {
   currentTrackIndex = (currentTrackIndex + 1) % PLAYLIST.length;
   loadTrack(currentTrackIndex, true);
@@ -972,6 +984,16 @@ function buildFilm(m) {
     }
   }, null, 0.26);
 
+  t.call(() => {
+    // CROSSBOW_IMPACT_AUDIO
+    if (bgMusic) {
+      userMuted = false;
+      bgMusic.muted = false;
+      bgMusic.volume = 1;
+      if (bgMusic.paused) playMusic();
+    }
+  }, null, 0.26);
+
   t.add(burstHearts, 0.26)
     .to(target, { x: 7, y: -9, duration: 0.06, ease: 'power2.out' }, 0.26)
     .to(target, { x: 0, y: 0, duration: 0.32, ease: 'power2.out' }, 0.32)
@@ -1041,6 +1063,20 @@ function speakHappyBirthdayMisty() {
 
 let played = false, drawing = false, startPX = 0, startPY = 0, startDraw = 0;
 
+
+function unlockCrossbowAudio() {
+  if (!bgMusic || !bgMusic.paused) return;
+  userMuted = false;
+  bgMusic.muted = false;
+  bgMusic.volume = 0;
+  if (!bgMusic.getAttribute('src')) {
+    bgMusic.src = PLAYLIST[currentTrackIndex].src;
+  }
+  bgMusic.play().catch(err =>
+    console.warn('Audio unlock:', err)
+  );
+}
+
 function fire() {
   if (played) return;
   played = true;
@@ -1073,13 +1109,20 @@ function autoFire() {
 
 archery.addEventListener('pointerdown', (e) => {
   if (played) return;
+  unlockCrossbowAudio();
   drawing = true;
   userMuted = false;
   if (bgMusic) {
     bgMusic.muted = false;
     bgMusic.volume = 1;
   }
-  playMusic();
+  if (bgMusic && bgMusic.paused) {
+    userMuted = false;
+    if (!bgMusic.getAttribute('src')) {
+      loadTrack(currentTrackIndex, false);
+    }
+    playMusic();
+  }
   try { archery.setPointerCapture(e.pointerId); } catch (_) {}
   startPX = e.clientX; startPY = e.clientY; startDraw = curDraw;
   e.preventDefault();
