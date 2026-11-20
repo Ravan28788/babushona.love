@@ -563,8 +563,8 @@
             <img src="./images/misty_cute_cheeks.jpg" alt="Misty Cute" />
             <span>Queen Misty 💕</span>
           </button>
-          <button class="picker-thumb" type="button" data-src="./images/neon-love-story.png" title="Yuvi & Misty Neon Love Story">
-            <img src="./images/neon-love-story.png" alt="Yuvi & Misty" />
+          <button class="picker-thumb" type="button" data-src="Yuvi and Misty’s Neon Love Story_2.png" title="Yuvi & Misty Neon Love Story">
+            <img src="Yuvi and Misty’s Neon Love Story_2.png" alt="Yuvi & Misty" />
             <span>Yuvi &amp; Misty 👩‍❤️‍👨</span>
           </button>
           <button class="picker-thumb" type="button" data-src="./images/misty_white_kurti.jpg" title="Misty Bashful Smile">
@@ -829,36 +829,10 @@
               <div class="video-frame">
                 <div class="polaroid-pin">🎬</div>
                 <video id="mistyVideo" controls playsinline loop preload="metadata" poster="./images/misty6.jpg">
-                  <source src="/images/misty_reel_final.mp4" type="video/mp4">
+                  <source src="./images/misty_video.mp4" type="video/mp4">
                   <source src="./Misty%20Photos/WhatsApp%20Video%202026-11-19%20at%2021.23.21.mp4" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
-<button id="reelPlayBtn" type="button"
-style="display:block;margin:12px auto;padding:12px 24px;
-background:#e91e63;color:white;border:0;border-radius:30px;
-font-size:16px;font-weight:bold;cursor:pointer;">
-▶ Play Memories Reel
-</button>
-
-<script>
-document.getElementById("reelPlayBtn").addEventListener("click", async function () {
-  const video = document.getElementById("mistyVideo");
-  if (!video) return;
-
-  video.src = "/images/misty_reel_final.mp4";
-  video.controls = true;
-  video.muted = false;
-
-  try {
-    await video.play();
-    this.textContent = "⏸ Pause Memories Reel";
-  } catch (error) {
-    console.error("Reel playback error:", error);
-    alert("Video could not play: " + error.message);
-  }
-});
-</script>
-
               </div>
               <div class="video-caption-box">
                 <p class="polaroid-name">Forever In Motion ♥</p>
@@ -1638,7 +1612,7 @@ document.getElementById("reelPlayBtn").addEventListener("click", async function 
     </div>
   </div>
 
-  <p class="sr-only">Happy Birthday Misty. Here&rsquo;s to a wonderful year ahead.</p>
+  <p class="sr-only">Happy Birthday celebration card. Here&rsquo;s to a wonderful year ahead.</p>
 
   <!-- Core Scripts -->
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -1685,7 +1659,7 @@ document.getElementById("reelPlayBtn").addEventListener("click", async function 
             label: '🧩 Love Puzzle',
             lockedLabel: '🔒 Love Puzzle',
             btnId: 'navPuzzleBtn',
-            requiredMsg: '🔒 Pehle Car Missions (Love Car, Thar 4x4, Misty & Yuvi) complete karo babu! 🚗🚙💖'
+            requiredMsg: '🔒 Pehle Car Missions complete karo babu! 🚗🚙💖'
           },
           gifts: {
             unlocked: false,
@@ -1863,6 +1837,12 @@ document.getElementById("reelPlayBtn").addEventListener("click", async function 
 
     document.addEventListener('DOMContentLoaded', () => {
       window.journey = new JourneyManager();
+      const p = new URLSearchParams(window.location.search);
+      const m = p.get('open_modal');
+      if (m === 'quiz') { setTimeout(() => window.loveQuest?.open(), 100); }
+      else if (m === 'game') { setTimeout(() => window.loveGame?.open(), 100); }
+      else if (m === 'puzzle') { setTimeout(() => window.lovePuzzle?.open(), 100); }
+      else if (m === 'gifts') { setTimeout(() => window.birthdayGifts?.open(), 100); }
     });
   </script>
 </body>
