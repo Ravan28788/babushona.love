@@ -59,13 +59,13 @@
       </div>
     </div>
     <audio id="bgMusic" preload="auto">
-      <source src="./music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp3" type="audio/mpeg">
+      <source src="./music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp4" type="audio/mp4">
     </audio>
 
     <canvas id="tree" class="tree" aria-label="A blossom tree grows and blooms into a heart made of petals" role="img"></canvas>
 
     <section class="hero" id="hero" aria-label="Draw the bow to open your card">
-      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="hero__bg" id="heroBg" aria-hidden="true"></div>
       <div class="hero__motes" id="motes" aria-hidden="true"></div>
 
       <p class="hero__eyebrow" id="eyebrow">a little something, for Misty ♥</p>
@@ -828,20 +828,11 @@
             <div class="video-player-wrap">
               <div class="video-frame">
                 <div class="polaroid-pin">🎬</div>
-                
-
-<div class="misty-reel-player" style="position:relative;width:100%;">
-  <video id="mistyVideo" controls playsinline preload="metadata"
-    poster="./images/misty6.jpg"
-    style="display:block;width:100%;height:auto;min-height:240px;background:#111;position:relative;z-index:1;">
-    <source src="/images/misty_original_reel.mp4?v=original1" type="video/mp4">
-  </video>
-  <button id="mistyReelPlay" type="button"
-    style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:10;background:#e92c75;color:white;border:0;border-radius:40px;padding:15px 24px;font-size:17px;cursor:pointer;box-shadow:0 4px 20px #0008;">
-    ▶ Play Reel
-  </button>
-</div>
-
+                <video id="mistyVideo" controls playsinline loop preload="metadata" poster="./images/misty6.jpg">
+                  <source src="./images/misty_video.mp4" type="video/mp4">
+                  <source src="./Misty%20Photos/WhatsApp%20Video%202026-11-19%20at%2021.23.21.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
               </div>
               <div class="video-caption-box">
                 <p class="polaroid-name">Forever In Motion ♥</p>
@@ -993,6 +984,11 @@
     </div>
   </div>
 
+  <!-- YouTube Audio Background Player Container (hidden / offscreen) -->
+  <div id="ytPlayerContainer" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0.001;pointer-events:none;z-index:-1;">
+    <div id="ytAudioPlayer"></div>
+  </div>
+
   <!-- Floating Bottom-Left Corner Admin Control Trigger -->
   <button type="button" class="admin-corner-trigger" id="adminCornerTrigger" title="Admin Control Center (Yuvi Access Only)">
     <span class="act-icon">⚙️</span>
@@ -1006,20 +1002,26 @@
       <div class="aauth-icon">🔐</div>
       <h2 class="aauth-title">Yuvi's Master Control</h2>
 
-      <!-- View 1: Standard Password Login -->
+      <!-- View 1: Standard Password & Multi-Admin Login -->
       <div id="adminLoginView">
         <p class="aauth-sub">Enter password to access full customization, link generator, and mission controls:</p>
         
         <form id="adminAuthForm" onsubmit="event.preventDefault();">
+          <div class="aauth-user-wrap" id="adminUserWrap" style="display:none; margin-bottom: 8px;">
+            <input type="text" id="adminUserInput" class="aauth-input" placeholder="Admin Username (optional)" autocomplete="username" />
+          </div>
           <div class="aauth-input-group">
             <input type="password" id="adminPassInput" class="aauth-input" placeholder="Enter Password..." autocomplete="current-password" />
             <button type="submit" id="adminLoginBtn" class="aauth-submit-btn">Unlock 🔓</button>
+          </div>
+          <div class="aauth-toggle-user-row">
+            <button type="button" class="admin-text-link" id="toggleUserFieldBtn">👤 Sub-Admin Username Login</button>
           </div>
           <div class="aauth-error-msg" id="adminAuthError" style="display:none;"></div>
         </form>
 
         <div class="aauth-meta-row">
-          <span class="aauth-hint-text">💡 Hint: <strong>Yuvi</strong></span>
+          <span class="aauth-hint-text">💡 Hint: <strong>Yuvi</strong> (or your created admin password)</span>
           <button type="button" class="admin-forgot-btn" id="adminForgotBtn">Forgot Password? 🔑</button>
         </div>
 
@@ -1074,22 +1076,288 @@
       <button class="modal-close-btn" id="closeAdminDashBtn" type="button" aria-label="Close">&times;</button>
       
       <header class="admin-dash-header">
-        <div class="admin-dash-badge">YUVIRAJ MASTER CONTROL 👑⚙️</div>
+        <div class="admin-dash-badge" id="adminDashBadge">YUVIRAJ MASTER CONTROL 👑⚙️</div>
         <h1 class="admin-dash-title">Admin Control &amp; Customization Center</h1>
         <p class="admin-dash-sub">Change names, occasions (Birthday/Anniversary), generate custom links, skip missions, and customize photos!</p>
       </header>
 
       <!-- Admin Tabs Navigation -->
       <div class="admin-tabs-nav">
-        <button class="atab-btn active" data-panel="panelGeneral" type="button">👤 Names &amp; Occasion</button>
-        <button class="atab-btn" data-panel="panelShareLink" type="button">🔗 Link Generator</button>
+        <button class="atab-btn active" data-panel="panelProfiles" type="button">👑 Profiles (Neha, Misty...)</button>
+        <button class="atab-btn" data-panel="panelThemes" type="button">🎨 Themes &amp; Styling</button>
+        <button class="atab-btn" data-panel="panelPhotos" type="button">📸 All Photos &amp; Media</button>
+        <button class="atab-btn" data-panel="panelGeneral" type="button">👤 Names &amp; Wishes</button>
+        <button class="atab-btn" data-panel="panelMusic" type="button">🎵 Add Music (YouTube)</button>
         <button class="atab-btn" data-panel="panelMissions" type="button">🚀 Missions &amp; Skip</button>
-        <button class="atab-btn" data-panel="panelPhotos" type="button">📸 Photos &amp; Media</button>
+        <button class="atab-btn" data-panel="panelAdmins" type="button">👥 Manage Admins</button>
         <button class="atab-btn" data-panel="panelPayment" type="button">💳 Payment &amp; Social</button>
       </div>
 
-      <!-- Tab Panel 1: Names & Occasion -->
-      <div class="atab-panel active" id="panelGeneral">
+      <!-- Tab Panel 1: Multi-Girl Profiles Manager (Misty, Neha, Rani...) -->
+      <div class="atab-panel active" id="panelProfiles">
+        <div class="profile-mgmt-card">
+          <div class="pmc-header">
+            <div class="pmc-badge">MULTI-CELEBRATION ENGINE 👑✨</div>
+            <h3>Celebration Profiles Manager (Neha, Misty, Rani...)</h3>
+            <p>
+              Yahan aap kisi bhi ladki (jaise <strong>Neha</strong>, <strong>Misty</strong>, <strong>Rani</strong>) ka naya profile bana sakte hain! Naya profile create karne par turant ek <strong>unique personalized link generate</strong> ho jayega, jise open karne par poori website usi ladki ke naam, photos, theme, wishes aur occasion ke sath live ho jayegi!
+            </p>
+          </div>
+
+          <!-- Section A: Create / Edit Profile Form -->
+          <div class="pmc-form-box">
+            <h4 class="pmc-box-title" id="profFormTitle">✨ Create / Edit Celebration Profile</h4>
+            <form id="profileForm" onsubmit="event.preventDefault();">
+              <input type="hidden" id="profEditId" value="" />
+
+              <div class="admin-grid-2">
+                <div class="form-group">
+                  <label for="profName">👑 Girl's Name (Recipient):</label>
+                  <input type="text" id="profName" class="admin-input" placeholder="e.g. Neha, Rani, Pooja..." />
+                  <span class="field-hint">Website par har jagah ye naam show hoga!</span>
+                </div>
+                <div class="form-group">
+                  <label for="profSender">🤴 Boy's Name (Sender):</label>
+                  <input type="text" id="profSender" class="admin-input" placeholder="e.g. Yuvi" value="Yuvi" />
+                </div>
+              </div>
+
+              <div class="admin-grid-3">
+                <div class="form-group">
+                  <label for="profNickname">Pet Name / Nickname:</label>
+                  <input type="text" id="profNickname" class="admin-input" placeholder="e.g. Babu Shona, Princess" value="Babu Shona" />
+                </div>
+                <div class="form-group">
+                  <label for="profOccasion">Occasion Type:</label>
+                  <select id="profOccasion" class="admin-input admin-select">
+                    <option value="birthday">🎂 Birthday Celebration</option>
+                    <option value="anniversary">💍 Anniversary Celebration</option>
+                    <option value="love">💖 Love &amp; Romantic Surprise</option>
+                    <option value="valentine">🌹 Valentine's Special</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="profThemeSelect">🎨 Theme Style:</label>
+                  <select id="profThemeSelect" class="admin-input admin-select">
+                    <option value="rose-pink">🌹 Romantic Rose Pink (Default)</option>
+                    <option value="midnight-neon">🔮 Midnight Purple &amp; Neon</option>
+                    <option value="royal-wine-gold">🍷 Royal Wine &amp; Gold</option>
+                    <option value="sunset-peach">🍑 Sunset Peach &amp; Coral</option>
+                    <option value="emerald-fantasy">🌿 Enchanted Emerald</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="profWish">Custom Tagline / Subtitle:</label>
+                <input type="text" id="profWish" class="admin-input" placeholder="e.g. to us and a love that blooms forever" value="to us and a love that blooms" />
+              </div>
+
+              <div class="form-group">
+                <label for="profVoice">🔊 Spoken Voice Wish (Text-to-Speech):</label>
+                <input type="text" id="profVoice" class="admin-input" placeholder="e.g. Happy Birthday Neha!" value="Happy Birthday Neha!" />
+              </div>
+
+              <div class="form-group">
+                <label for="profLetter">💌 Custom Romantic Love Letter:</label>
+                <textarea id="profLetter" class="admin-textarea" rows="3" placeholder="Write custom sweet message for her..."></textarea>
+              </div>
+
+              <div class="pmc-actions-row">
+                <button type="button" id="profSaveBtn" class="pmc-btn save-btn">
+                  💾 Save &amp; Create Profile 🚀
+                </button>
+                <button type="button" id="profResetFormBtn" class="pmc-btn clear-btn">
+                  ➕ New Blank Profile
+                </button>
+              </div>
+
+              <div class="pmc-status-banner" id="profStatusBanner" style="display:none;"></div>
+            </form>
+          </div>
+
+          <!-- Section B: Shareable Link Box -->
+          <div class="pmc-link-box" id="profLinkCard">
+            <h4 class="pmc-box-title">🔗 Generated Unique Shareable Link</h4>
+            <div class="link-output-group">
+              <input type="text" id="profShareLinkInput" class="admin-input link-input" readonly />
+              <button type="button" id="profCopyShareLinkBtn" class="admin-action-btn primary-action">📋 Copy Profile Link</button>
+              <button type="button" id="profOpenShareLinkBtn" class="admin-action-btn secondary-action">🚀 Test Link in New Tab</button>
+            </div>
+            <span class="field-hint">Ye link kisi ko bhi share karein—chahe phone par khole ya computer par, website automatically is ladki ke profile se open hogi!</span>
+          </div>
+
+          <!-- Section C: Saved Profiles List -->
+          <div class="pmc-list-section">
+            <h4 class="pmc-box-title">📋 Saved Celebration Profiles</h4>
+            <div class="pmc-profiles-container" id="profilesListContainer">
+              <!-- Rendered dynamically by admin.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel 2: Themes & Styling -->
+      <div class="atab-panel" id="panelThemes">
+        <div class="themes-card">
+          <div class="tc-header">
+            <h3>🎨 Visual Website Themes (5 Luxury Color Palettes)</h3>
+            <p>Poori website ka visual mood, neon glow, button accents aur background vibe ek click mein change karein:</p>
+          </div>
+
+          <div class="theme-grid">
+            <div class="theme-card-option" data-theme="rose-pink">
+              <div class="tco-preview rose-preview">
+                <span class="tco-dot dot-1" style="background:#ff2a70;"></span>
+                <span class="tco-dot dot-2" style="background:#ff5f86;"></span>
+                <span class="tco-dot dot-3" style="background:#6e0a31;"></span>
+              </div>
+              <div class="tco-title">🌹 Romantic Rose Pink (Default)</div>
+              <div class="tco-desc">Classic romance, soft pink neon, warm paper and rose glow.</div>
+              <button type="button" class="tco-btn" data-settheme="rose-pink">Apply Theme ✨</button>
+            </div>
+
+            <div class="theme-card-option" data-theme="midnight-neon">
+              <div class="tco-preview neon-preview">
+                <span class="tco-dot dot-1" style="background:#be2edd;"></span>
+                <span class="tco-dot dot-2" style="background:#8e44ad;"></span>
+                <span class="tco-dot dot-3" style="background:#2c003e;"></span>
+              </div>
+              <div class="tco-title">🔮 Midnight Purple &amp; Neon</div>
+              <div class="tco-desc">Dreamy starry night, glowing neon purple &amp; lilac romance.</div>
+              <button type="button" class="tco-btn" data-settheme="midnight-neon">Apply Theme ✨</button>
+            </div>
+
+            <div class="theme-card-option" data-theme="royal-wine-gold">
+              <div class="tco-preview wine-preview">
+                <span class="tco-dot dot-1" style="background:#e74c3c;"></span>
+                <span class="tco-dot dot-2" style="background:#f1c40f;"></span>
+                <span class="tco-dot dot-3" style="background:#3d070b;"></span>
+              </div>
+              <div class="tco-title">🍷 Royal Wine &amp; Golden Luxury</div>
+              <div class="tco-desc">Deep crimson velvet, royal golden borders &amp; passionate luxury.</div>
+              <button type="button" class="tco-btn" data-settheme="royal-wine-gold">Apply Theme ✨</button>
+            </div>
+
+            <div class="theme-card-option" data-theme="sunset-peach">
+              <div class="tco-preview peach-preview">
+                <span class="tco-dot dot-1" style="background:#ff793f;"></span>
+                <span class="tco-dot dot-2" style="background:#fed330;"></span>
+                <span class="tco-dot dot-3" style="background:#4e1d03;"></span>
+              </div>
+              <div class="tco-title">🍑 Sunset Peach &amp; Coral</div>
+              <div class="tco-desc">Warm golden hour, soft sunset glow &amp; aesthetic peach warmth.</div>
+              <button type="button" class="tco-btn" data-settheme="sunset-peach">Apply Theme ✨</button>
+            </div>
+
+            <div class="theme-card-option" data-theme="emerald-fantasy">
+              <div class="tco-preview emerald-preview">
+                <span class="tco-dot dot-1" style="background:#2ed573;"></span>
+                <span class="tco-dot dot-2" style="background:#10ac84;"></span>
+                <span class="tco-dot dot-3" style="background:#05231a;"></span>
+              </div>
+              <div class="tco-title">🌿 Enchanted Emerald Fantasy</div>
+              <div class="tco-desc">Fairytale forest, mystical emerald green &amp; sparkling fairy dust.</div>
+              <button type="button" class="tco-btn" data-settheme="emerald-fantasy">Apply Theme ✨</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel 3: All Photos & Media (Complete 8-Photo Customizer) -->
+      <div class="atab-panel" id="panelPhotos">
+        <div class="photos-mgmt-card">
+          <div class="pmc-header">
+            <h3>📸 All Website Photos &amp; Media Customizer (8 Photos)</h3>
+            <p>Website ke andar ki har ek photo aur video change karein (File upload karein ya image URL paste karein):</p>
+          </div>
+
+          <div class="photos-control-grid">
+            <div class="photo-card-item">
+              <div class="pci-header">
+                <h4>🌌 1. Background Theme Wallpaper</h4>
+                <span class="pci-tag">Main Scene</span>
+              </div>
+              <p>Main website wallpaper background photo:</p>
+              <input type="file" id="adminUploadBg" accept="image/*" class="admin-file-input" />
+              <input type="url" id="adminUrlBg" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
+            </div>
+
+            <div class="photo-card-item">
+              <div class="pci-header">
+                <h4>👸 2. Main Girl Portrait Photo</h4>
+                <span class="pci-tag">Toasts &amp; Lightbox</span>
+              </div>
+              <p>Girl's profile photo in notifications, dialogs &amp; frames:</p>
+              <input type="file" id="adminUploadPortrait" accept="image/*" class="admin-file-input" />
+              <input type="url" id="adminUrlPortrait" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
+            </div>
+
+            <div class="photo-card-item">
+              <div class="pci-header">
+                <h4>🧩 3. Love Photo Puzzle Image</h4>
+                <span class="pci-tag">3x3 Jigsaw Game</span>
+              </div>
+              <p>Puzzle game solve karne ke liye photo:</p>
+              <input type="file" id="adminUploadPuzzle" accept="image/*" class="admin-file-input" />
+              <input type="url" id="adminUrlPuzzle" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
+            </div>
+
+            <div class="photo-card-item">
+              <div class="pci-header">
+                <h4>👩‍❤️‍💋‍👨 4. Live Hug &amp; Kiss Couple Photo</h4>
+                <span class="pci-tag">Gift #4 &amp; Wallpaper</span>
+              </div>
+              <p>Gift #4 live animated wallpaper photo:</p>
+              <input type="file" id="adminUploadHug" accept="image/*" class="admin-file-input" />
+              <input type="url" id="adminUrlHug" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
+            </div>
+
+            <div class="photo-card-item">
+              <div class="pci-header">
+                <h4>👗 5. Gift 1: Princess Royal Dress</h4>
+                <span class="pci-tag">Gift Showcase</span>
+              </div>
+              <p>Gift #1 princess gown photo:</p>
+              <input type="file" id="adminUploadGiftDress" accept="image/*" class="admin-file-input" />
+              <input type="url" id="adminUrlGiftDress" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
+            </div>
+
+            <div class="photo-card-item">
+              <div class="pci-header">
+                <h4>🚙 6. Gift 2: Mahindra Thar 4x4</h4>
+                <span class="pci-tag">Dream Car</span>
+              </div>
+              <p>Gift #2 Thar 4x4 vehicle photo:</p>
+              <input type="file" id="adminUploadGiftThar" accept="image/*" class="admin-file-input" />
+              <input type="url" id="adminUrlGiftThar" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
+            </div>
+
+            <div class="photo-card-item">
+              <div class="pci-header">
+                <h4>🎮 7. Gift 3: PS5 + GTA 6 Gaming</h4>
+                <span class="pci-tag">Console &amp; Games</span>
+              </div>
+              <p>Gift #3 PlayStation 5 console photo:</p>
+              <input type="file" id="adminUploadGiftPs5" accept="image/*" class="admin-file-input" />
+              <input type="url" id="adminUrlGiftPs5" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
+            </div>
+
+            <div class="photo-card-item">
+              <div class="pci-header">
+                <h4>💳 8. Payment UPI QR Code Photo</h4>
+                <span class="pci-tag">Payment Frame</span>
+              </div>
+              <p>Step 5 mein display hone wala QR code:</p>
+              <input type="file" id="adminUploadPaymentQr" accept="image/*" class="admin-file-input" />
+              <input type="url" id="adminUrlPaymentQr" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel 4: Names & Wishes -->
+      <div class="atab-panel" id="panelGeneral">
         <div class="admin-grid-2">
           <div class="form-group">
             <label for="adminToName">Recipient Girl's Name:</label>
@@ -1198,36 +1466,119 @@
         </div>
       </div>
 
-      <!-- Tab Panel 4: Photos & Media -->
-      <div class="atab-panel" id="panelPhotos">
-        <div class="photos-control-grid">
-          <div class="photo-card-item">
-            <h4>🌌 Background Theme Wallpaper</h4>
-            <p>Main website wallpaper photo change karein:</p>
-            <input type="file" id="adminUploadBg" accept="image/*" class="admin-file-input" />
+
+
+      <!-- Tab Panel 5: Music & YouTube Songs Snippet Manager -->
+      <div class="atab-panel" id="panelMusic">
+        <div class="music-admin-card">
+          <div class="mac-header">
+            <h3>🎵 YouTube Music &amp; Snippet Hook Player</h3>
+            <p>YouTube se kisi bhi romantic song ka link paste karein aur portal playlist me add karein. Song ka <strong>sirf main point / romantic hook</strong> play hoga, full song play nahi hoga!</p>
           </div>
 
-          <div class="photo-card-item">
-            <h4>👸 Main Girl Portrait Photo</h4>
-            <p>Modal &amp; Toast photo change karein:</p>
-            <input type="file" id="adminUploadPortrait" accept="image/*" class="admin-file-input" />
+          <div class="mac-form-box">
+            <div class="form-group">
+              <label for="adminYtUrl">🔗 YouTube Song URL:</label>
+              <input type="text" id="adminYtUrl" class="admin-input" placeholder="e.g. https://www.youtube.com/watch?v=... ya https://youtu.be/..." />
+              <span class="field-hint">YouTube watch link, youtu.be, shorts ya embed link paste karein</span>
+            </div>
+
+            <div class="admin-grid-2">
+              <div class="form-group">
+                <label for="adminYtTitle">Song Title:</label>
+                <input type="text" id="adminYtTitle" class="admin-input" placeholder="e.g. Tum Hi Ho ❤️" />
+              </div>
+              <div class="form-group">
+                <label for="adminYtArtist">Artist / Singer:</label>
+                <input type="text" id="adminYtArtist" class="admin-input" placeholder="e.g. Arijit Singh" />
+              </div>
+            </div>
+
+            <div class="admin-grid-2">
+              <div class="form-group">
+                <label for="adminYtStart">⏱️ Main Hook Start Time (seconds ya mm:ss):</label>
+                <input type="text" id="adminYtStart" class="admin-input" placeholder="e.g. 0:45 ya 45" value="0:30" />
+                <span class="field-hint">Romantic chorus hook kahan se shuru ho</span>
+              </div>
+              <div class="form-group">
+                <label for="adminYtEnd">⏹️ Snippet End Time (seconds ya mm:ss):</label>
+                <input type="text" id="adminYtEnd" class="admin-input" placeholder="e.g. 1:25 ya 85" value="1:20" />
+                <span class="field-hint">Sirf itna hi play hoga, fir next romantic song aayega</span>
+              </div>
+            </div>
+
+            <div class="mac-actions-row">
+              <button type="button" id="adminAddSongBtn" class="mac-btn add-btn">
+                ➕ Add Song to Portal Playlist
+              </button>
+              <button type="button" id="adminTestSongBtn" class="mac-btn test-btn">
+                ▶️ Test Play Snippet (Check Hook)
+              </button>
+              <button type="button" id="adminStopTestBtn" class="mac-btn stop-btn" style="display:none;">
+                ⏹️ Stop Preview
+              </button>
+            </div>
+            <div class="mac-status-msg" id="macStatusMsg" style="display:none;"></div>
           </div>
 
-          <div class="photo-card-item">
-            <h4>🧩 Love Photo Puzzle Image</h4>
-            <p>3x3 jigsaw puzzle ke liye custom photo:</p>
-            <input type="file" id="adminUploadPuzzle" accept="image/*" class="admin-file-input" />
-          </div>
-
-          <div class="photo-card-item">
-            <h4>👩‍❤️‍💋‍👨 Live Hug &amp; Kiss Wallpaper Photo</h4>
-            <p>Gift #4 live animated wallpaper photo:</p>
-            <input type="file" id="adminUploadHug" accept="image/*" class="admin-file-input" />
+          <div class="mac-playlist-section">
+            <h4 class="mac-sub-title">🎶 Live Romantic Playlist (Built-in + Custom YouTube Songs)</h4>
+            <div class="mac-playlist-list" id="adminPlaylistContainer">
+              <!-- Rendered dynamically by admin.js -->
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Tab Panel 5: Payment & Social -->
+      <!-- Tab Panel 6: Multi-Admin Creator & Manager -->
+      <div class="atab-panel" id="panelAdmins">
+        <div class="admins-mgmt-card">
+          <div class="amc-header">
+            <h3>👥 Multi-Admin Management (Create More Admins)</h3>
+            <p>Aap naye admins bana sakte hain. Naye banaye gaye admin ko bhi login karne par <strong>wahi saare full control options</strong> milenge jo main admin ko milte hain (names, photos, music, link generator, mission skip, payment)!</p>
+          </div>
+
+          <div class="amc-create-box">
+            <h4 class="amc-box-title">➕ Create New Admin Account</h4>
+            <form id="createAdminForm" onsubmit="event.preventDefault();">
+              <div class="admin-grid-3">
+                <div class="form-group">
+                  <label for="newAdminName">Admin Display Name:</label>
+                  <input type="text" id="newAdminName" class="admin-input" placeholder="e.g. Aary, Rahul" />
+                </div>
+                <div class="form-group">
+                  <label for="newAdminUser">Admin Username / ID:</label>
+                  <input type="text" id="newAdminUser" class="admin-input" placeholder="e.g. aary, admin2" />
+                </div>
+                <div class="form-group">
+                  <label for="newAdminPass">Admin Password:</label>
+                  <input type="password" id="newAdminPass" class="admin-input" placeholder="e.g. Aary@123" />
+                </div>
+              </div>
+
+              <div class="amc-perms-badge">
+                🛡️ Permissions: <strong>Full Admin Access</strong> (Same rights as Master Admin Yuvi)
+              </div>
+
+              <div class="amc-actions-row">
+                <button type="button" id="createAdminBtn" class="amc-create-btn">
+                  👑 Create Admin Account
+                </button>
+              </div>
+              <div class="amc-status-msg" id="amcStatusMsg" style="display:none;"></div>
+            </form>
+          </div>
+
+          <div class="amc-list-section">
+            <h4 class="amc-box-title">📋 Active Administrators</h4>
+            <div class="amc-admins-list" id="adminUsersContainer">
+              <!-- Rendered dynamically by admin.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel 7: Payment & Social -->
       <div class="atab-panel" id="panelPayment">
         <div class="admin-grid-3">
           <div class="form-group">
@@ -1264,6 +1615,7 @@
   <p class="sr-only">Happy Birthday Misty. Here&rsquo;s to a wonderful year ahead.</p>
 
   <!-- Core Scripts -->
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script src="./sound.js"></script>
   <script src="./heartClicks.js" defer></script>
   <script src="./birthday.js" defer></script>
@@ -1487,77 +1839,5 @@
       window.journey = new JourneyManager();
     });
   </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const video = document.getElementById('mistyVideo');
-  const btn = document.getElementById('mistyReelPlayBtn');
-  if (!video || !btn) return;
-
-  video.controls = true;
-
-  btn.addEventListener('click', async () => {
-    try {
-      if (video.paused) {
-        await video.play();
-      } else {
-        video.pause();
-      }
-    } catch (err) {
-      console.error('Reel playback error:', err);
-      alert('Video could not play: ' + err.message);
-    }
-  });
-
-  video.addEventListener('play', () => {
-    btn.textContent = '⏸ Pause Romantic Reel';
-  });
-  video.addEventListener('pause', () => {
-    btn.textContent = '▶ Play Romantic Reel';
-  });
-});
-</script>
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const video = document.getElementById("mistyVideo");
-  const button = document.getElementById("mistyReelPlay");
-  if (!video || !button) return;
-
-  button.addEventListener("click", async function (event) {
-    event.stopPropagation();
-    if (!video.paused) {
-      video.pause();
-      return;
-    }
-    try {
-      video.muted = false;
-      await video.play();
-    } catch (err) {
-      console.error("Reel playback:", err);
-      button.textContent = "Video playback failed";
-    }
-  });
-
-  video.addEventListener("playing", () => {
-    button.style.display = "none";
-  });
-  video.addEventListener("pause", () => {
-    button.style.display = "block";
-    button.textContent = "▶ Resume Reel";
-  });
-  video.addEventListener("ended", () => {
-    button.style.display = "block";
-    button.textContent = "▶ Replay Reel";
-  });
-  video.addEventListener("error", () => {
-    button.style.display = "block";
-    button.textContent = "Video playback error";
-    console.error("Reel media error:", video.error);
-  });
-});
-</script>
-
 </body>
 </html>
