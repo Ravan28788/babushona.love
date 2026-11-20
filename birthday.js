@@ -959,6 +959,19 @@ function buildFilm(m) {
     .to(aim, { opacity: 0, duration: 0.18 }, 0)
     .to([eyebrow, hint], { opacity: 0, duration: 0.2, ease: 'power1.out' }, 0);
 
+  t.call(() => {
+    userMuted = false;
+    if (bgMusic) {
+      bgMusic.muted = false;
+      bgMusic.volume = 1;
+      bgMusic.play().then(() => {
+        updatePlayState(true);
+      }).catch(err => {
+        console.warn("Crossbow music failed:", err);
+      });
+    }
+  }, null, 0.26);
+
   t.add(burstHearts, 0.26)
     .to(target, { x: 7, y: -9, duration: 0.06, ease: 'power2.out' }, 0.26)
     .to(target, { x: 0, y: 0, duration: 0.32, ease: 'power2.out' }, 0.32)
