@@ -1,0 +1,1482 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Happy Birthday Misty ♥</title>
+  <meta name="description" content="An interactive birthday celebration card for Misty." />
+  <meta name="theme-color" content="#f7e7dc" />
+  <link rel="icon" type="image/png" href="./favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&display=swap" rel="stylesheet" />
+
+  <script src="./gsap.min.js"></script>
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./birthday.css" />
+  <link rel="stylesheet" href="./admin.css" />
+</head>
+<body>
+  <main class="scene">
+
+    <!-- Top Navigation Bar & Live India Digital Clock Header -->
+    <header class="top-header-bar">
+      <!-- Live India Standard Time (IST) Digital Clock Widget -->
+      <div class="live-clock-widget" id="liveClockWidget" title="Live Indian Standard Time (IST)">
+        <span class="clock-flag">🇮🇳</span>
+        <span class="clock-time" id="clockTime">12:00:00 AM</span>
+        <span class="clock-tz">IST</span>
+        <span class="midnight-glow-tag" id="midnightGlowTag" style="display:none;">🎂 12:00 MIDNIGHT! 🎉</span>
+      </div>
+
+      <nav class="top-nav" id="topNav" aria-label="Journey Navigation">
+        <button class="nav-pill active" id="navIntroBtn" type="button">🌸 Intro Tree</button>
+        <button class="nav-pill is-locked" id="navQuizBtn" type="button">🔒 Love Quiz</button>
+        <button class="nav-pill is-locked" id="navGameBtn" type="button">🔒 Car Mission</button>
+        <button class="nav-pill is-locked" id="navPuzzleBtn" type="button">🔒 Love Puzzle</button>
+        <button class="nav-pill is-locked" id="navGiftsBtn" type="button">🔒 Birthday Gifts</button>
+        <a class="nav-pill nav-wallpaper-pill" href="live-wallpaper.html" target="_blank" title="Yuvi &amp; Misty Live Wallpaper">✨ Live Wallpaper</a>
+        <button class="nav-pill nav-pay-pill is-locked" id="navPayBtn" type="button">🔒 Pay 143</button>
+      </nav>
+      <!-- Floating Journey Lock Notification Toast -->
+      <div class="journey-lock-toast" id="journeyLockToast" style="display:none;"></div>
+    </header>
+
+    <!-- Floating Romantic Music Player Bar with Playlist & Track Controls -->
+    <div class="music-player-widget" id="musicPlayerWidget">
+      <div class="mp-disc-wrap" id="musicDisc">
+        <span class="mp-disc-icon">🎵</span>
+      </div>
+      <div class="mp-track-info" id="mpTrackInfo">
+        <span class="mp-track-title" id="mpTrackTitle">Ho Gaya Hai Pyaar ❤️</span>
+        <span class="mp-track-artist" id="mpTrackArtist">Yasser Desai</span>
+      </div>
+      <div class="mp-controls">
+        <button class="mp-btn mp-prev" id="mpPrevBtn" type="button" title="Previous Song" aria-label="Previous Song">⏮️</button>
+        <button class="mp-btn mp-play" id="mpPlayBtn" type="button" title="Play / Pause" aria-label="Play / Pause">▶️</button>
+        <button class="mp-btn mp-next" id="mpNextBtn" type="button" title="Next Song" aria-label="Next Song">⏭️</button>
+      </div>
+    </div>
+    <audio id="bgMusic" preload="auto">
+      <source src="./music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp3" type="audio/mpeg">
+    </audio>
+
+    <canvas id="tree" class="tree" aria-label="A blossom tree grows and blooms into a heart made of petals" role="img"></canvas>
+
+    <section class="hero" id="hero" aria-label="Draw the bow to open your card">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="hero__motes" id="motes" aria-hidden="true"></div>
+
+      <p class="hero__eyebrow" id="eyebrow">a little something, for Misty ♥</p>
+
+      <div class="targetWrap" aria-hidden="true">
+        <div class="target" id="target">
+          <span class="heart__glow" aria-hidden="true"></span>
+          <span class="target__heart" id="targetHeart">
+            <svg class="heart__svg" viewBox="0 0 100 92" aria-hidden="true">
+              <defs>
+                <radialGradient id="hg" cx="38%" cy="30%" r="80%">
+                  <stop offset="0%"  stop-color="#ffd9e4" />
+                  <stop offset="42%" stop-color="#ff6f97" />
+                  <stop offset="82%" stop-color="#d81e57" />
+                  <stop offset="100%" stop-color="#9d0f3e" />
+                </radialGradient>
+                <linearGradient id="hsheen" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"  stop-color="rgba(255,255,255,.85)" />
+                  <stop offset="34%" stop-color="rgba(255,255,255,0)" />
+                </linearGradient>
+              </defs>
+              <path d="M50 86.5C26 68 10.5 53.6 10.5 34.6 10.5 20.4 21 11 33.2 11c8.6 0 14.2 4.7 16.8 11.4C52.6 15.7 58.2 11 66.8 11 79 11 89.5 20.4 89.5 34.6 89.5 53.6 74 68 50 86.5Z" fill="url(#hg)" />
+              <path d="M50 86.5C26 68 10.5 53.6 10.5 34.6 10.5 20.4 21 11 33.2 11c8.6 0 14.2 4.7 16.8 11.4C52.6 15.7 58.2 11 66.8 11 79 11 89.5 20.4 89.5 34.6 89.5 53.6 74 68 50 86.5Z" fill="url(#hsheen)" opacity=".7" />
+              <ellipse cx="34" cy="30" rx="8.5" ry="5.4" fill="#fff" opacity=".72" style="mix-blend-mode:screen" />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <div class="archery" id="archery" role="button" tabindex="0"
+           aria-label="Draw the bow and release to send the arrow to the heart">
+
+          <div class="aim" id="aim" aria-hidden="true"></div>
+
+          <svg class="bow" id="bow" viewBox="0 0 460 300" aria-hidden="true">
+            <defs>
+              <linearGradient id="limb" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0"   stop-color="#4a2a1a" />
+                <stop offset=".18" stop-color="#6b3f24" />
+                <stop offset=".5"  stop-color="#8a5127" />
+                <stop offset=".82" stop-color="#6b3f24" />
+                <stop offset="1"   stop-color="#4a2a1a" />
+              </linearGradient>
+              <linearGradient id="limbHi" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="rgba(255,214,160,.8)" />
+                <stop offset="1" stop-color="rgba(255,214,160,0)" />
+              </linearGradient>
+              <linearGradient id="grip" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#2a1a10" />
+                <stop offset=".5" stop-color="#5a3822" />
+                <stop offset="1" stop-color="#2a1a10" />
+              </linearGradient>
+            </defs>
+            <path class="bow__limb" d="M34 96 C 118 168, 168 240, 230 252 C 292 240, 342 168, 426 96"
+                  fill="none" stroke="url(#limb)" stroke-width="13" stroke-linecap="round" />
+            <path class="bow__limbHi" d="M34 96 C 118 168, 168 240, 230 252 C 292 240, 342 168, 426 96"
+                  fill="none" stroke="url(#limbHi)" stroke-width="3" stroke-linecap="round" opacity=".7" />
+            <path d="M34 96 C 22 82, 26 70, 40 66" fill="none" stroke="url(#limb)" stroke-width="8" stroke-linecap="round" />
+            <path d="M426 96 C 438 82, 434 70, 420 66" fill="none" stroke="url(#limb)" stroke-width="8" stroke-linecap="round" />
+            <rect x="216" y="206" width="28" height="70" rx="9" fill="url(#grip)" />
+            <path d="M219 220h22 M219 236h22 M219 252h22" stroke="rgba(0,0,0,.35)" stroke-width="2" />
+            <line class="bow__str" id="strL" x1="40" y1="70" x2="230" y2="96" stroke="#9a8068" stroke-width="2.2" stroke-linecap="round" />
+            <line class="bow__str" id="strR" x1="420" y1="70" x2="230" y2="96" stroke="#9a8068" stroke-width="2.2" stroke-linecap="round" />
+            <circle class="bow__serving" id="serving" cx="230" cy="96" r="4.5" fill="#6f5137" />
+          </svg>
+
+          <svg class="arrow" id="arrow" viewBox="0 0 64 220" aria-hidden="true">
+            <defs>
+              <linearGradient id="shaft" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#4a2c14" />
+                <stop offset=".5" stop-color="#8a5a2c" />
+                <stop offset="1" stop-color="#3e2410" />
+              </linearGradient>
+              <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ffe38c" />
+                <stop offset=".45" stop-color="#f4a626" />
+                <stop offset="1" stop-color="#a85f0e" />
+              </linearGradient>
+              <linearGradient id="feath" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ff7f9c" />
+                <stop offset=".5" stop-color="#e6396a" />
+                <stop offset="1" stop-color="#a8154a" />
+              </linearGradient>
+              <linearGradient id="wing" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#ffffff" />
+                <stop offset="1" stop-color="#ffe0c4" />
+              </linearGradient>
+            </defs>
+
+            <rect x="29.4" y="30" width="5.2" height="168" rx="2.6" fill="url(#shaft)" />
+
+            <g class="arrow__wings">
+              <path class="wingL" d="M31 30 C 10 16, 2 20, 4 34 C 12 30, 20 32, 31 40 Z" fill="url(#wing)" stroke="rgba(196,132,58,.72)" stroke-width="1.2"/>
+              <path class="wingR" d="M33 30 C 54 16, 62 20, 60 34 C 52 30, 44 32, 33 40 Z" fill="url(#wing)" stroke="rgba(196,132,58,.72)" stroke-width="1.2"/>
+            </g>
+
+            <path class="arrow__head" d="M32 12 C 30 7, 22 6.5, 21.5 13 C 21 18, 27 22, 32 27 C 37 22, 43 18, 42.5 13 C 42 6.5, 34 7, 32 12 Z" fill="url(#gold)" stroke="#a5701a" stroke-width=".8" />
+            <ellipse cx="27" cy="13" rx="2.6" ry="1.7" fill="#fff" opacity=".8" style="mix-blend-mode:screen" />
+
+            <g class="arrow__fletch">
+              <path d="M32 150 C 16 156, 10 178, 15 200 C 24 194, 30 184, 32 176 Z" fill="url(#feath)" />
+              <path d="M32 150 C 48 156, 54 178, 49 200 C 40 194, 34 184, 32 176 Z" fill="url(#feath)" opacity=".92" />
+              <path d="M28 160l4 3 M26 170l6 3 M25 180l7 3" stroke="rgba(130,12,48,.45)" stroke-width="1" />
+              <path d="M36 160l-4 3 M38 170l-6 3 M39 180l-7 3" stroke="rgba(130,12,48,.45)" stroke-width="1" />
+            </g>
+            <path d="M29 200 L32 205 L35 200" fill="none" stroke="#c9a25a" stroke-width="2" stroke-linecap="round"/>
+            <circle id="tip" cx="32" cy="9" r="0.6" fill="none" />
+          </svg>
+      </div>
+
+      <p class="hero__hint" id="hint">pull &amp; release</p>
+    </section>
+
+    <div class="flood" id="flood" aria-hidden="true"></div>
+
+    <div class="field" id="field" aria-hidden="true">
+      <div class="blob blob--1"></div>
+      <div class="blob blob--2"></div>
+      <div class="blob blob--3"></div>
+      <div class="fgrid" id="fgrid"></div>
+      <div class="fvignette"></div>
+
+      <div class="camera" id="camera">
+        <p class="kEyebrow" id="kEyebrow">make a wish&hellip;</p>
+        <h2 class="headline" id="headline">
+          <span class="hl__line"><span class="mask"><span class="hl__word" id="wLine1">Happy Birthday</span></span></span>
+          <span class="hl__line"><span class="mask"><span class="hl__word" id="wLine2">Misty</span></span></span>
+        </h2>
+        <svg class="uline" id="uline" viewBox="0 0 300 26" fill="none" aria-hidden="true">
+          <path class="uline__path" d="M8 16C56 7 132 4 178 6c30 1 78 5 114 12-40 3-108 4-176 3"
+                stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <p class="kSub" id="kSub">to the sweetest soul in the world</p>
+      </div>
+
+      <div class="bar bar--top" id="barTop"></div>
+      <div class="bar bar--bot" id="barBot"></div>
+    </div>
+
+    <div class="bloom" id="bloom" aria-hidden="true"></div>
+
+    <div class="wish" id="wish" aria-hidden="true">
+      <p class="wish__eyebrow" id="wEyebrow">forever &amp; always</p>
+      <div class="wish__heroWrap"><h1 class="wish__hero" id="wHero">Happy Birthday, Misty</h1></div>
+      <span class="wish__rule" id="wRule"></span>
+      <p class="wish__sub" id="wSub">to us and a love that blooms</p>
+      <button class="start-quest-btn" id="startQuestBtn" type="button">
+        💌 Start Misty's Love Quest &amp; Game ✨
+      </button>
+    </div>
+
+    <button class="replay" id="replay" type="button" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="15" height="15">
+        <path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor" />
+      </svg>
+      Again
+    </button>
+
+    <div class="grade" aria-hidden="true">
+      <div class="grade__vignette"></div>
+      <div class="grade__grain"></div>
+    </div>
+  </main>
+
+  <!-- 10 Love Questions Quest Modal -->
+  <div class="modal-overlay" id="questModal" aria-modal="true" role="dialog">
+    <div class="quest-card" id="questCard">
+      <button class="modal-close-btn" id="closeQuestBtn" type="button" aria-label="Close Quiz">&times;</button>
+      <div class="quest-progress">
+        <div class="quest-badge" id="qBadge">Question 1 of 10 💕</div>
+        <div class="quest-progress-track">
+          <div class="quest-progress-fill" id="qProgressFill" style="width: 10%;"></div>
+        </div>
+      </div>
+
+      <div class="quest-emoji" id="qEmoji">🥺💖</div>
+      <h2 class="quest-title" id="qText">Do you love me, Misty? 🥺💖</h2>
+      <p class="quest-sub" id="qSub">Ek sach sach jawab dena meri jaan... no lies allowed!</p>
+
+      <!-- Button Arena with Runaway NO -->
+      <div class="btn-arena" id="btnArena">
+        <button class="btn-yes" id="btnYes" type="button">YES! 💖🥰</button>
+        <div class="btn-no-wrap" id="btnNoWrap">
+          <div class="tease-bubble" id="teaseBubble">Pakad ke dikhao! 😜</div>
+          <button class="btn-no" id="btnNo" type="button">NO 🙈</button>
+        </div>
+      </div>
+
+      <div class="congrats-toast" id="congratsToast">
+        <div class="congrats-icon">🎉💍✨</div>
+        <p class="congrats-msg" id="congratsMsg">YAYYY! I love you so much! 🥰❤️</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Multi-Mission Romantic Arcade Modal (3 Games) -->
+  <div class="modal-overlay" id="gameModal" aria-modal="true" role="dialog">
+    <div class="game-container">
+      <!-- Mission Mode Selector Tabs -->
+      <div class="game-mission-tabs" id="gameMissionTabs">
+        <button class="mission-tab-btn active" id="tabMission1" data-mission="1" type="button">
+          🚗 1. Love Car
+        </button>
+        <button class="mission-tab-btn is-locked" id="tabMission2" data-mission="2" type="button">
+          🔒 2. Thar 4x4
+        </button>
+        <button class="mission-tab-btn is-locked" id="tabMission3" data-mission="3" type="button">
+          🔒 3. Misty &amp; Yuvi
+        </button>
+      </div>
+
+      <!-- Game HUD -->
+      <div class="game-hud">
+        <div class="hud-item">
+          <span class="hud-label" id="hudItemLabel">💖 Coins:</span>
+          <span class="hud-val" id="gameCoinCount">0 / 50</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Mission:</span>
+          <span class="hud-val" id="gameMissionName">Love Car</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Speed:</span>
+          <span class="hud-val" id="gameSpeed">85 km/h</span>
+        </div>
+        <button class="game-close-btn" id="closeGameBtn" type="button" aria-label="Close Game">&times;</button>
+      </div>
+
+      <!-- Interactive Real-Time Journey Map Bar (Misty's path to Yuvi) -->
+      <div class="journey-map-bar" id="journeyMapBar">
+        <div class="map-track">
+          <div class="map-track-line"></div>
+          <div class="map-progress-fill" id="mapProgressFill" style="width: 0%;"></div>
+
+          <!-- Nodes along the path -->
+          <div class="map-node map-node-start" style="left: 0%;" title="Start">
+            <span class="node-icon">🚩</span>
+            <span class="node-text">Start</span>
+          </div>
+          <div class="map-node" style="left: 30%;" title="Checkpoint 1: 15 Stars">
+            <span class="node-icon">🌸</span>
+            <span class="node-text">15</span>
+          </div>
+          <div class="map-node" style="left: 60%;" title="Checkpoint 2: 30 Stars">
+            <span class="node-icon">🌙</span>
+            <span class="node-text">30</span>
+          </div>
+          <div class="map-node" style="left: 85%;" title="Checkpoint 3: 45 Stars">
+            <span class="node-icon">🏰</span>
+            <span class="node-text">45</span>
+          </div>
+          <!-- Finish Node: Yuvi with Red Rose! -->
+          <div class="map-node map-node-finish" style="left: 100%;" title="Yuvi with Red Rose">
+            <span class="node-icon rose-icon">🌹🤴</span>
+            <span class="node-text rose-label">Yuvi 🌹</span>
+          </div>
+
+          <!-- Dynamic Runner Avatar -->
+          <div class="map-runner-pin" id="mapRunnerPin" style="left: 0%;">
+            <span class="runner-icon" id="runnerIcon">👧💖</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mid-Game Mission Milestone Toast with Misty's Photo -->
+      <div class="mission-milestone-toast" id="missionMilestoneToast">
+        <div class="milestone-photo-wrap">
+          <img id="milestonePhotoImg" src="./images/misty1.jpg" alt="Misty" />
+          <span class="milestone-heart-badge">💖</span>
+        </div>
+        <div class="milestone-content">
+          <div class="milestone-tag" id="milestoneTag">CHECKPOINT REACHED! 🌸</div>
+          <p class="milestone-msg" id="milestoneMsg">Misty my babe, meri girlfriend! You're driving straight into my heart! 💖</p>
+          <div class="milestone-next" id="milestoneNext">Target: 50 Items! 🚀</div>
+        </div>
+      </div>
+
+      <!-- Canvas -->
+      <div class="game-canvas-wrap">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- On-Screen Mobile Touch Controls -->
+        <div class="game-touch-controls" id="gameTouchControls">
+          <button class="touch-btn" id="btnSteerLeft" type="button">⬅️ Left</button>
+          <button class="touch-btn boost-btn" id="btnBoost" type="button">🚀 Boost</button>
+          <button class="touch-btn" id="btnSteerRight" type="button">➡️ Right</button>
+        </div>
+
+        <!-- Misty Care Collision Popup Modal ("Misty babu dhyaan se aao!") -->
+        <div class="misty-care-modal" id="mistyCareModal" style="display:none;">
+          <div class="care-backdrop"></div>
+          <div class="care-card">
+            <div class="care-badge">🥺 SAMBHAL KE MERI JAAN! 🛡️</div>
+            <div class="care-avatar-wrap">
+              <img class="care-misty-img" src="./images/misty_cute_cheeks.jpg" alt="Queen Misty" />
+              <span class="care-heart-fx">💖</span>
+            </div>
+            <h3 class="care-title">Misty babu dhyaan se aao! 🥰💋</h3>
+            <p class="care-text" id="careModalText">
+              "Arey babu, sambhal ke chalo! Mummy, Papa ya Bhai se bach ke aao meri jaan! Yuvi samne aapke liye red rose leke wait kar raha hai! 🌹<br><br>
+              Aapke sabhi coins 100% safe hain! Ab aaram se aao babu!"
+            </p>
+            <button class="care-ok-btn" id="careOkBtn" type="button">
+              Okk बाबू, main dhyaan se aaungi! 💖🥰
+            </button>
+          </div>
+        </div>
+
+        <!-- Nitro Boost "Kiss Yuvi" Recharge Modal -->
+        <div class="nitro-kiss-modal" id="nitroKissModal" style="display:none;">
+          <div class="nitro-backdrop" id="nitroBackdrop"></div>
+          <div class="nitro-card">
+            <button class="nitro-close-btn" id="closeNitroBtn" type="button">&times;</button>
+            <div class="nitro-yuvi-avatar">
+              <span class="nitro-emoji">🏎️🔥</span>
+              <span class="nitro-heart">💋</span>
+            </div>
+            <div class="nitro-badge">NITRO BOOST RECHARGE 🚀💨</div>
+            <h3 class="nitro-title">Kiss Yuvi for Super Nitro Boost! 😘</h3>
+            <p class="nitro-speech" id="nitroSpeech">
+              "Pehle apne Yuvi ko sweet sweet kiss do babu, tabhi aapki car ko <strong>Super Nitro Booster</strong> milega! 🚀🔥"
+            </p>
+
+            <div class="nitro-kiss-actions">
+              <button class="nitro-kiss-btn" id="btnNitroFlyingKiss" type="button">
+                <span class="nk-icon">💋</span>
+                <span class="nk-label">Flying Kiss</span>
+              </button>
+              <button class="nitro-kiss-btn" id="btnNitroSweetKiss" type="button">
+                <span class="nk-icon">😘</span>
+                <span class="nk-label">Sweet Kissi</span>
+              </button>
+              <button class="nitro-kiss-btn" id="btnNitroHugKiss" type="button">
+                <span class="nk-icon">👩‍❤️‍💋‍👨</span>
+                <span class="nk-label">Hug Kiss</span>
+              </button>
+            </div>
+
+            <div class="nitro-fx-stage" id="nitroFxStage"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Win Mission Celebration Modal with Immediate Game Stop, Flowers & Hearts Reaction -->
+      <div class="mission-win-modal" id="missionWinModal">
+        <!-- Floating Heart Balloons and Flying Kisses Container -->
+        <div class="win-fx-container" id="winFxContainer" aria-hidden="true"></div>
+
+        <div class="win-card">
+          <div class="win-badge" id="winBadge">🎉 50 / 50 COLLECTED! MISSION COMPLETE! 🏆</div>
+          <div class="win-avatar-box">
+            <img class="win-misty-img" id="winMistyImg" src="./images/misty6.jpg" alt="Queen Misty" />
+            <span class="win-crown">👑</span>
+          </div>
+          <h2 class="win-title" id="winTitle">MISSION 1 COMPLETED! 🌸💖</h2>
+          <div class="win-flower-reaction" id="winFlowerReaction">🌸 🌹 🌺 💐 💖 💋 💐 🌺 🌹 🌸</div>
+          <p class="win-love-words" id="winLoveWords">
+            "Misty my babe, meri girlfriend, meri world, mera babu shona, my love...<br>
+            You collected all 50 love items and conquered this mission! 🏰❤️💋"
+          </p>
+          <div class="win-kisses-tag" id="winKissesTag">💋 Swarms of Flying Kisses &amp; Endless Love For You! 😘💕</div>
+          
+          <div class="win-actions-row">
+            <button class="win-next-mission-btn" id="winNextMissionBtn" type="button">
+              ➡️ Next Mission: Drive Thar 4x4! 🚙
+            </button>
+            <button class="claim-gifts-btn" id="claimGiftsBtn" type="button">
+              🎁 Claim Birthday Gifts ✨
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Special Yuvi & Misty Reunion & Love Questions Modal -->
+      <div class="mission-win-modal yuvi-reunion-modal" id="yuviReunionModal">
+        <div class="win-fx-container" id="yuviFxContainer" aria-hidden="true"></div>
+        <div class="win-card yuvi-card">
+          <div class="win-badge">👑 MISTY &amp; YUVI REUNITED! 👩‍❤️‍💋‍👨</div>
+          <div class="yuvi-avatar-duo live-reunion-duo">
+            <div class="avatar-pair-wrap live-hug-pulse">
+              <img class="duo-avatar-img" src="./images/gift_yuvi_misty.jpg" alt="Yuvi and Misty" />
+              <div class="reunion-kiss-bursts" aria-hidden="true">
+                <span class="rk-kiss rk1">💋</span>
+                <span class="rk-kiss rk2">💖</span>
+                <span class="rk-kiss rk3">😘</span>
+                <span class="rk-kiss rk4">💋</span>
+                <span class="rk-sparkle">✨</span>
+              </div>
+              <span class="duo-heart-float">💖</span>
+            </div>
+            <div class="reunion-live-pill"><span class="live-blip"></span> LIVE HUG &amp; KISS 💋</div>
+          </div>
+          <h2 class="win-title" id="yuviReunionTitle">Misty Reached Yuvi! 👩‍❤️‍💋‍👨💋</h2>
+          <div class="reunion-hug-toast" id="reunionHugToast">
+            🌹 Yuvi presented a Red Rose &amp; sealed with tight Hugs &amp; Flying Kisses! 💋🥰
+          </div>
+
+          <!-- Yuvi's Lovely Interactive Question Area -->
+          <div class="yuvi-dialogue-box" id="yuviDialogueBox">
+            <div class="yuvi-speaker-tag">
+              <span class="speaker-avatar">🤴</span> <strong>Yuvi says:</strong>
+            </div>
+            <p class="yuvi-question-text" id="yuviQuestionText">
+              "Misty baby, mere paas aakar kaisa laga? Sach batana... pura din kitna miss kiya apne Yuvi ko? 🥺❤️"
+            </p>
+            
+            <div class="yuvi-btn-arena" id="yuviBtnArena">
+              <button class="btn-yuvi-yes" id="btnYuviYes" type="button">
+                Bohot zyada miss kiya! 🥰❤️
+              </button>
+              <div class="btn-yuvi-no-wrap" id="btnYuviNoWrap">
+                <div class="yuvi-tease-bubble" id="yuviTeaseBubble">Jhooth mat bolo babu! 😜</div>
+                <button class="btn-yuvi-no" id="btnYuviNo" type="button">
+                  Thoda sa bhi nahi! 🙈
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success Actions after answering Yuvi -->
+          <div class="yuvi-actions-row" id="yuviActionsRow" style="display:none;">
+            <p class="win-love-words">
+              "Yuvi &amp; Misty Forever &amp; Always! Tumne har obstacle paar karke prove kar diya ki tum meri sabse pyari girlfriend ho! 🏰❤️💋"
+            </p>
+            <button class="claim-gifts-btn" id="claimYuviGiftsBtn" type="button">
+              🎁 Claim Grand Birthday Gifts (PS5 + GTA 6 &amp; Your Yuvi!) ✨
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Special Romantic Photo Puzzle Modal (Yuvi & Misty Jigsaw) -->
+  <div class="modal-overlay" id="puzzleModal" aria-modal="true" role="dialog">
+    <div class="puzzle-container">
+      <button class="modal-close-btn" id="closePuzzleBtn" type="button" aria-label="Close Puzzle">&times;</button>
+      
+      <header class="puzzle-header">
+        <div class="puzzle-badge">SPECIAL COUPLE GAME 🧩💖</div>
+        <h1 class="puzzle-title">Yuvi &amp; Misty Love Puzzle 👩‍❤️‍👨</h1>
+        <p class="puzzle-sub">Pieces ko tap karke swap karo aur hamari pyari photo assemble karo babu!</p>
+        
+        <!-- Mandatory Notice Banner as requested by user -->
+        <div class="puzzle-mandatory-banner" id="puzzleMandatoryBanner">
+          <div class="pmb-icon-wrap">
+            <span class="pmb-pulse-icon">⚠️ 🧩</span>
+          </div>
+          <div class="pmb-text-wrap">
+            <div class="pmb-heading">👑 MANDATORY NOTICE FOR QUEEN MISTY:</div>
+            <p class="pmb-body">
+              In sabhi photo puzzles mein se <strong>koi bhi 1 puzzle solve karna MANDATORY hai</strong>! Tabhi aage ka mission aur grand birthday gifts unlock honge! 💖
+              <br>
+              <span class="pmb-highlight">✨ Jab 1 puzzle complete ho jaye, tab aap chahein toh baaki sabhi puzzles ko direct SKIP kar sakti hain! 🥰</span>
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Puzzle Stats & Controls -->
+      <div class="puzzle-hud">
+        <div class="phud-item">
+          <span class="phud-label">🧩 Pieces:</span>
+          <span class="phud-val" id="puzzlePiecesMatched">0 / 9 Solved</span>
+        </div>
+        <div class="phud-item">
+          <span class="phud-label">🔄 Moves:</span>
+          <span class="phud-val" id="puzzleMoveCount">0</span>
+        </div>
+        <div class="phud-item">
+          <span class="phud-label">💋 Kisses Given:</span>
+          <span class="phud-val" id="puzzleKissesCount">0</span>
+        </div>
+        <div class="phud-item phud-req-item">
+          <span class="phud-label">🎯 Goal:</span>
+          <span class="phud-val" id="puzzleRequiredStatus">1 Solve (Mandatory) 🔒</span>
+        </div>
+        <button class="puzzle-peek-btn" id="puzzlePeekBtn" type="button" title="Reference Photo Dekho">
+          👀 Peek Photo
+        </button>
+        <button class="puzzle-peek-btn" id="puzzleChangePhotoBtn" type="button" title="Change or Upload Puzzle Photo">
+          📷 Custom Photo
+        </button>
+        <button class="puzzle-skip-btn is-locked" id="puzzleSkipBtn" type="button" title="Skip Remaining Puzzles (1 Solved Required)">
+          <span class="skip-btn-icon">🔒</span> <span class="skip-btn-text">Skip Puzzles</span>
+        </button>
+        <input type="file" id="puzzlePhotoUpload" accept="image/*" style="display:none;" />
+      </div>
+
+      <!-- Romantic Photo Picker Gallery -->
+      <div class="puzzle-photo-picker" id="puzzlePhotoPicker">
+        <div class="picker-label">💖 Choose Photo to Solve:</div>
+        <div class="picker-scroll" id="puzzlePickerScroll">
+          <button class="picker-thumb is-active" type="button" data-src="./images/misty_cute_cheeks.jpg" title="Queen Misty Cute Portrait">
+            <img src="./images/misty_cute_cheeks.jpg" alt="Misty Cute" />
+            <span>Queen Misty 💕</span>
+          </button>
+          <button class="picker-thumb" type="button" data-src="Yuvi and Misty’s Neon Love Story_2.png" title="Yuvi & Misty Neon Love Story">
+            <img src="Yuvi and Misty’s Neon Love Story_2.png" alt="Yuvi & Misty" />
+            <span>Yuvi &amp; Misty 👩‍❤️‍👨</span>
+          </button>
+          <button class="picker-thumb" type="button" data-src="./images/misty_white_kurti.jpg" title="Misty Bashful Smile">
+            <img src="./images/misty_white_kurti.jpg" alt="Misty Kurti" />
+            <span>Cute Smile 🌸</span>
+          </button>
+          <button class="picker-thumb" type="button" data-src="./images/misty_hearts_bed.jpg" title="Suruchi Vishwa (Misty) Hearts">
+            <img src="./images/misty_hearts_bed.jpg" alt="Misty Hearts" />
+            <span>Suruchi Vishwa 💖</span>
+          </button>
+          <button class="picker-thumb" type="button" data-src="./images/misty_cat_glasses.jpg" title="Misty & Cat">
+            <img src="./images/misty_cat_glasses.jpg" alt="Misty Cat" />
+            <span>Cat Cutie 🐱</span>
+          </button>
+          <button class="picker-thumb" type="button" data-src="./images/misty_pink_cat.jpg" title="Misty Heart Arms">
+            <img src="./images/misty_pink_cat.jpg" alt="Misty Love" />
+            <span>Love Heart 💗</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Yuvi Tip Banner (Shown when Yuvi solves 2 pieces) -->
+      <div class="puzzle-tip-banner" id="puzzleTipBanner" style="display:none;">
+        💡 <strong>Yuvi's Tip:</strong> 2 pieces solved for Queen Misty! 💖 Aur help chahiye toh dubara button dabao babu! 😘
+      </div>
+
+      <!-- Puzzle Stage Area -->
+      <div class="puzzle-stage">
+        <!-- Interactive 3x3 Puzzle Board -->
+        <div class="puzzle-board" id="puzzleBoard"></div>
+
+        <!-- Reference Preview Overlay (Hidden by default, toggled with Peek) -->
+        <div class="puzzle-ref-preview" id="puzzleRefPreview" style="display:none;">
+          <img id="puzzleRefImg" src="./images/misty_cute_cheeks.jpg" alt="Reference Full View" />
+          <span class="ref-badge">REFERENCE PHOTO 💖 (Tap anywhere to close)</span>
+        </div>
+      </div>
+
+      <!-- Yuvi Help Request Button -->
+      <div class="puzzle-help-area">
+        <button class="puzzle-help-btn" id="puzzleHelpBtn" type="button">
+          🥺 Yuvi mujh se puzzle solve nahi ho rahi hai, meri help karo! 💔
+        </button>
+        <div class="help-hint-text">Stuck ho gayi ho babu? Yuvi ko 5 sweet kisses do aur 2 pieces solve karwao! 🥰✨</div>
+      </div>
+
+      <!-- Skip Remaining Puzzles Action Card -->
+      <div class="puzzle-actions-footer">
+        <button class="puzzle-big-skip-btn is-locked" id="puzzleBigSkipBtn" type="button">
+          <span class="skip-big-text"><span class="skip-big-icon">🔒</span> Skip Remaining Puzzles &amp; Claim Gifts! 🎁</span>
+          <span class="skip-big-sub" id="skipBigSubText">(Pehle koi bhi 1 puzzle solve karna mandatory hai babu)</span>
+        </button>
+      </div>
+
+      <!-- Puzzle Win Celebration Overlay -->
+      <div class="puzzle-win-card" id="puzzleWinCard" style="display:none;">
+        <div class="win-badge">🎉 LOVE PUZZLE SOLVED! 🏆</div>
+        <div class="win-avatar-box">
+          <img class="win-misty-img" src="./images/gift_yuvi_misty.jpg" alt="Yuvi and Misty" />
+          <span class="win-crown">👑</span>
+        </div>
+        <h2 class="win-title">YOU DID IT, QUEEN MISTY! 👩‍❤️‍💋‍👨💖</h2>
+        <div class="win-flower-reaction">🌸 🌹 🌺 💐 💖 💋 💐 🌺 🌹 🌸</div>
+        <p class="win-love-words">
+          "Misty my babe, meri girlfriend, meri world, mera babu shona, my love...<br>
+          Tumne hamara love puzzle solve kar diya! Tum mere dil ka sabse keemti tukda ho, aur tumhare bina meri zindagi bilkul incomplete hai! I love you so much! 💍🏰❤️💋"
+        </p>
+        <div class="win-actions-row">
+          <button class="claim-gifts-btn" id="puzzleClaimGiftsBtn" type="button">
+            🎁 Claim Grand Birthday Gifts ✨
+          </button>
+          <button class="win-skip-btn" id="puzzleWinSkipBtn" type="button">
+            ⏭️ Skip Remaining Puzzles &amp; Claim Gifts! 🚀
+          </button>
+          <button class="win-next-mission-btn" id="puzzlePlayAgainBtn" type="button">
+            🔄 Solve Another Photo Puzzle 🧩
+          </button>
+        </div>
+      </div>
+
+      <!-- Yuvi Kiss-Exchange Help Modal Dialog -->
+      <div class="puzzle-help-modal" id="puzzleHelpModal" style="display:none;">
+        <div class="ph-backdrop" id="phBackdrop"></div>
+        <div class="ph-card">
+          <button class="ph-close-btn" id="phCloseBtn" type="button">&times;</button>
+          <div class="ph-yuvi-avatar">
+            <span class="ph-yuvi-emoji">🤴🌹</span>
+            <span class="ph-blush">🥰</span>
+          </div>
+          <h3 class="ph-title">Yuvi's Romantic Help Counter 💋</h3>
+          <p class="ph-speech" id="phSpeech">
+            "Aise hi help nahi milegi babu! 😜 Pehle apne Yuvi ko <strong>5 sweet sweet kisses</strong> do, tabhi main help karunga puzzle solve karne mein! 😘💋"
+          </p>
+
+          <!-- Interactive Kiss Progress Bar -->
+          <div class="ph-progress-box">
+            <div class="ph-progress-header">
+              <span>Kisses given to Yuvi:</span>
+              <strong id="phKissCountText">0 / 5 💋</strong>
+            </div>
+            <div class="ph-progress-bar">
+              <div class="ph-progress-fill" id="phProgressFill" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- 3 Interactive Kiss Buttons -->
+          <div class="ph-kiss-actions">
+            <button class="ph-kiss-btn" id="btnKissFlying" type="button">
+              <span class="pk-icon">💋</span>
+              <span class="pk-label">Flying Kiss</span>
+            </button>
+            <button class="ph-kiss-btn" id="btnKissSweet" type="button">
+              <span class="pk-icon">😘</span>
+              <span class="pk-label">Sweet Kissi</span>
+            </button>
+            <button class="ph-kiss-btn" id="btnKissHug" type="button">
+              <span class="pk-icon">👩‍❤️‍💋‍👨</span>
+              <span class="pk-label">Tight Hug Kiss</span>
+            </button>
+          </div>
+
+          <div class="ph-kisses-fx-stage" id="phKissFxStage"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Birthday Gifts & Photo Gallery Modal -->
+  <div class="modal-overlay" id="giftsModal" aria-modal="true" role="dialog">
+    <div class="gifts-container">
+      <button class="modal-close-btn" id="closeGiftsBtn" type="button">&times;</button>
+      
+      <header class="gifts-header">
+        <div class="gifts-badge">SPECIAL BIRTHDAY EDITION 👑</div>
+        <h1 class="gifts-title">Happy Birthday, Queen Misty! 🎂🎉</h1>
+        <p class="gifts-sub">Since you answered every question with love &amp; reached my heart, here are your special surprises:</p>
+      </header>
+
+      <div class="gifts-grid">
+        <!-- Gift 1: PS5 + GTA 6 CD -->
+        <div class="gift-card real-gift-card" id="giftCardPS5" data-gift="ps5">
+          <div class="gift-badge">GIFT #1 🎮📀</div>
+          <div class="gift-photo-wrap">
+            <img class="gift-thumb-img" src="./images/gift_ps5_gta6.jpg" alt="Sony PlayStation 5 Console + GTA 6 CD" />
+            <span class="gift-zoom-hint">🔍 Tap to Open Full Photo</span>
+          </div>
+          <h3 class="gift-item-title">Sony PS5 + GTA VI CD Disc 🎮📀</h3>
+          <p class="gift-item-desc">Ultra HD PlayStation 5 console bundled with Grand Theft Auto VI (GTA 6) CD Game Disc! Vice City missions, open-world cruising with Yuvi, and late-night gaming dates!</p>
+          <div class="gift-tap-hint">Tap to Open Full Photo ✨</div>
+        </div>
+
+        <!-- Gift 2: Mahindra Thar -->
+        <div class="gift-card real-gift-card" id="giftCardThar" data-gift="thar">
+          <div class="gift-badge">GIFT #2 🚙</div>
+          <div class="gift-photo-wrap">
+            <img class="gift-thumb-img" src="./images/gift_thar.jpg" alt="Mahindra Thar 4x4" />
+            <span class="gift-zoom-hint">🔍 Tap to Open Full Photo</span>
+          </div>
+          <h3 class="gift-item-title">Mahindra Thar 4x4 (Dream Beast) 🚙</h3>
+          <p class="gift-item-desc">Starting with this cute mini Thar collectible for your room, and real mountain road trips with me next!</p>
+          <div class="gift-tap-hint">Tap to Open Full Photo ✨</div>
+        </div>
+
+        <!-- Gift 3: Princess Dresses -->
+        <div class="gift-card real-gift-card" id="giftCardDress" data-gift="dress">
+          <div class="gift-badge">GIFT #3 👗</div>
+          <div class="gift-photo-wrap">
+            <img class="gift-thumb-img" src="./images/gift_dress.jpg" alt="Princess Dresses & Cute Outfits" />
+            <span class="gift-zoom-hint">🔍 Tap to Open Full Photo</span>
+          </div>
+          <h3 class="gift-item-title">Princess Dresses &amp; Cute Outfits 👗</h3>
+          <p class="gift-item-desc">The prettiest dresses for the prettiest girl in the world! To make you shine like the absolute queen you are!</p>
+          <div class="gift-tap-hint">Tap to Open Full Photo ✨</div>
+        </div>
+
+        <!-- Gift 4: Yuvi (Boyfriend & Soulmate) -->
+        <div class="gift-card real-gift-card live-animated-gift-card" id="giftCardYuvi" data-gift="yuvi">
+          <div class="gift-badge">LIFETIME GIFT 👑💍</div>
+          <div class="gift-photo-wrap live-hug-container">
+            <img class="gift-thumb-img live-hug-img" src="./images/yuvi_misty_theme_bg.jpg?v=5" alt="Yuvi & Misty Live Hug and Kiss" />
+            <div class="live-kiss-fx" aria-hidden="true">
+              <span class="live-kiss k1">💋</span>
+              <span class="live-kiss k2">💖</span>
+              <span class="live-kiss k3">😘</span>
+              <span class="live-kiss k4">💋</span>
+              <span class="live-sparkle sp1">✨</span>
+              <span class="live-sparkle sp2">🌸</span>
+            </div>
+            <div class="live-animation-pill">
+              <span class="live-blip"></span> LIVE ANIMATION 👩‍❤️‍💋‍👨
+            </div>
+            <span class="gift-zoom-hint">🔍 Tap to Watch Full Live Video</span>
+          </div>
+          <h3 class="gift-item-title">Yuvi (Misty's Forever Boyfriend) 👑❤️</h3>
+          <p class="gift-item-desc">100% genuine, lifetime warranty, unlimited warm hugs &amp; kisses, 24/7 care &amp; loyalty, exclusively reserved for Queen Misty forever!</p>
+          <div class="gift-tap-hint">Tap to Open Full Live Hug &amp; Kiss Video ✨</div>
+          <a href="live-wallpaper.html" target="_blank" class="launch-live-wallpaper-btn" onclick="event.stopPropagation();">
+            🌌 Open Fullscreen Neon Live Wallpaper ✨
+          </a>
+        </div>
+      </div>
+
+      <!-- Misty's Romantic Memories Album & Video Showcase -->
+      <section class="gallery-showcase-section" id="galleryShowcase">
+        <div class="gallery-sec-header">
+          <div class="gifts-badge">MOST SPECIAL GIFT 📸💖</div>
+          <h2 class="gallery-sec-title">Misty's Sweetest Moments &amp; Memories</h2>
+          <p class="gallery-sec-sub">Every picture tells a story of the most gorgeous, sweet, and adorable girl in the universe...</p>
+        </div>
+
+        <div class="gallery-dual-grid">
+          <!-- Left: Multi-Photo Interactive Polaroid Album -->
+          <div class="album-card">
+            <div class="album-badge-bar">
+              <span class="album-pill">ALBUM OF LOVE 💕</span>
+              <span class="photo-counter-badge" id="photoCounter">Photo 1 of 9</span>
+            </div>
+
+            <div class="polaroid-wrapper">
+              <div class="polaroid-frame">
+                <div class="polaroid-pin">📌</div>
+                
+                <div class="polaroid-img-box">
+                  <img id="mistyPhotoImg" src="./images/misty1.jpg" alt="Misty's Special Photo" />
+                  
+                  <!-- Floating Nav Arrows on the Photo -->
+                  <button class="photo-nav-btn prev-btn" id="prevPhotoBtn" type="button" aria-label="Previous Photo">❮</button>
+                  <button class="photo-nav-btn next-btn" id="nextPhotoBtn" type="button" aria-label="Next Photo">❯</button>
+                </div>
+
+                <div class="polaroid-caption">
+                  <p class="polaroid-name" id="photoTitle">Queen Misty ♥</p>
+                  <p class="polaroid-note" id="photoCaption">"Casual, effortlessly stylish, and stunning as always! 💙✨"</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dot Indicators -->
+            <div class="photo-dots" id="photoDots"></div>
+
+            <!-- Thumbnail Strip for Quick Tap -->
+            <div class="photo-thumbnails" id="photoThumbnails"></div>
+
+            <!-- Upload Custom Photo Option -->
+            <div class="album-actions">
+              <button class="upload-photo-btn" id="changePhotoBtn" type="button">
+                📸 Add / Change Photo
+              </button>
+              <input type="file" id="photoUploadInput" accept="image/*" style="display: none;" />
+            </div>
+          </div>
+
+          <!-- Right: Misty's Special Video Reel -->
+          <div class="video-card">
+            <div class="album-badge-bar">
+              <span class="album-pill">ROMANTIC REEL 🎥✨</span>
+              <span class="video-badge-tag">Misty In Motion</span>
+            </div>
+
+            <div class="video-player-wrap">
+              <div class="video-frame">
+                <div class="polaroid-pin">🎬</div>
+                <video id="mistyVideo" controls playsinline loop preload="metadata" poster="./images/misty6.jpg">
+                  <source src="./images/misty_video.mp4" type="video/mp4">
+                  <source src="./Misty%20Photos/WhatsApp%20Video%202026-11-19%20at%2021.23.21.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div class="video-caption-box">
+                <p class="polaroid-name">Forever In Motion ♥</p>
+                <p class="polaroid-note">"Seeing you smile and laugh melts my heart every single second... my favorite view in this whole universe! 🥰🎬🌹"</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Handwritten Love Letter -->
+      <div class="love-letter-card">
+        <div class="letter-stamp">FOREVER &amp; ALWAYS 💌</div>
+        <h2 class="letter-title">A Letter From My Heart To You, Misty... 🌹</h2>
+        <p class="letter-body">
+          Dear Misty,<br><br>
+          Happy Birthday to the girl who stole my heart and made my life ten thousand times sweeter. Every time I see your smile, hear your voice, or just think about you, I feel like the luckiest person in this whole universe.<br><br>
+          Thank you for being my strength, my happiness, my biggest cheerleader, and my sweet partner in all madness. I promise to keep loving you, protecting your smile, standing by your side in every step of life, and making you feel like the queen you truly are.<br><br>
+          Here’s to us, to all our dreams, and to a love that blooms brighter with every passing year. Happy Birthday, my love! ❤️🎂✨
+        </p>
+        <p class="letter-sign">Yours Forever,<br><span>Your Favorite Guy ♥</span></p>
+      </div>
+
+      <!-- Romantic 143 UPI Payment & Secret Mission Unlock Section -->
+      <section class="vip-payment-section" id="vipPaymentSection">
+        <div class="vip-header">
+          <div class="vip-badge">💖 SECRET VIP UNLOCK • 143 EDITION 🔐</div>
+          <h2 class="vip-title">Pay ₹143 to Unlock Next Unique Missions &amp; More Gifts! 🎁✨</h2>
+          <div class="love-143-explain">
+            <span class="heart-pulse">❤️</span> <strong>143 Ka Matlab:</strong> 1 = <strong>I</strong>, 4 = <strong>LOVE</strong>, 3 = <strong>YOU</strong>! 🥺💖
+          </div>
+          <p class="vip-sub">
+            Scan the QR code below or use the UPI ID to send ₹143 love token to Yuvi, enter your UTR number to verify, and unlock secret missions &amp; special surprises!
+          </p>
+        </div>
+
+        <div class="payment-card-wrap">
+          <!-- Big Romantic Chocolate Promise Pop-Up Banner -->
+          <div class="chocolate-promise-popup" id="chocolatePromisePopup">
+            <div class="cpp-tag">🍫 SPECIAL PROMISE FROM YUVI 🥺💖</div>
+            <h3 class="cpp-big-title">
+              "143 AMMOUNT PAY KRDO, CHOCLATE KHARID KE TUM KO DUNGA!" 🥰🍫
+            </h3>
+            <p class="cpp-sub-desc">
+              (143 = <strong>I LOVE YOU!</strong> ❤️ Payment aate hi Queen Misty ke liye bohot saari favourite chocolates &amp; surprise gifts reserved ho jayenge babu! 💋✨)
+            </p>
+            <div class="cpp-decor" aria-hidden="true">
+              <span class="d-item d1">🍫</span>
+              <span class="d-item d2">💖</span>
+              <span class="d-item d3">✨</span>
+              <span class="d-item d4">🍫</span>
+            </div>
+          </div>
+
+          <!-- Heart Photo Frame holding the QR Code -->
+          <div class="heart-frame-container">
+            <div class="heart-frame-outer">
+              <div class="heart-frame-inner">
+                <img class="payment-qr-img" src="./images/payment_qr.png?v=5" alt="Payment QR Code - Yuvi" />
+              </div>
+              <div class="heart-sparkle s1">💖</div>
+              <div class="heart-sparkle s2">✨</div>
+              <div class="heart-sparkle s3">🌸</div>
+              <div class="heart-sparkle s4">💋</div>
+            </div>
+            <div class="qr-receiver-name">Yuvi (Your Love) 👑</div>
+            <div class="upi-id-pill" id="upiIdPill">
+              <span class="upi-label">UPI ID:</span>
+              <span class="upi-text" id="upiText">baby8389@nyes</span>
+              <button class="copy-upi-btn" id="copyUpiBtn" type="button" title="Copy UPI ID">📋 Copy</button>
+            </div>
+            <div class="amount-tag">Amount: <strong>₹143.00</strong> (143 = I Love You ❤️)</div>
+          </div>
+
+          <!-- UTR Verification Box -->
+          <div class="utr-verify-box" id="utrVerifyBox">
+            <h3 class="utr-box-title">Enter Payment UTR Number 💳</h3>
+            <p class="utr-box-desc">Payment karne ke baad apna UPI Reference / UTR Number yahan enter karein:</p>
+            
+            <div class="utr-input-group">
+              <input type="text" id="utrInput" class="utr-input" placeholder="Enter 12-digit UTR (e.g. 432109876543)" maxlength="24" autocomplete="off" />
+              <button type="button" id="submitUtrBtn" class="submit-utr-btn">
+                ✅ Submit &amp; Verify Payment 🚀
+              </button>
+            </div>
+            <div class="utr-error-msg" id="utrErrorMsg" style="display:none;"></div>
+          </div>
+
+          <!-- Payment Success Box (Revealed after UTR submission) -->
+          <div class="payment-success-card" id="paymentSuccessCard" style="display:none;">
+            <div class="success-icon-wrap">🎉💖💍</div>
+            <h3 class="success-title">Payment Successful! ₹143 Received! 🥰💋</h3>
+            <div class="success-143-banner">
+              "143 = I LOVE YOU MISTY! FOREVER &amp; ALWAYS!" 💖♾️
+            </div>
+            <p class="success-desc">
+              Misty my baby, payment successfully verified! 143 (I Love You) token received! Your next secret missions and surprise gifts are now reserved for you!
+            </p>
+            
+            <!-- Instagram DM CTA -->
+            <div class="insta-dm-box">
+              <div class="insta-badge">NEXT STEP 📸💌</div>
+              <div class="insta-id-card">
+                <svg class="insta-logo-svg" viewBox="0 0 24 24" width="28" height="28" fill="none">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="currentColor"/>
+                </svg>
+                <div class="insta-id-info">
+                  <span class="insta-id-label">Official Instagram ID:</span>
+                  <span class="insta-id-handle" id="instaIdHandle">@tim_aary</span>
+                </div>
+                <button class="copy-insta-btn" id="copyInstaBtn" type="button" title="Copy Instagram ID">📋 Copy</button>
+              </div>
+              <h4 class="insta-title">DM @tim_aary on Instagram for More Features &amp; Secret Gifts!</h4>
+              <p class="insta-desc">Instagram par Yuvi (<strong>@tim_aary</strong>) ko direct DM karein aur screenshot share karke agle unique missions &amp; gifts claim karein!</p>
+              <a href="https://instagram.com/tim_aary" target="_blank" rel="noopener noreferrer" class="insta-dm-btn" id="instaDmBtn">
+                📸 DM @tim_aary on Instagram Now 💌✨
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Gift Full-Screen View / Lightbox Modal -->
+  <div class="modal-overlay gift-lightbox-overlay" id="giftLightboxModal" aria-modal="true" role="dialog">
+    <div class="gift-lightbox-card" id="giftLightboxCard">
+      <button class="modal-close-btn" id="closeGiftLightboxBtn" type="button" aria-label="Close Lightbox">&times;</button>
+      <div class="lightbox-badge" id="lightboxBadge">UNBOXED WITH LOVE 🎁💖</div>
+      <div class="lightbox-img-wrap" id="lightboxImgWrap">
+        <img id="lightboxImg" src="./images/gift_ps5.jpg" alt="Gift Full View" />
+        <div class="lightbox-live-fx" id="lightboxLiveFx" style="display:none;" aria-hidden="true">
+          <span class="live-kiss lk1">💋</span>
+          <span class="live-kiss lk2">💖</span>
+          <span class="live-kiss lk3">😘</span>
+          <span class="live-kiss lk4">💋</span>
+          <span class="live-sparkle lsp1">✨</span>
+          <span class="live-sparkle lsp2">🌸</span>
+        </div>
+        <div class="lightbox-live-badge" id="lightboxLiveBadge" style="display:none;">
+          <span class="live-blip"></span> LIVE HUG &amp; KISS VIDEO ANIMATION 👩‍❤️‍💋‍👨
+        </div>
+      </div>
+      <h2 class="lightbox-title" id="lightboxTitle">Sony PlayStation 5 Console 🎮</h2>
+      <p class="lightbox-desc" id="lightboxDesc">For all our late-night gaming sessions, hilarious co-op adventures, and non-stop fun together!</p>
+      <div class="lightbox-footer">
+        <span class="lightbox-tag">✨ Reserved exclusively for Queen Misty &amp; Me 💖</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Bottom-Left Corner Admin Control Trigger -->
+  <button type="button" class="admin-corner-trigger" id="adminCornerTrigger" title="Admin Control Center (Yuvi Access Only)">
+    <span class="act-icon">⚙️</span>
+    <span class="act-text">Admin Control</span>
+  </button>
+
+  <!-- Admin Password Auth Modal -->
+  <div class="modal-overlay" id="adminAuthModal" style="display:none;" aria-modal="true" role="dialog">
+    <div class="admin-auth-card">
+      <button class="modal-close-btn" id="closeAdminAuthBtn" type="button" aria-label="Close">&times;</button>
+      <div class="aauth-icon">🔐</div>
+      <h2 class="aauth-title">Yuvi's Master Control</h2>
+
+      <!-- View 1: Standard Password Login -->
+      <div id="adminLoginView">
+        <p class="aauth-sub">Enter password to access full customization, link generator, and mission controls:</p>
+        
+        <form id="adminAuthForm" onsubmit="event.preventDefault();">
+          <div class="aauth-input-group">
+            <input type="password" id="adminPassInput" class="aauth-input" placeholder="Enter Password..." autocomplete="current-password" />
+            <button type="submit" id="adminLoginBtn" class="aauth-submit-btn">Unlock 🔓</button>
+          </div>
+          <div class="aauth-error-msg" id="adminAuthError" style="display:none;"></div>
+        </form>
+
+        <div class="aauth-meta-row">
+          <span class="aauth-hint-text">💡 Hint: <strong>Yuvi</strong></span>
+          <button type="button" class="admin-forgot-btn" id="adminForgotBtn">Forgot Password? 🔑</button>
+        </div>
+
+        <div class="aauth-contact-row">
+          <span class="aauth-contact-label">Admin Contact:</span>
+          <a href="https://instagram.com/tim_aary" target="_blank" rel="noopener noreferrer" class="aauth-contact-link">
+            📸 @tim_aary
+          </a>
+        </div>
+      </div>
+
+      <!-- View 2: Security Questions Forgot Password Reset -->
+      <div id="adminForgotView" style="display:none;">
+        <p class="aauth-sub">Answer your 2 private security questions to verify identity &amp; reset password:</p>
+
+        <div class="sec-question-group">
+          <label class="sec-q-label">1. Your childhood school name:</label>
+          <input type="text" id="secAns1" class="aauth-input" placeholder="Enter school name..." autocomplete="off" />
+        </div>
+
+        <div class="sec-question-group">
+          <label class="sec-q-label">2. Your favourite things:</label>
+          <input type="text" id="secAns2" class="aauth-input" placeholder="Enter favourite things..." autocomplete="off" />
+        </div>
+
+        <div class="sec-question-group">
+          <label class="sec-q-label">Set New Password (optional):</label>
+          <input type="password" id="secNewPass" class="aauth-input" placeholder="New password (or leave blank to reset)" />
+        </div>
+
+        <div class="aauth-error-msg" id="secErrorMsg" style="display:none;"></div>
+        <div class="aauth-success-msg" id="secSuccessMsg" style="display:none;"></div>
+
+        <div class="sec-actions-row">
+          <button type="button" id="submitSecBtn" class="aauth-submit-btn w-100">Verify &amp; Unlock 🔓</button>
+          <button type="button" id="backToLoginBtn" class="admin-back-btn">&larr; Back to Login</button>
+        </div>
+
+        <div class="aauth-contact-row" style="margin-top:12px;">
+          <span class="aauth-contact-label">Admin Contact:</span>
+          <a href="https://instagram.com/tim_aary" target="_blank" rel="noopener noreferrer" class="aauth-contact-link">
+            📸 @tim_aary
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Master Control Dashboard Modal -->
+  <div class="modal-overlay" id="adminDashboardModal" style="display:none;" aria-modal="true" role="dialog">
+    <div class="admin-dash-container">
+      <button class="modal-close-btn" id="closeAdminDashBtn" type="button" aria-label="Close">&times;</button>
+      
+      <header class="admin-dash-header">
+        <div class="admin-dash-badge">YUVIRAJ MASTER CONTROL 👑⚙️</div>
+        <h1 class="admin-dash-title">Admin Control &amp; Customization Center</h1>
+        <p class="admin-dash-sub">Change names, occasions (Birthday/Anniversary), generate custom links, skip missions, and customize photos!</p>
+      </header>
+
+      <!-- Admin Tabs Navigation -->
+      <div class="admin-tabs-nav">
+        <button class="atab-btn active" data-panel="panelGeneral" type="button">👤 Names &amp; Occasion</button>
+        <button class="atab-btn" data-panel="panelShareLink" type="button">🔗 Link Generator</button>
+        <button class="atab-btn" data-panel="panelMissions" type="button">🚀 Missions &amp; Skip</button>
+        <button class="atab-btn" data-panel="panelPhotos" type="button">📸 Photos &amp; Media</button>
+        <button class="atab-btn" data-panel="panelPayment" type="button">💳 Payment &amp; Social</button>
+      </div>
+
+      <!-- Tab Panel 1: Names & Occasion -->
+      <div class="atab-panel active" id="panelGeneral">
+        <div class="admin-grid-2">
+          <div class="form-group">
+            <label for="adminToName">Recipient Girl's Name:</label>
+            <input type="text" id="adminToName" class="admin-input" placeholder="e.g. Misty, Neha, Pooja..." value="Misty" />
+            <span class="field-hint">Pure website par sab jagah ye naam use hoga!</span>
+          </div>
+          <div class="form-group">
+            <label for="adminFromName">Sender Boy's Name:</label>
+            <input type="text" id="adminFromName" class="admin-input" placeholder="e.g. Yuvi" value="Yuvi" />
+            <span class="field-hint">Letters, dialogs aur QR frame mein aapka naam</span>
+          </div>
+        </div>
+
+        <div class="admin-grid-2">
+          <div class="form-group">
+            <label for="adminNickname">Girl's Pet Name / Nickname:</label>
+            <input type="text" id="adminNickname" class="admin-input" placeholder="e.g. Babu Shona, Princess, Sweetheart" value="Babu Shona" />
+          </div>
+          <div class="form-group">
+            <label for="adminOccasion">Occasion Type:</label>
+            <select id="adminOccasion" class="admin-input admin-select">
+              <option value="birthday">🎂 Birthday Celebration (Default)</option>
+              <option value="anniversary">💍 Anniversary Celebration</option>
+              <option value="love">💖 Love &amp; Romantic Surprise</option>
+              <option value="valentine">🌹 Valentine's Special</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adminCustomWish">Custom Subtitle / Tagline:</label>
+          <input type="text" id="adminCustomWish" class="admin-input" placeholder="e.g. to us and a love that blooms forever" value="to us and a love that blooms" />
+        </div>
+
+        <div class="admin-grid-2">
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="adminToggleVoice" checked />
+              <span>🔊 Spoken Voice Audio Wish (Text-to-Speech)</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="adminVoiceText">Spoken Voice Phrase:</label>
+            <input type="text" id="adminVoiceText" class="admin-input" placeholder="e.g. Happy Birthday Neha!" value="Happy Birthday Misty!" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adminLetterText">Custom Love Letter Message:</label>
+          <textarea id="adminLetterText" class="admin-textarea" rows="4"></textarea>
+        </div>
+      </div>
+
+      <!-- Tab Panel 2: Shareable Link Generator -->
+      <div class="atab-panel" id="panelShareLink">
+        <div class="link-gen-card">
+          <div class="lg-badge">INSTANT PERSONALIZED LINK 🚀</div>
+          <h3 class="lg-title">Unique Link for Any Girl / Occasion</h3>
+          <p class="lg-desc">
+            Aapko bar-bar website code edit karne ki zaroorat nahi hai! Bas upar naam (jaise <strong>Neha</strong>) aur occasion (jaise <strong>Anniversary</strong>) daal kar niche se link copy karke send kar dijiye! Link khulte hi website unke naam se live ho jayegi!
+          </p>
+          
+          <div class="link-output-group">
+            <input type="text" id="adminGeneratedLink" class="admin-input link-input" readonly />
+            <button type="button" id="adminCopyLinkBtn" class="admin-action-btn primary-action">📋 Copy Shareable Custom Link</button>
+            <button type="button" id="adminOpenLinkBtn" class="admin-action-btn secondary-action">🚀 Test Link in New Tab</button>
+          </div>
+          
+          <div class="example-links-box">
+            <div class="elb-title">💡 Quick Examples:</div>
+            <ul>
+              <li><code>?to=Neha&amp;from=Yuvi&amp;occ=birthday</code> &rarr; Neha Birthday Edition 🎂</li>
+              <li><code>?to=Pooja&amp;from=Yuvi&amp;occ=anniversary</code> &rarr; Pooja Anniversary Edition 💍</li>
+              <li><code>?to=Simran&amp;from=Yuvi&amp;occ=love</code> &rarr; Simran Love Surprise Edition 💖</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel 3: Missions & Skip Controls -->
+      <div class="atab-panel" id="panelMissions">
+        <div class="missions-control-card">
+          <div class="mc-header">
+            <h3>⚡ Instant Mission Unlock &amp; Bypass (Full Control)</h3>
+            <p>Direct kisi bhi mission ya stage par jump karein ya saare lock ek click mein hataayein:</p>
+          </div>
+
+          <div class="master-unlock-row">
+            <button type="button" id="adminUnlockAllBtn" class="admin-master-unlock-btn">
+              🔓 Master Unlock ALL (Quiz, Car, Thar, Misty&amp;Yuvi, Puzzle, Gifts, Pay)
+            </button>
+            <button type="button" id="adminResetProgressBtn" class="admin-reset-progress-btn">
+              🔄 Lock Everything Back to Start
+            </button>
+          </div>
+
+          <div class="jump-grid">
+            <button type="button" class="admin-jump-btn" data-jump="quiz">🎯 Jump to Love Quiz</button>
+            <button type="button" class="admin-jump-btn" data-jump="car1">🚗 Jump to Love Car (Mission 1)</button>
+            <button type="button" class="admin-jump-btn" data-jump="car2">🚙 Jump to Thar 4x4 (Mission 2)</button>
+            <button type="button" class="admin-jump-btn" data-jump="car3">👩‍❤️‍👨 Jump to Couple Game (Mission 3)</button>
+            <button type="button" class="admin-jump-btn" data-jump="puzzle">🧩 Jump to Photo Puzzle</button>
+            <button type="button" class="admin-jump-btn" data-jump="gifts">🎁 Jump to Birthday Gifts</button>
+            <button type="button" class="admin-jump-btn" data-jump="pay">💳 Jump to Payment ₹143</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel 4: Photos & Media -->
+      <div class="atab-panel" id="panelPhotos">
+        <div class="photos-control-grid">
+          <div class="photo-card-item">
+            <h4>🌌 Background Theme Wallpaper</h4>
+            <p>Main website wallpaper photo change karein:</p>
+            <input type="file" id="adminUploadBg" accept="image/*" class="admin-file-input" />
+          </div>
+
+          <div class="photo-card-item">
+            <h4>👸 Main Girl Portrait Photo</h4>
+            <p>Modal &amp; Toast photo change karein:</p>
+            <input type="file" id="adminUploadPortrait" accept="image/*" class="admin-file-input" />
+          </div>
+
+          <div class="photo-card-item">
+            <h4>🧩 Love Photo Puzzle Image</h4>
+            <p>3x3 jigsaw puzzle ke liye custom photo:</p>
+            <input type="file" id="adminUploadPuzzle" accept="image/*" class="admin-file-input" />
+          </div>
+
+          <div class="photo-card-item">
+            <h4>👩‍❤️‍💋‍👨 Live Hug &amp; Kiss Wallpaper Photo</h4>
+            <p>Gift #4 live animated wallpaper photo:</p>
+            <input type="file" id="adminUploadHug" accept="image/*" class="admin-file-input" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel 5: Payment & Social -->
+      <div class="atab-panel" id="panelPayment">
+        <div class="admin-grid-3">
+          <div class="form-group">
+            <label for="adminUpiId">UPI ID for Payment:</label>
+            <input type="text" id="adminUpiId" class="admin-input" value="baby8389@nyes" />
+          </div>
+          <div class="form-group">
+            <label for="adminAmount">Love Token Amount (₹):</label>
+            <input type="number" id="adminAmount" class="admin-input" value="143" />
+            <span class="field-hint">143 = I Love You</span>
+          </div>
+          <div class="form-group">
+            <label for="adminInstaId">Instagram Handle:</label>
+            <input type="text" id="adminInstaId" class="admin-input" value="tim_aary" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Actions Footer -->
+      <footer class="admin-dash-footer">
+        <button type="button" id="adminSaveBtn" class="admin-save-btn">
+          💾 Save &amp; Apply Changes Instantly ✨
+        </button>
+        <button type="button" id="adminResetBtn" class="admin-reset-btn">
+          🔄 Reset to Default Yuvi &amp; Misty
+        </button>
+        <button type="button" id="adminLogoutBtn" class="admin-logout-btn">
+          🔒 Logout
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <p class="sr-only">Happy Birthday Misty. Here&rsquo;s to a wonderful year ahead.</p>
+
+  <!-- Core Scripts -->
+  <script src="./sound.js"></script>
+  <script src="./heartClicks.js" defer></script>
+  <script src="./birthday.js" defer></script>
+  <script src="./quest.js" defer></script>
+  <script src="./game.js" defer></script>
+  <script src="./puzzle.js" defer></script>
+  <script src="./gifts.js" defer></script>
+  <script src="./admin.js" defer></script>
+
+  <!-- Step-by-Step Romantic Journey Manager with Anti-Skip Locks -->
+  <script>
+    class JourneyManager {
+      constructor() {
+        // Clear any old stored progress so card ALWAYS begins strictly at Step 1!
+        try { localStorage.removeItem('misty_journey_unlocked'); } catch (_) {}
+
+        this.steps = {
+          intro: {
+            unlocked: true,
+            label: '🌸 Intro Tree',
+            lockedLabel: '🌸 Intro Tree',
+            btnId: 'navIntroBtn',
+            requiredMsg: ''
+          },
+          quiz: {
+            unlocked: false,
+            label: '💖 Love Quiz',
+            lockedLabel: '🔒 Love Quiz',
+            btnId: 'navQuizBtn',
+            requiredMsg: '🔒 Pehle Intro Tree mein dil pe teer chalake letter open karo babu! 🏹💖'
+          },
+          game: {
+            unlocked: false,
+            label: '🚗 Car Mission',
+            lockedLabel: '🔒 Car Mission',
+            btnId: 'navGameBtn',
+            requiredMsg: '🔒 Pehle 10 Love Questions complete karo babu! 💖📝'
+          },
+          puzzle: {
+            unlocked: false,
+            label: '🧩 Love Puzzle',
+            lockedLabel: '🔒 Love Puzzle',
+            btnId: 'navPuzzleBtn',
+            requiredMsg: '🔒 Pehle Car Missions (Love Car, Thar 4x4, Misty & Yuvi) complete karo babu! 🚗🚙💖'
+          },
+          gifts: {
+            unlocked: false,
+            label: '🎁 Birthday Gifts',
+            lockedLabel: '🔒 Birthday Gifts',
+            btnId: 'navGiftsBtn',
+            requiredMsg: '🔒 Pehle Love Puzzle solve karo babu! 🧩💖'
+          },
+          pay: {
+            unlocked: false,
+            label: '💳 Pay 143',
+            lockedLabel: '🔒 Pay 143',
+            btnId: 'navPayBtn',
+            requiredMsg: '🔒 Pehle Birthday Gifts unbox karo babu! 🎁👑'
+          }
+        };
+
+        this.toastEl = document.getElementById('journeyLockToast');
+        this.toastTimer = null;
+
+        this.initUI();
+        this.bindEvents();
+      }
+
+      initUI() {
+        Object.keys(this.steps).forEach((k) => {
+          const s = this.steps[k];
+          const btn = document.getElementById(s.btnId);
+          if (!btn) return;
+          if (s.unlocked) {
+            btn.classList.remove('is-locked');
+            btn.innerHTML = s.label;
+          } else {
+            btn.classList.add('is-locked');
+            btn.innerHTML = s.lockedLabel;
+          }
+        });
+      }
+
+      unlock(stepKey, silent = false) {
+        const s = this.steps[stepKey];
+        if (!s) return;
+        if (s.unlocked) return; // already unlocked
+
+        s.unlocked = true;
+
+        const btn = document.getElementById(s.btnId);
+        if (btn) {
+          btn.classList.remove('is-locked');
+          btn.innerHTML = s.label;
+          btn.classList.add('just-unlocked');
+          setTimeout(() => btn.classList.remove('just-unlocked'), 1500);
+        }
+
+        if (!silent) {
+          if (window.soundFX) {
+            window.soundFX.chime(1.4);
+            setTimeout(() => window.soundFX.triumph?.(), 300);
+          }
+          this.showToast(`🎉 Yay! ${s.label} unlock ho gaya babu! 💖✨`);
+        }
+      }
+
+      showToast(msg) {
+        if (!this.toastEl) return;
+        this.toastEl.innerHTML = msg;
+        this.toastEl.style.display = 'block';
+        this.toastEl.classList.remove('is-shown');
+        void this.toastEl.offsetWidth; // force reflow
+        this.toastEl.classList.add('is-shown');
+
+        clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          this.toastEl.classList.remove('is-shown');
+          setTimeout(() => {
+            if (!this.toastEl.classList.contains('is-shown')) {
+              this.toastEl.style.display = 'none';
+            }
+          }, 350);
+        }, 2800);
+      }
+
+      closeAllModals() {
+        document.body.classList.remove('modal-active');
+        document.getElementById('questModal')?.classList.remove('is-open');
+        document.getElementById('gameModal')?.classList.remove('is-open');
+        document.getElementById('puzzleModal')?.classList.remove('is-open');
+        document.getElementById('giftsModal')?.classList.remove('is-open');
+        document.getElementById('giftLightboxModal')?.classList.remove('is-open');
+      }
+
+      setActiveNav(btnId) {
+        document.querySelectorAll('.nav-pill').forEach((b) => b.classList.remove('active'));
+        const target = document.getElementById(btnId);
+        if (target) target.classList.add('active');
+      }
+
+      handleNavClick(stepKey, openFn) {
+        const s = this.steps[stepKey];
+        if (!s) return;
+
+        if (!s.unlocked) {
+          const btn = document.getElementById(s.btnId);
+          if (btn) {
+            btn.classList.add('shake-locked');
+            setTimeout(() => btn.classList.remove('shake-locked'), 450);
+          }
+          if (window.soundFX) window.soundFX.boing();
+          this.showToast(s.requiredMsg);
+          return;
+        }
+
+        this.closeAllModals();
+        openFn?.();
+        this.setActiveNav(s.btnId);
+      }
+
+      bindEvents() {
+        const guardBtn = (btnId, stepKey, openFn) => {
+          const btn = document.getElementById(btnId);
+          if (!btn) return;
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            this.handleNavClick(stepKey, openFn);
+          }, true); // Capture phase: intercepts BEFORE any other listener
+        };
+
+        guardBtn('navIntroBtn', 'intro', () => {});
+        guardBtn('navQuizBtn', 'quiz', () => window.loveQuest?.open());
+        guardBtn('navGameBtn', 'game', () => {
+          window.loveGame?.switchMode(window.loveGame?.currentMode || 1);
+          window.loveGame?.open();
+        });
+        guardBtn('navPuzzleBtn', 'puzzle', () => window.lovePuzzle?.open());
+        guardBtn('navGiftsBtn', 'gifts', () => window.birthdayGifts?.open());
+        guardBtn('navPayBtn', 'pay', () => window.birthdayGifts?.scrollToPayment());
+
+        // In-modal actions
+        const startQuestBtn = document.getElementById('startQuestBtn');
+        const closeQuestBtn = document.getElementById('closeQuestBtn');
+        const closeGameBtn = document.getElementById('closeGameBtn');
+        const claimGiftsBtn = document.getElementById('claimGiftsBtn');
+        const closeGiftsBtn = document.getElementById('closeGiftsBtn');
+
+        startQuestBtn?.addEventListener('click', () => {
+          this.unlock('quiz', true);
+          window.loveQuest?.open();
+          this.setActiveNav('navQuizBtn');
+        });
+
+        closeQuestBtn?.addEventListener('click', () => {
+          window.loveQuest?.close();
+          this.setActiveNav('navIntroBtn');
+        });
+
+        closeGameBtn?.addEventListener('click', () => {
+          window.loveGame?.close();
+          this.setActiveNav('navIntroBtn');
+        });
+
+        claimGiftsBtn?.addEventListener('click', () => {
+          window.loveGame?.close();
+          this.unlock('puzzle', true);
+          window.lovePuzzle?.open();
+          this.setActiveNav('navPuzzleBtn');
+        });
+
+        closeGiftsBtn?.addEventListener('click', () => {
+          window.birthdayGifts?.close();
+          this.setActiveNav('navIntroBtn');
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.journey = new JourneyManager();
+    });
+  </script>
+</body>
+</html>

@@ -311,9 +311,11 @@ class BirthdayGifts {
 
         const data = GIFT_DETAILS[giftKey];
         if (data && lightboxModal && lightboxImg) {
+          const girlName = window.SiteConfig?.recipientName || 'Misty';
+          const boyName = window.SiteConfig?.senderName || 'Yuvi';
           lightboxImg.src = data.img;
-          if (lightboxTitle) lightboxTitle.textContent = data.title;
-          if (lightboxDesc) lightboxDesc.textContent = data.desc;
+          if (lightboxTitle) lightboxTitle.textContent = data.title.replace(/Misty/g, girlName).replace(/Yuvi/g, boyName);
+          if (lightboxDesc) lightboxDesc.textContent = data.desc.replace(/Misty/g, girlName).replace(/Yuvi/g, boyName);
           
           const liveFx = document.getElementById('lightboxLiveFx');
           const liveBadge = document.getElementById('lightboxLiveBadge');
