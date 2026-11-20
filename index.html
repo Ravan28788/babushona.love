@@ -828,7 +828,8 @@
             <div class="video-player-wrap">
               <div class="video-frame">
                 <div class="polaroid-pin">🎬</div>
-                <video id="mistyVideo" controls playsinline loop preload="metadata" poster="./images/misty6.jpg">
+                <button id="mistyReelPlayBtn" type="button" style="display:block;margin:10px auto;padding:12px 24px;border:0;border-radius:30px;background:#e91e63;color:white;font-size:16px;font-weight:bold;cursor:pointer;position:relative;z-index:10">▶ Play Romantic Reel</button>
+<video id="mistyVideo" controls playsinline loop preload="metadata" poster="./images/misty6.jpg">
 <source src="/images/misty_video.mp4" type="video/mp4">
 </video>
               </div>
@@ -1476,5 +1477,36 @@
       window.journey = new JourneyManager();
     });
   </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const video = document.getElementById('mistyVideo');
+  const btn = document.getElementById('mistyReelPlayBtn');
+  if (!video || !btn) return;
+
+  video.controls = true;
+
+  btn.addEventListener('click', async () => {
+    try {
+      if (video.paused) {
+        await video.play();
+      } else {
+        video.pause();
+      }
+    } catch (err) {
+      console.error('Reel playback error:', err);
+      alert('Video could not play: ' + err.message);
+    }
+  });
+
+  video.addEventListener('play', () => {
+    btn.textContent = '⏸ Pause Romantic Reel';
+  });
+  video.addEventListener('pause', () => {
+    btn.textContent = '▶ Play Romantic Reel';
+  });
+});
+</script>
+
 </body>
 </html>

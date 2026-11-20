@@ -212,6 +212,37 @@ if (bgMusic && PLAYLIST.length) {
   bgMusic.addEventListener('pause', () => updatePlayState(false));
 }
 
+
+// ROMANTIC_HOOK_SEEK_FIX
+// Start each song at its configured romantic highlight.
+if (bgMusic) {
+  let hookTrackSrc = '';
+
+  const seekToRomanticHook = () => {
+    const track = PLAYLIST[currentTrackIndex];
+    if (!track || bgMusic.readyState < 1) return;
+
+    const src = bgMusic.currentSrc || bgMusic.src;
+    if (!src) return;
+
+    if (hookTrackSrc !== src) {
+      hookTrackSrc = src;
+      const start = Number(track.startTime) || 0;
+      if (start > 0) {
+        try {
+          bgMusic.currentTime = start;
+        } catch (err) {
+          console.warn('Music seek:', err);
+        }
+      }
+    }
+  };
+
+  bgMusic.addEventListener('loadedmetadata', seekToRomanticHook);
+  bgMusic.addEventListener('play', seekToRomanticHook);
+  bgMusic.addEventListener('emptied', () => { hookTrackSrc = ''; });
+}
+
 function nextTrack() {
   currentTrackIndex = (currentTrackIndex + 1) % PLAYLIST.length;
   loadTrack(currentTrackIndex, true);
