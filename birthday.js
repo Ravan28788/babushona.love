@@ -51,16 +51,16 @@ const replay = $('replay');
 // Romantic Music Playlist from /music/ folder (starts from main love hooks)
 const PLAYLIST = [
   {
-    title: "Ho Gaya Hai Pyaar ❤️",
-    artist: "Yasser Desai",
-    src: "/music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp3",
-    startTime: 42
-  },
-  {
     title: "Dilruba Dilnasheen 🌹",
     artist: "Rito Riba",
     src: "/music/Dilruba Dilnasheen(Official Audio) I Dilfek EP I Rito Riba.mp3",
     startTime: 20
+  },
+  {
+    title: "Ho Gaya Hai Pyaar ❤️",
+    artist: "Yasser Desai",
+    src: "/music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp3",
+    startTime: 42
   },
   {
     title: "Teri Meri Kahaani 💕",
@@ -241,6 +241,20 @@ if (bgMusic) {
   bgMusic.addEventListener('loadedmetadata', seekToRomanticHook);
   bgMusic.addEventListener('play', seekToRomanticHook);
   bgMusic.addEventListener('emptied', () => { hookTrackSrc = ''; });
+}
+
+
+// DILRUBA_INITIAL_TRACK_FIX
+if (bgMusic && PLAYLIST.length) {
+  bgMusic.pause();
+  bgMusic.src = PLAYLIST[0].src;
+  bgMusic.preload = 'auto';
+  bgMusic.muted = false;
+  bgMusic.volume = 1;
+  currentTrackIndex = 0;
+  if (mpTrackTitle) mpTrackTitle.textContent = PLAYLIST[0].title;
+  if (mpTrackArtist) mpTrackArtist.textContent = PLAYLIST[0].artist;
+  bgMusic.load();
 }
 
 function nextTrack() {
@@ -1024,6 +1038,18 @@ function buildFilm(m) {
       if (bgMusic.paused) playMusic();
     }
   }, null, 0.26);
+
+  
+  t.call(() => {
+    if (bgMusic) {
+      userMuted = false;
+      bgMusic.muted = false;
+      bgMusic.volume = 1;
+      if (bgMusic.paused) {
+        playMusic();
+      }
+    }
+  }, null, 0.26); // DILRUBA_HEART_VOLUME_FIX
 
   t.add(burstHearts, 0.26)
     .to(target, { x: 7, y: -9, duration: 0.06, ease: 'power2.out' }, 0.26)
