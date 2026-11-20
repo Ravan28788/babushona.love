@@ -833,6 +833,32 @@
                   <source src="./Misty%20Photos/WhatsApp%20Video%202026-11-19%20at%2021.23.21.mp4" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
+<button id="reelPlayBtn" type="button"
+style="display:block;margin:12px auto;padding:12px 24px;
+background:#e91e63;color:white;border:0;border-radius:30px;
+font-size:16px;font-weight:bold;cursor:pointer;">
+▶ Play Memories Reel
+</button>
+
+<script>
+document.getElementById("reelPlayBtn").addEventListener("click", async function () {
+  const video = document.getElementById("mistyVideo");
+  if (!video) return;
+
+  video.src = "/images/misty_reel_final.mp4";
+  video.controls = true;
+  video.muted = false;
+
+  try {
+    await video.play();
+    this.textContent = "⏸ Pause Memories Reel";
+  } catch (error) {
+    console.error("Reel playback error:", error);
+    alert("Video could not play: " + error.message);
+  }
+});
+</script>
+
               </div>
               <div class="video-caption-box">
                 <p class="polaroid-name">Forever In Motion ♥</p>
