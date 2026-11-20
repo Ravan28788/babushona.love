@@ -53,13 +53,13 @@ const PLAYLIST = [
   {
     title: "Ho Gaya Hai Pyaar ❤️",
     artist: "Yasser Desai",
-    src: "/music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp4",
+    src: "/music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp3",
     startTime: 42
   },
   {
     title: "Dilruba Dilnasheen 🌹",
     artist: "Rito Riba",
-    src: "/music/Dilruba Dilnasheen(Official Audio) I Dilfek EP I Rito Riba.mp4",
+    src: "/music/Dilruba Dilnasheen(Official Audio) I Dilfek EP I Rito Riba.mp3",
     startTime: 20
   },
   {
@@ -71,31 +71,31 @@ const PLAYLIST = [
   {
     title: "Kalyani (8D Audio) 🎶",
     artist: "Shreya Ghoshal",
-    src: "/music/8D Audio - KALYANI (with Shreya Ghoshal)  ARJN _ KDS _ FIFTY4 _ RONN _ Use Headphones.mp4",
+    src: "/music/8D Audio - KALYANI (with Shreya Ghoshal)  ARJN _ KDS _ FIFTY4 _ RONN _ Use Headphones.mp3",
     startTime: 32
   },
   {
     title: "Naina Banjare ✨",
     artist: "Arijit Singh",
-    src: "/music/vidssave.com Arijit Singh - Naina Banjare _ Sanya Malhotra & Radhika Madan _ Lyrical _ Pataakha 480P.mp4",
+    src: "/music/vidssave.com Arijit Singh - Naina Banjare _ Sanya Malhotra & Radhika Madan _ Lyrical _ Pataakha 480P.mp3",
     startTime: 28
   },
   {
     title: "Kaho Na Kaho 🥀",
     artist: "Amir Jamal",
-    src: "/music/vidssave.com Kaho Na Kaho - 8K_4K Music Video _ Emraan Hashmi, Mallika Sherawat _ Amir Jamal _ Anu Malik _ Murder 360P.mp4",
+    src: "/music/vidssave.com Kaho Na Kaho - 8K_4K Music Video _ Emraan Hashmi, Mallika Sherawat _ Amir Jamal _ Anu Malik _ Murder 360P.mp3",
     startTime: 45
   },
   {
     title: "Guzarish 🌙",
     artist: "Satinder Sartaaj",
-    src: "/music/vidssave.com GUZARISH (गुज़ारिश) - SATINDER SARTAAJ _ BHUSHAN KUMAR 480P.mp4",
+    src: "/music/vidssave.com GUZARISH (गुज़ारिश) - SATINDER SARTAAJ _ BHUSHAN KUMAR 480P.mp3",
     startTime: 36
   },
   {
     title: "Aashiq Banaya Aapne 🔥",
     artist: "Himesh Reshammiya",
-    src: "/music/Aashiq-Banaya-Aapne-SnapYT.App.mp4",
+    src: "/music/Aashiq-Banaya-Aapne-SnapYT.App.mp3",
     startTime: 48
   }
 ];
@@ -114,7 +114,9 @@ function loadTrack(idx, autoPlay = true) {
   if (!bgMusic || !PLAYLIST[idx]) return;
   currentTrackIndex = idx;
   const track = PLAYLIST[idx];
+  bgMusic.pause();
   bgMusic.src = track.src;
+  bgMusic.load();
   if (mpTrackTitle) mpTrackTitle.textContent = track.title;
   if (mpTrackArtist) mpTrackArtist.textContent = track.artist;
 
@@ -130,7 +132,10 @@ function loadTrack(idx, autoPlay = true) {
     if (autoPlay && !userMuted) {
       bgMusic.play().then(() => {
         updatePlayState(true);
-      }).catch(() => {});
+      }).catch((err) => {
+      console.error("MUSIC PLAY FAILED:", err);
+      updatePlayState(false);
+    });
     } else {
       updatePlayState(false);
     }
@@ -156,7 +161,10 @@ function playMusic() {
     }
     bgMusic.play().then(() => {
       updatePlayState(true);
-    }).catch(() => {});
+    }).catch((err) => {
+      console.error("MUSIC PLAY FAILED:", err);
+      updatePlayState(false);
+    });
   }
 }
 
@@ -171,7 +179,10 @@ function toggleMusic() {
     }
     bgMusic.play().then(() => {
       updatePlayState(true);
-    }).catch(() => {});
+    }).catch((err) => {
+      console.error("MUSIC PLAY FAILED:", err);
+      updatePlayState(false);
+    });
   } else {
     userMuted = true;
     bgMusic.pause();
