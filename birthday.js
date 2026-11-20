@@ -170,23 +170,33 @@ function playMusic() {
 
 function toggleMusic() {
   if (!bgMusic) return;
-  if (bgMusic.paused) {
-    userMuted = false;
-    const track = PLAYLIST[currentTrackIndex];
-    const startSec = track?.startTime || 0;
-    if (startSec && bgMusic.currentTime < 2) {
-      try { bgMusic.currentTime = startSec; } catch (e) {}
-    }
-    bgMusic.play().then(() => {
-      updatePlayState(true);
-    }).catch((err) => {
-      console.error("MUSIC PLAY FAILED:", err);
-      updatePlayState(false);
-    });
-  } else {
+
+  if (!bgMusic.paused) {
     userMuted = true;
     bgMusic.pause();
     updatePlayState(false);
+    return;
+  }
+
+  userMuted = false;
+  bgMusic.muted = false;
+  bgMusic.volume = 1;
+
+  if (!bgMusic.currentSrc) {
+    const track = PLAYLIST[currentTrackIndex];
+    bgMusic.src = track.src;
+    bgMusic.load();
+  }
+
+  const promise = bgMusic.play();
+
+  if (promise) {
+    promise.then(() => {
+      updatePlayState(true);
+    }).catch(err => {
+      console.error("Resume failed:", err);
+      updatePlayState(false);
+    });
   }
 }
 
