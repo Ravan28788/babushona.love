@@ -1,20 +1,20 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const video = document.getElementById("mistyVideo");
   if (!video) return;
 
   video.controls = true;
-  video.setAttribute("playsinline", "");
-  video.style.pointerEvents = "auto";
+  video.playsInline = true;
 
-  const wrapper = video.parentElement;
-  wrapper.style.position = "relative";
+  let button = document.getElementById("safeReelPlayButton");
 
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.textContent = "▶ Play Reel";
-  btn.setAttribute("aria-label", "Play romantic reel");
+  if (!button) {
+    button = document.createElement("button");
+    button.id = "safeReelPlayButton";
+    button.type = "button";
+    video.insertAdjacentElement("afterend", button);
+  }
 
-  Object.assign(btn.style, {
+  Object.assign(button.style, {
     display: "block",
     margin: "12px auto",
     padding: "12px 24px",
@@ -29,25 +29,46 @@ document.addEventListener("DOMContentLoaded", function () {
     zIndex: "999"
   });
 
-  video.insertAdjacentElement("afterend", btn);
+  let starting = false;
 
-  btn.addEventListener("click", async function () {
+  function updateButton() {
+    button.textContent = video.paused
+      ? "▶ Play Reel"
+      : "⏸ Pause Reel";
+  }
+
+  button.addEventListener("click", async () => {
+    if (starting) return;
+
+    if (!video.paused) {
+      video.pause();
+      updateButton();
+      return;
+    }
+
+    starting = true;
+    button.disabled = true;
+
     try {
-      if (video.paused) {
-        video.muted = false;
-        await video.play();
-        btn.textContent = "⏸ Pause Reel";
-      } else {
-        video.pause();
-        btn.textContent = "▶ Play Reel";
-      }
+      await video.play();
     } catch (error) {
-      console.error("Reel playback error:", error);
-      alert("Video play nahi ho rahi: " + error.message);
+      console.error("Reel playback failed:", error);
+
+      if (error.name === "AbortError") {
+        console.warn("Another script interrupted video playback.");
+      } else {
+        alert("Reel playback error: " + error.message);
+      }
+    } finally {
+      starting = false;
+      button.disabled = false;
+      updateButton();
     }
   });
 
-  video.addEventListener("ended", function () {
-    btn.textContent = "▶ Play Reel";
-  });
+  video.addEventListener("play", updateButton);
+  video.addEventListener("pause", updateButton);
+  video.addEventListener("ended", updateButton);
+
+  updateButton();
 });
