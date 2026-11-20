@@ -188,11 +188,10 @@ class LoveQuest {
       this.card.classList.add('card-flip');
     }
 
-    const girlName = window.SiteConfig?.recipientName || 'Misty';
     this.badgeEl.textContent = q.badge;
     this.emojiEl.textContent = q.emoji;
-    this.questionEl.textContent = q.question.replace(/Misty/g, girlName);
-    this.subtextEl.textContent = q.subtext.replace(/Misty/g, girlName);
+    this.questionEl.textContent = q.question;
+    this.subtextEl.textContent = q.subtext;
 
     // Progress bar
     const pct = ((idx + 1) / LOVE_QUESTIONS.length) * 100;

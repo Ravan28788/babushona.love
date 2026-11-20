@@ -48,97 +48,57 @@ const uline = $('uline').querySelector('.uline__path');
 const bloom = $('bloom');
 const replay = $('replay');
 
-// Romantic Music Playlist Engine with YouTube Support & Snippet Player
-const DEFAULT_PLAYLIST = [
+// Romantic Music Playlist from /music/ folder (starts from main love hooks)
+const PLAYLIST = [
   {
-    id: "default_1",
-    title: "Ho Gaya Hai Pyaar ❤️",
-    artist: "Yasser Desai",
-    src: "./music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp4",
-    type: "local",
-    startTime: 42,
-    endTime: 95
-  },
-  {
-    id: "default_2",
     title: "Dilruba Dilnasheen 🌹",
     artist: "Rito Riba",
-    src: "./music/Dilruba Dilnasheen(Official Audio) I Dilfek EP I Rito Riba.mp4",
-    type: "local",
-    startTime: 20,
-    endTime: 78
+    src: "/music/Dilruba Dilnasheen(Official Audio) I Dilfek EP I Rito Riba.mp3",
+    startTime: 20
   },
   {
-    id: "default_3",
+    title: "Ho Gaya Hai Pyaar ❤️",
+    artist: "Yasser Desai",
+    src: "/music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp3",
+    startTime: 42
+  },
+  {
     title: "Teri Meri Kahaani 💕",
     artist: "Arijit Singh",
-    src: "./music/vidssave.com Teri Meri Kahaani Hai Baarishon Ka Paani - Arijit Singh _ Gabbar Is Back _ Akshay Kumar & Kareena K💕 480P.mp4",
-    type: "local",
-    startTime: 38,
-    endTime: 98
+    src: "/music/vidssave.com Teri Meri Kahaani Hai Baarishon Ka Paani - Arijit Singh _ Gabbar Is Back _ Akshay Kumar & Kareena K💕 480P.mp4",
+    startTime: 38
   },
   {
-    id: "default_4",
     title: "Kalyani (8D Audio) 🎶",
     artist: "Shreya Ghoshal",
-    src: "./music/8D Audio - KALYANI (with Shreya Ghoshal)  ARJN _ KDS _ FIFTY4 _ RONN _ Use Headphones.mp4",
-    type: "local",
-    startTime: 32,
-    endTime: 85
+    src: "/music/8D Audio - KALYANI (with Shreya Ghoshal)  ARJN _ KDS _ FIFTY4 _ RONN _ Use Headphones.mp3",
+    startTime: 32
   },
   {
-    id: "default_5",
     title: "Naina Banjare ✨",
     artist: "Arijit Singh",
-    src: "./music/vidssave.com Arijit Singh - Naina Banjare _ Sanya Malhotra & Radhika Madan _ Lyrical _ Pataakha 480P.mp4",
-    type: "local",
-    startTime: 28,
-    endTime: 80
+    src: "/music/vidssave.com Arijit Singh - Naina Banjare _ Sanya Malhotra & Radhika Madan _ Lyrical _ Pataakha 480P.mp3",
+    startTime: 28
   },
   {
-    id: "default_6",
     title: "Kaho Na Kaho 🥀",
     artist: "Amir Jamal",
-    src: "./music/vidssave.com Kaho Na Kaho - 8K_4K Music Video _ Emraan Hashmi, Mallika Sherawat _ Amir Jamal _ Anu Malik _ Murder 360P.mp4",
-    type: "local",
-    startTime: 45,
-    endTime: 105
+    src: "/music/vidssave.com Kaho Na Kaho - 8K_4K Music Video _ Emraan Hashmi, Mallika Sherawat _ Amir Jamal _ Anu Malik _ Murder 360P.mp3",
+    startTime: 45
   },
   {
-    id: "default_7",
     title: "Guzarish 🌙",
     artist: "Satinder Sartaaj",
-    src: "./music/vidssave.com GUZARISH (गुज़ारिश) - SATINDER SARTAAJ _ BHUSHAN KUMAR 480P.mp4",
-    type: "local",
-    startTime: 36,
-    endTime: 95
+    src: "/music/vidssave.com GUZARISH (गुज़ारिश) - SATINDER SARTAAJ _ BHUSHAN KUMAR 480P.mp3",
+    startTime: 36
   },
   {
-    id: "default_8",
     title: "Aashiq Banaya Aapne 🔥",
     artist: "Himesh Reshammiya",
-    src: "./music/Aashiq-Banaya-Aapne-SnapYT.App.mp4",
-    type: "local",
-    startTime: 48,
-    endTime: 110
+    src: "/music/Aashiq-Banaya-Aapne-SnapYT.App.mp3",
+    startTime: 48
   }
 ];
-
-function getStoredCustomPlaylist() {
-  try {
-    const raw = localStorage.getItem('yuvi_custom_playlist');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.warn('Error reading custom playlist:', e);
-  }
-  return [];
-}
-
-let PLAYLIST = [...getStoredCustomPlaylist(), ...DEFAULT_PLAYLIST];
-window.ActivePlaylist = PLAYLIST;
 
 let currentTrackIndex = 0;
 const bgMusic = $('bgMusic');
@@ -149,117 +109,42 @@ const mpTrackTitle = $('mpTrackTitle');
 const mpTrackArtist = $('mpTrackArtist');
 const musicDisc = $('musicDisc');
 let userMuted = false;
-let ytPlayer = null;
-let ytPlayerReady = false;
-let ytSnippetTimer = null;
-let localSnippetCheck = null;
-let isSnippetTesting = false;
 
-// Initialize YouTube Iframe API
-function initYouTubePlayer() {
-  if (window.YT && window.YT.Player) {
-    createYTInstance();
-    return;
-  }
-  const prevReady = window.onYouTubeIframeAPIReady;
-  window.onYouTubeIframeAPIReady = function() {
-    if (typeof prevReady === 'function') prevReady();
-    createYTInstance();
-  };
-  if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
-  }
-}
+function loadTrack(idx, autoPlay = true) {
+  if (!bgMusic || !PLAYLIST[idx]) return;
+  currentTrackIndex = idx;
+  const track = PLAYLIST[idx];
+  bgMusic.pause();
+  bgMusic.src = track.src;
+  bgMusic.load();
+  if (mpTrackTitle) mpTrackTitle.textContent = track.title;
+  if (mpTrackArtist) mpTrackArtist.textContent = track.artist;
 
-function createYTInstance() {
-  if (ytPlayer) return;
-  let container = document.getElementById('ytPlayerContainer');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'ytPlayerContainer';
-    container.style.cssText = 'position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0.001;pointer-events:none;z-index:-1;';
-    const playerDiv = document.createElement('div');
-    playerDiv.id = 'ytAudioPlayer';
-    container.appendChild(playerDiv);
-    document.body.appendChild(container);
-  }
+  const startSec = track.startTime || 0;
 
-  try {
-    ytPlayer = new window.YT.Player('ytAudioPlayer', {
-      height: '1',
-      width: '1',
-      playerVars: {
-        autoplay: 0,
-        controls: 0,
-        disablekb: 1,
-        fs: 0,
-        playsinline: 1,
-        rel: 0
-      },
-      events: {
-        onReady: () => {
-          ytPlayerReady = true;
-          window.ytAudioPlayer = ytPlayer;
-        },
-        onStateChange: (event) => {
-          // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0
-          if (event.data === 1) {
-            updatePlayState(true);
-            startSnippetWatcher();
-          } else if (event.data === 2) {
-            updatePlayState(false);
-            clearSnippetWatcher();
-          } else if (event.data === 0) {
-            clearSnippetWatcher();
-            if (!isSnippetTesting) {
-              nextTrack();
-            } else {
-              window.RomanticPlayer?.stopSnippetTest();
-            }
-          }
-        },
-        onError: (err) => {
-          console.warn('YouTube Player Error:', err);
-          clearSnippetWatcher();
-          if (!isSnippetTesting) {
-            setTimeout(nextTrack, 1000);
-          }
-        }
-      }
-    });
-  } catch (err) {
-    console.warn('Could not initialize YouTube Player:', err);
-  }
-}
-
-function clearSnippetWatcher() {
-  if (ytSnippetTimer) {
-    clearInterval(ytSnippetTimer);
-    ytSnippetTimer = null;
-  }
-}
-
-function startSnippetWatcher() {
-  clearSnippetWatcher();
-  const track = PLAYLIST[currentTrackIndex];
-  if (!track || track.type !== 'youtube' || !track.endTime) return;
-
-  ytSnippetTimer = setInterval(() => {
-    if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+  const applyStartAndPlay = () => {
     try {
-      const cur = ytPlayer.getCurrentTime();
-      if (cur >= track.endTime) {
-        clearSnippetWatcher();
-        if (isSnippetTesting) {
-          window.RomanticPlayer?.stopSnippetTest();
-        } else {
-          nextTrack();
-        }
+      if (bgMusic.currentTime < startSec) {
+        bgMusic.currentTime = startSec;
       }
-    } catch (_) {}
-  }, 400);
+    } catch (e) {}
+
+    if (autoPlay && !userMuted) {
+      bgMusic.play().then(() => {
+        updatePlayState(true);
+      }).catch((err) => {
+      console.error("MUSIC PLAY FAILED:", err);
+      updatePlayState(false);
+    });
+    } else {
+      updatePlayState(false);
+    }
+  };
+
+  bgMusic.addEventListener('loadedmetadata', applyStartAndPlay, { once: true });
+  if (bgMusic.readyState >= 1) {
+    applyStartAndPlay();
+  }
 }
 
 function updatePlayState(isPlaying) {
@@ -267,166 +152,109 @@ function updatePlayState(isPlaying) {
   if (musicDisc) musicDisc.classList.toggle('is-spinning', isPlaying);
 }
 
-function stopAllAudio() {
-  if (bgMusic) {
-    try { bgMusic.pause(); } catch (_) {}
-  }
-  if (localSnippetCheck) {
-    clearInterval(localSnippetCheck);
-    localSnippetCheck = null;
-  }
-  clearSnippetWatcher();
-  if (ytPlayer && ytPlayerReady && typeof ytPlayer.pauseVideo === 'function') {
-    try { ytPlayer.pauseVideo(); } catch (_) {}
-  }
-}
-
-function loadTrack(idx, autoPlay = true) {
-  if (!PLAYLIST.length) return;
-  currentTrackIndex = (idx + PLAYLIST.length) % PLAYLIST.length;
-  const track = PLAYLIST[currentTrackIndex];
-  if (!track) return;
-
-  stopAllAudio();
-
-  if (mpTrackTitle) mpTrackTitle.textContent = track.title;
-  if (mpTrackArtist) mpTrackArtist.textContent = track.artist || 'Romantic Melody';
-
-  const startSec = track.startTime || 0;
-  const endSec = track.endTime || 0;
-
-  if (track.type === 'youtube' && track.youtubeId) {
-    // YouTube Track Playback
-    if (!ytPlayerReady) {
-      initYouTubePlayer();
-    }
-    const playYT = () => {
-      if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') return;
-      try {
-        ytPlayer.loadVideoById({
-          videoId: track.youtubeId,
-          startSeconds: startSec,
-          endSeconds: endSec > startSec ? endSec : undefined
-        });
-        if (autoPlay && !userMuted) {
-          ytPlayer.playVideo();
-          updatePlayState(true);
-        } else {
-          ytPlayer.pauseVideo();
-          updatePlayState(false);
-        }
-      } catch (e) {
-        console.warn('Error playing YouTube track:', e);
-      }
-    };
-
-    if (ytPlayerReady) {
-      playYT();
-    } else {
-      setTimeout(playYT, 800);
-    }
-  } else {
-    // Local Audio Track Playback
-    if (!bgMusic) return;
-    bgMusic.src = track.src;
-
-    const applyStartAndPlay = () => {
-      try {
-        if (bgMusic.currentTime < startSec) {
-          bgMusic.currentTime = startSec;
-        }
-      } catch (e) {}
-
-      // Monitor snippet end for local audio
-      if (endSec && endSec > startSec) {
-        if (localSnippetCheck) clearInterval(localSnippetCheck);
-        localSnippetCheck = setInterval(() => {
-          if (bgMusic && bgMusic.currentTime >= endSec) {
-            clearInterval(localSnippetCheck);
-            localSnippetCheck = null;
-            nextTrack();
-          }
-        }, 500);
-      }
-
-      if (autoPlay && !userMuted) {
-        bgMusic.play().then(() => {
-          updatePlayState(true);
-        }).catch(() => {});
-      } else {
-        updatePlayState(false);
-      }
-    };
-
-    bgMusic.addEventListener('loadedmetadata', applyStartAndPlay, { once: true });
-    if (bgMusic.readyState >= 1) {
-      applyStartAndPlay();
-    }
-  }
-}
-
 function playMusic() {
-  if (userMuted) return;
-  const track = PLAYLIST[currentTrackIndex];
-  if (!track) return;
-
-  if (track.type === 'youtube' && track.youtubeId) {
-    if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
-      ytPlayer.playVideo();
+  if (bgMusic && bgMusic.paused && !userMuted) {
+    const track = PLAYLIST[currentTrackIndex];
+    const startSec = track?.startTime || 0;
+    if (startSec && bgMusic.currentTime < 2) {
+      try { bgMusic.currentTime = startSec; } catch (e) {}
+    }
+    bgMusic.play().then(() => {
       updatePlayState(true);
-    } else {
-      loadTrack(currentTrackIndex, true);
-    }
-  } else {
-    if (bgMusic) {
-      const startSec = track?.startTime || 0;
-      if (startSec && bgMusic.currentTime < 2) {
-        try { bgMusic.currentTime = startSec; } catch (e) {}
-      }
-      bgMusic.play().then(() => {
-        updatePlayState(true);
-      }).catch(() => {});
-    }
+    }).catch((err) => {
+      console.error("MUSIC PLAY FAILED:", err);
+      updatePlayState(false);
+    });
   }
 }
 
 function toggleMusic() {
-  const track = PLAYLIST[currentTrackIndex];
-  if (!track) return;
+  if (!bgMusic) return;
 
-  if (track.type === 'youtube') {
-    if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') {
-      loadTrack(currentTrackIndex, true);
-      return;
-    }
-    const state = ytPlayer.getPlayerState();
-    if (state === 1) {
-      // currently playing -> pause
-      userMuted = true;
-      ytPlayer.pauseVideo();
-      updatePlayState(false);
-    } else {
-      userMuted = false;
-      ytPlayer.playVideo();
-      updatePlayState(true);
-    }
-  } else {
-    if (!bgMusic) return;
-    if (bgMusic.paused) {
-      userMuted = false;
-      const startSec = track?.startTime || 0;
-      if (startSec && bgMusic.currentTime < 2) {
-        try { bgMusic.currentTime = startSec; } catch (e) {}
-      }
-      bgMusic.play().then(() => {
-        updatePlayState(true);
-      }).catch(() => {});
-    } else {
-      userMuted = true;
-      bgMusic.pause();
-      updatePlayState(false);
-    }
+  if (!bgMusic.paused) {
+    userMuted = true;
+    bgMusic.pause();
+    updatePlayState(false);
+    return;
   }
+
+  userMuted = false;
+  bgMusic.muted = false;
+  bgMusic.volume = 1;
+
+  if (!bgMusic.currentSrc) {
+    const track = PLAYLIST[currentTrackIndex];
+    bgMusic.src = track.src;
+    bgMusic.load();
+  }
+
+  const promise = bgMusic.play();
+
+  if (promise) {
+    promise.then(() => {
+      updatePlayState(true);
+    }).catch(err => {
+      console.error("Resume failed:", err);
+      updatePlayState(false);
+    });
+  }
+}
+
+
+// Reliable initial audio setup
+if (bgMusic && PLAYLIST.length) {
+  if (!bgMusic.getAttribute('src')) {
+    bgMusic.src = PLAYLIST[0].src;
+  }
+  bgMusic.preload = 'auto';
+  bgMusic.load();
+  bgMusic.addEventListener('play', () => updatePlayState(true));
+  bgMusic.addEventListener('pause', () => updatePlayState(false));
+}
+
+
+// ROMANTIC_HOOK_SEEK_FIX
+// Start each song at its configured romantic highlight.
+if (bgMusic) {
+  let hookTrackSrc = '';
+
+  const seekToRomanticHook = () => {
+    const track = PLAYLIST[currentTrackIndex];
+    if (!track || bgMusic.readyState < 1) return;
+
+    const src = bgMusic.currentSrc || bgMusic.src;
+    if (!src) return;
+
+    if (hookTrackSrc !== src) {
+      hookTrackSrc = src;
+      const start = Number(track.startTime) || 0;
+      if (start > 0) {
+        try {
+          bgMusic.currentTime = start;
+        } catch (err) {
+          console.warn('Music seek:', err);
+        }
+      }
+    }
+  };
+
+  bgMusic.addEventListener('loadedmetadata', seekToRomanticHook);
+  bgMusic.addEventListener('play', seekToRomanticHook);
+  bgMusic.addEventListener('emptied', () => { hookTrackSrc = ''; });
+}
+
+
+// DILRUBA_INITIAL_TRACK_FIX
+if (bgMusic && PLAYLIST.length) {
+  bgMusic.pause();
+  bgMusic.src = PLAYLIST[0].src;
+  bgMusic.preload = 'auto';
+  bgMusic.muted = false;
+  bgMusic.volume = 1;
+  currentTrackIndex = 0;
+  if (mpTrackTitle) mpTrackTitle.textContent = PLAYLIST[0].title;
+  if (mpTrackArtist) mpTrackArtist.textContent = PLAYLIST[0].artist;
+  bgMusic.load();
 }
 
 function nextTrack() {
@@ -447,94 +275,6 @@ if (bgMusic) {
     nextTrack();
   });
 }
-
-// Global Romantic Music API for Admin & External Hooks
-window.RomanticPlayer = {
-  getPlaylist: () => PLAYLIST,
-  getDefaultPlaylist: () => DEFAULT_PLAYLIST,
-  getCustomPlaylist: getStoredCustomPlaylist,
-  getCurrentIndex: () => currentTrackIndex,
-  
-  addCustomSong: function(song) {
-    const list = getStoredCustomPlaylist();
-    const newSong = {
-      id: 'custom_' + Date.now(),
-      title: song.title || 'Romantic Melody ❤️',
-      artist: song.artist || 'YouTube Special',
-      type: 'youtube',
-      youtubeId: song.youtubeId,
-      startTime: song.startTime || 30,
-      endTime: song.endTime || (song.startTime ? song.startTime + 50 : 80)
-    };
-    list.unshift(newSong);
-    localStorage.setItem('yuvi_custom_playlist', JSON.stringify(list));
-    PLAYLIST = [...list, ...DEFAULT_PLAYLIST];
-    window.ActivePlaylist = PLAYLIST;
-    return newSong;
-  },
-
-  removeCustomSong: function(songId) {
-    let list = getStoredCustomPlaylist();
-    list = list.filter(s => s.id !== songId);
-    localStorage.setItem('yuvi_custom_playlist', JSON.stringify(list));
-    PLAYLIST = [...list, ...DEFAULT_PLAYLIST];
-    window.ActivePlaylist = PLAYLIST;
-    if (currentTrackIndex >= PLAYLIST.length) currentTrackIndex = 0;
-  },
-
-  playTrackByIdx: function(idx) {
-    loadTrack(idx, true);
-  },
-
-  testSnippet: function(videoId, startSec, endSec, onDone) {
-    isSnippetTesting = true;
-    stopAllAudio();
-    if (!ytPlayerReady) initYouTubePlayer();
-
-    const doTest = () => {
-      if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') return;
-      try {
-        ytPlayer.loadVideoById({
-          videoId: videoId,
-          startSeconds: startSec || 0,
-          endSeconds: endSec > startSec ? endSec : undefined
-        });
-        ytPlayer.playVideo();
-        updatePlayState(true);
-        if (mpTrackTitle) mpTrackTitle.textContent = '🎵 Testing Snippet...';
-        if (mpTrackArtist) mpTrackArtist.textContent = `Hook: ${startSec}s to ${endSec}s`;
-      } catch (err) {
-        console.warn('Snippet test error:', err);
-      }
-    };
-
-    if (ytPlayerReady) {
-      doTest();
-    } else {
-      setTimeout(doTest, 800);
-    }
-  },
-
-  stopSnippetTest: function() {
-    isSnippetTesting = false;
-    clearSnippetWatcher();
-    if (ytPlayer && ytPlayerReady) {
-      try { ytPlayer.pauseVideo(); } catch (_) {}
-    }
-    updatePlayState(false);
-    // Restore current active track info
-    const track = PLAYLIST[currentTrackIndex];
-    if (track) {
-      if (mpTrackTitle) mpTrackTitle.textContent = track.title;
-      if (mpTrackArtist) mpTrackArtist.textContent = track.artist;
-    }
-  }
-};
-
-// Initialize YouTube Player early on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  initYouTubePlayer();
-});
 
 // Live India Standard Time (IST - Asia/Kolkata) Digital Clock
 function updateIndiaLiveClock() {
@@ -1276,6 +1016,41 @@ function buildFilm(m) {
     .to(aim, { opacity: 0, duration: 0.18 }, 0)
     .to([eyebrow, hint], { opacity: 0, duration: 0.2, ease: 'power1.out' }, 0);
 
+  t.call(() => {
+    userMuted = false;
+    if (bgMusic) {
+      bgMusic.muted = false;
+      bgMusic.volume = 1;
+      bgMusic.play().then(() => {
+        updatePlayState(true);
+      }).catch(err => {
+        console.warn("Crossbow music failed:", err);
+      });
+    }
+  }, null, 0.26);
+
+  t.call(() => {
+    // CROSSBOW_IMPACT_AUDIO
+    if (bgMusic) {
+      userMuted = false;
+      bgMusic.muted = false;
+      bgMusic.volume = 1;
+      if (bgMusic.paused) playMusic();
+    }
+  }, null, 0.26);
+
+  
+  t.call(() => {
+    if (bgMusic) {
+      userMuted = false;
+      bgMusic.muted = false;
+      bgMusic.volume = 1;
+      if (bgMusic.paused) {
+        playMusic();
+      }
+    }
+  }, null, 0.26); // DILRUBA_HEART_VOLUME_FIX
+
   t.add(burstHearts, 0.26)
     .to(target, { x: 7, y: -9, duration: 0.06, ease: 'power2.out' }, 0.26)
     .to(target, { x: 0, y: 0, duration: 0.32, ease: 'power2.out' }, 0.32)
@@ -1345,6 +1120,20 @@ function speakHappyBirthdayMisty() {
 
 let played = false, drawing = false, startPX = 0, startPY = 0, startDraw = 0;
 
+
+function unlockCrossbowAudio() {
+  if (!bgMusic || !bgMusic.paused) return;
+  userMuted = false;
+  bgMusic.muted = false;
+  bgMusic.volume = 0;
+  if (!bgMusic.getAttribute('src')) {
+    bgMusic.src = PLAYLIST[currentTrackIndex].src;
+  }
+  bgMusic.play().catch(err =>
+    console.warn('Audio unlock:', err)
+  );
+}
+
 function fire() {
   if (played) return;
   played = true;
@@ -1377,13 +1166,20 @@ function autoFire() {
 
 archery.addEventListener('pointerdown', (e) => {
   if (played) return;
+  unlockCrossbowAudio();
   drawing = true;
   userMuted = false;
   if (bgMusic) {
     bgMusic.muted = false;
     bgMusic.volume = 1;
   }
-  playMusic();
+  if (bgMusic && bgMusic.paused) {
+    userMuted = false;
+    if (!bgMusic.getAttribute('src')) {
+      loadTrack(currentTrackIndex, false);
+    }
+    playMusic();
+  }
   try { archery.setPointerCapture(e.pointerId); } catch (_) {}
   startPX = e.clientX; startPY = e.clientY; startDraw = curDraw;
   e.preventDefault();

@@ -393,9 +393,7 @@ class LoveCarGame {
 
     if (tab3) {
       const isUnlocked = this.unlockedGameModes.has(3);
-      const girlName = window.SiteConfig?.recipientName || 'Misty';
-      const boyName = window.SiteConfig?.senderName || 'Yuvi';
-      tab3.innerHTML = isUnlocked ? `👩‍❤️‍👨 3. ${girlName} &amp; ${boyName}` : `🔒 3. ${girlName} &amp; ${boyName}`;
+      tab3.innerHTML = isUnlocked ? '👩‍❤️‍👨 3. Misty &amp; Yuvi' : '🔒 3. Misty &amp; Yuvi';
       tab3.classList.toggle('active', this.currentMode === 3);
       tab3.classList.toggle('is-locked', !isUnlocked);
     }
@@ -1833,8 +1831,7 @@ class LoveCarGame {
       // Speech badge: "Rose for Queen Misty! 🌹💖"
       ctx.fillStyle = '#ff2a70';
       ctx.font = 'bold 10px sans-serif';
-      const girlName = window.SiteConfig?.recipientName || 'Misty';
-      ctx.fillText(`Rose for Queen ${girlName}! 🌹💖`, 0, 52);
+      ctx.fillText('Rose for Queen Misty! 🌹💖', 0, 52);
     }
 
     ctx.restore();
@@ -1947,8 +1944,7 @@ class LoveCarGame {
       ctx.font = 'bold 9.5px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const girlName = window.SiteConfig?.recipientName || 'Misty';
-      ctx.fillText(`🧕 ENEMY: ${girlName} ki Mummy`, 0, -35);
+      ctx.fillText('🧕 ENEMY: Misty ki Mummy', 0, -35);
 
     } else if (type === 'papa') {
       // 👓 Misty ke Papa
@@ -2034,8 +2030,7 @@ class LoveCarGame {
       ctx.font = 'bold 9.5px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const girlName = window.SiteConfig?.recipientName || 'Misty';
-      ctx.fillText(`👓 ENEMY: ${girlName} ke Papa`, 0, -35);
+      ctx.fillText('👓 ENEMY: Misty ke Papa', 0, -35);
 
     } else {
       // 😜 Misty ka Bhai
@@ -2120,8 +2115,7 @@ class LoveCarGame {
       ctx.font = 'bold 9.5px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const girlName = window.SiteConfig?.recipientName || 'Misty';
-      ctx.fillText(`😜 ENEMY: ${girlName} ka Bhai`, 0, -35);
+      ctx.fillText('😜 ENEMY: Misty ka Bhai', 0, -35);
     }
 
     ctx.restore();
