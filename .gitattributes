@@ -1,9 +1,0 @@
-*.mp4 filter=lfs diff=lfs merge=lfs -text
-
-public/images/misty_video_fixed.mp4 -filter -diff -merge text
-public/images/misty_original_reel.mp4 -filter -diff -merge
-
-/public/images/misty_reel_final.mp4 -filter -diff -merge
-images/misty_video.mp4 -filter -diff -merge -text
-
-/images/misty_video.mp4 -filter -diff -merge -text
