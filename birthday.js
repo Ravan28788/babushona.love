@@ -48,57 +48,97 @@ const uline = $('uline').querySelector('.uline__path');
 const bloom = $('bloom');
 const replay = $('replay');
 
-// Romantic Music Playlist from /music/ folder (starts from main love hooks)
-const PLAYLIST = [
+// Romantic Music Playlist Engine with YouTube Support & Snippet Player
+const DEFAULT_PLAYLIST = [
   {
-    title: "Dilruba Dilnasheen 🌹",
-    artist: "Rito Riba",
-    src: "/music/Dilruba Dilnasheen(Official Audio) I Dilfek EP I Rito Riba.mp3",
-    startTime: 20
-  },
-  {
+    id: "default_1",
     title: "Ho Gaya Hai Pyaar ❤️",
     artist: "Yasser Desai",
-    src: "/music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp3",
-    startTime: 42
+    src: "./music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp4",
+    type: "local",
+    startTime: 42,
+    endTime: 95
   },
   {
+    id: "default_2",
+    title: "Dilruba Dilnasheen 🌹",
+    artist: "Rito Riba",
+    src: "./music/Dilruba Dilnasheen(Official Audio) I Dilfek EP I Rito Riba.mp4",
+    type: "local",
+    startTime: 20,
+    endTime: 78
+  },
+  {
+    id: "default_3",
     title: "Teri Meri Kahaani 💕",
     artist: "Arijit Singh",
-    src: "/music/vidssave.com Teri Meri Kahaani Hai Baarishon Ka Paani - Arijit Singh _ Gabbar Is Back _ Akshay Kumar & Kareena K💕 480P.mp4",
-    startTime: 38
+    src: "./music/vidssave.com Teri Meri Kahaani Hai Baarishon Ka Paani - Arijit Singh _ Gabbar Is Back _ Akshay Kumar & Kareena K💕 480P.mp4",
+    type: "local",
+    startTime: 38,
+    endTime: 98
   },
   {
+    id: "default_4",
     title: "Kalyani (8D Audio) 🎶",
     artist: "Shreya Ghoshal",
-    src: "/music/8D Audio - KALYANI (with Shreya Ghoshal)  ARJN _ KDS _ FIFTY4 _ RONN _ Use Headphones.mp3",
-    startTime: 32
+    src: "./music/8D Audio - KALYANI (with Shreya Ghoshal)  ARJN _ KDS _ FIFTY4 _ RONN _ Use Headphones.mp4",
+    type: "local",
+    startTime: 32,
+    endTime: 85
   },
   {
+    id: "default_5",
     title: "Naina Banjare ✨",
     artist: "Arijit Singh",
-    src: "/music/vidssave.com Arijit Singh - Naina Banjare _ Sanya Malhotra & Radhika Madan _ Lyrical _ Pataakha 480P.mp3",
-    startTime: 28
+    src: "./music/vidssave.com Arijit Singh - Naina Banjare _ Sanya Malhotra & Radhika Madan _ Lyrical _ Pataakha 480P.mp4",
+    type: "local",
+    startTime: 28,
+    endTime: 80
   },
   {
+    id: "default_6",
     title: "Kaho Na Kaho 🥀",
     artist: "Amir Jamal",
-    src: "/music/vidssave.com Kaho Na Kaho - 8K_4K Music Video _ Emraan Hashmi, Mallika Sherawat _ Amir Jamal _ Anu Malik _ Murder 360P.mp3",
-    startTime: 45
+    src: "./music/vidssave.com Kaho Na Kaho - 8K_4K Music Video _ Emraan Hashmi, Mallika Sherawat _ Amir Jamal _ Anu Malik _ Murder 360P.mp4",
+    type: "local",
+    startTime: 45,
+    endTime: 105
   },
   {
+    id: "default_7",
     title: "Guzarish 🌙",
     artist: "Satinder Sartaaj",
-    src: "/music/vidssave.com GUZARISH (गुज़ारिश) - SATINDER SARTAAJ _ BHUSHAN KUMAR 480P.mp3",
-    startTime: 36
+    src: "./music/vidssave.com GUZARISH (गुज़ारिश) - SATINDER SARTAAJ _ BHUSHAN KUMAR 480P.mp4",
+    type: "local",
+    startTime: 36,
+    endTime: 95
   },
   {
+    id: "default_8",
     title: "Aashiq Banaya Aapne 🔥",
     artist: "Himesh Reshammiya",
-    src: "/music/Aashiq-Banaya-Aapne-SnapYT.App.mp3",
-    startTime: 48
+    src: "./music/Aashiq-Banaya-Aapne-SnapYT.App.mp4",
+    type: "local",
+    startTime: 48,
+    endTime: 110
   }
 ];
+
+function getStoredCustomPlaylist() {
+  try {
+    const raw = localStorage.getItem('yuvi_custom_playlist');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch (e) {
+    console.warn('Error reading custom playlist:', e);
+  }
+  return [];
+}
+
+let PLAYLIST = [...getStoredCustomPlaylist(), ...DEFAULT_PLAYLIST];
+window.ActivePlaylist = PLAYLIST;
 
 let currentTrackIndex = 0;
 const bgMusic = $('bgMusic');
@@ -109,42 +149,117 @@ const mpTrackTitle = $('mpTrackTitle');
 const mpTrackArtist = $('mpTrackArtist');
 const musicDisc = $('musicDisc');
 let userMuted = false;
+let ytPlayer = null;
+let ytPlayerReady = false;
+let ytSnippetTimer = null;
+let localSnippetCheck = null;
+let isSnippetTesting = false;
 
-function loadTrack(idx, autoPlay = true) {
-  if (!bgMusic || !PLAYLIST[idx]) return;
-  currentTrackIndex = idx;
-  const track = PLAYLIST[idx];
-  bgMusic.pause();
-  bgMusic.src = track.src;
-  bgMusic.load();
-  if (mpTrackTitle) mpTrackTitle.textContent = track.title;
-  if (mpTrackArtist) mpTrackArtist.textContent = track.artist;
-
-  const startSec = track.startTime || 0;
-
-  const applyStartAndPlay = () => {
-    try {
-      if (bgMusic.currentTime < startSec) {
-        bgMusic.currentTime = startSec;
-      }
-    } catch (e) {}
-
-    if (autoPlay && !userMuted) {
-      bgMusic.play().then(() => {
-        updatePlayState(true);
-      }).catch((err) => {
-      console.error("MUSIC PLAY FAILED:", err);
-      updatePlayState(false);
-    });
-    } else {
-      updatePlayState(false);
-    }
-  };
-
-  bgMusic.addEventListener('loadedmetadata', applyStartAndPlay, { once: true });
-  if (bgMusic.readyState >= 1) {
-    applyStartAndPlay();
+// Initialize YouTube Iframe API
+function initYouTubePlayer() {
+  if (window.YT && window.YT.Player) {
+    createYTInstance();
+    return;
   }
+  const prevReady = window.onYouTubeIframeAPIReady;
+  window.onYouTubeIframeAPIReady = function() {
+    if (typeof prevReady === 'function') prevReady();
+    createYTInstance();
+  };
+  if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+  }
+}
+
+function createYTInstance() {
+  if (ytPlayer) return;
+  let container = document.getElementById('ytPlayerContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'ytPlayerContainer';
+    container.style.cssText = 'position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0.001;pointer-events:none;z-index:-1;';
+    const playerDiv = document.createElement('div');
+    playerDiv.id = 'ytAudioPlayer';
+    container.appendChild(playerDiv);
+    document.body.appendChild(container);
+  }
+
+  try {
+    ytPlayer = new window.YT.Player('ytAudioPlayer', {
+      height: '1',
+      width: '1',
+      playerVars: {
+        autoplay: 0,
+        controls: 0,
+        disablekb: 1,
+        fs: 0,
+        playsinline: 1,
+        rel: 0
+      },
+      events: {
+        onReady: () => {
+          ytPlayerReady = true;
+          window.ytAudioPlayer = ytPlayer;
+        },
+        onStateChange: (event) => {
+          // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0
+          if (event.data === 1) {
+            updatePlayState(true);
+            startSnippetWatcher();
+          } else if (event.data === 2) {
+            updatePlayState(false);
+            clearSnippetWatcher();
+          } else if (event.data === 0) {
+            clearSnippetWatcher();
+            if (!isSnippetTesting) {
+              nextTrack();
+            } else {
+              window.RomanticPlayer?.stopSnippetTest();
+            }
+          }
+        },
+        onError: (err) => {
+          console.warn('YouTube Player Error:', err);
+          clearSnippetWatcher();
+          if (!isSnippetTesting) {
+            setTimeout(nextTrack, 1000);
+          }
+        }
+      }
+    });
+  } catch (err) {
+    console.warn('Could not initialize YouTube Player:', err);
+  }
+}
+
+function clearSnippetWatcher() {
+  if (ytSnippetTimer) {
+    clearInterval(ytSnippetTimer);
+    ytSnippetTimer = null;
+  }
+}
+
+function startSnippetWatcher() {
+  clearSnippetWatcher();
+  const track = PLAYLIST[currentTrackIndex];
+  if (!track || track.type !== 'youtube' || !track.endTime) return;
+
+  ytSnippetTimer = setInterval(() => {
+    if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+    try {
+      const cur = ytPlayer.getCurrentTime();
+      if (cur >= track.endTime) {
+        clearSnippetWatcher();
+        if (isSnippetTesting) {
+          window.RomanticPlayer?.stopSnippetTest();
+        } else {
+          nextTrack();
+        }
+      }
+    } catch (_) {}
+  }, 400);
 }
 
 function updatePlayState(isPlaying) {
@@ -152,109 +267,166 @@ function updatePlayState(isPlaying) {
   if (musicDisc) musicDisc.classList.toggle('is-spinning', isPlaying);
 }
 
-function playMusic() {
-  if (bgMusic && bgMusic.paused && !userMuted) {
-    const track = PLAYLIST[currentTrackIndex];
-    const startSec = track?.startTime || 0;
-    if (startSec && bgMusic.currentTime < 2) {
-      try { bgMusic.currentTime = startSec; } catch (e) {}
+function stopAllAudio() {
+  if (bgMusic) {
+    try { bgMusic.pause(); } catch (_) {}
+  }
+  if (localSnippetCheck) {
+    clearInterval(localSnippetCheck);
+    localSnippetCheck = null;
+  }
+  clearSnippetWatcher();
+  if (ytPlayer && ytPlayerReady && typeof ytPlayer.pauseVideo === 'function') {
+    try { ytPlayer.pauseVideo(); } catch (_) {}
+  }
+}
+
+function loadTrack(idx, autoPlay = true) {
+  if (!PLAYLIST.length) return;
+  currentTrackIndex = (idx + PLAYLIST.length) % PLAYLIST.length;
+  const track = PLAYLIST[currentTrackIndex];
+  if (!track) return;
+
+  stopAllAudio();
+
+  if (mpTrackTitle) mpTrackTitle.textContent = track.title;
+  if (mpTrackArtist) mpTrackArtist.textContent = track.artist || 'Romantic Melody';
+
+  const startSec = track.startTime || 0;
+  const endSec = track.endTime || 0;
+
+  if (track.type === 'youtube' && track.youtubeId) {
+    // YouTube Track Playback
+    if (!ytPlayerReady) {
+      initYouTubePlayer();
     }
-    bgMusic.play().then(() => {
+    const playYT = () => {
+      if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') return;
+      try {
+        ytPlayer.loadVideoById({
+          videoId: track.youtubeId,
+          startSeconds: startSec,
+          endSeconds: endSec > startSec ? endSec : undefined
+        });
+        if (autoPlay && !userMuted) {
+          ytPlayer.playVideo();
+          updatePlayState(true);
+        } else {
+          ytPlayer.pauseVideo();
+          updatePlayState(false);
+        }
+      } catch (e) {
+        console.warn('Error playing YouTube track:', e);
+      }
+    };
+
+    if (ytPlayerReady) {
+      playYT();
+    } else {
+      setTimeout(playYT, 800);
+    }
+  } else {
+    // Local Audio Track Playback
+    if (!bgMusic) return;
+    bgMusic.src = track.src;
+
+    const applyStartAndPlay = () => {
+      try {
+        if (bgMusic.currentTime < startSec) {
+          bgMusic.currentTime = startSec;
+        }
+      } catch (e) {}
+
+      // Monitor snippet end for local audio
+      if (endSec && endSec > startSec) {
+        if (localSnippetCheck) clearInterval(localSnippetCheck);
+        localSnippetCheck = setInterval(() => {
+          if (bgMusic && bgMusic.currentTime >= endSec) {
+            clearInterval(localSnippetCheck);
+            localSnippetCheck = null;
+            nextTrack();
+          }
+        }, 500);
+      }
+
+      if (autoPlay && !userMuted) {
+        bgMusic.play().then(() => {
+          updatePlayState(true);
+        }).catch(() => {});
+      } else {
+        updatePlayState(false);
+      }
+    };
+
+    bgMusic.addEventListener('loadedmetadata', applyStartAndPlay, { once: true });
+    if (bgMusic.readyState >= 1) {
+      applyStartAndPlay();
+    }
+  }
+}
+
+function playMusic() {
+  if (userMuted) return;
+  const track = PLAYLIST[currentTrackIndex];
+  if (!track) return;
+
+  if (track.type === 'youtube' && track.youtubeId) {
+    if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+      ytPlayer.playVideo();
       updatePlayState(true);
-    }).catch((err) => {
-      console.error("MUSIC PLAY FAILED:", err);
-      updatePlayState(false);
-    });
+    } else {
+      loadTrack(currentTrackIndex, true);
+    }
+  } else {
+    if (bgMusic) {
+      const startSec = track?.startTime || 0;
+      if (startSec && bgMusic.currentTime < 2) {
+        try { bgMusic.currentTime = startSec; } catch (e) {}
+      }
+      bgMusic.play().then(() => {
+        updatePlayState(true);
+      }).catch(() => {});
+    }
   }
 }
 
 function toggleMusic() {
-  if (!bgMusic) return;
+  const track = PLAYLIST[currentTrackIndex];
+  if (!track) return;
 
-  if (!bgMusic.paused) {
-    userMuted = true;
-    bgMusic.pause();
-    updatePlayState(false);
-    return;
-  }
-
-  userMuted = false;
-  bgMusic.muted = false;
-  bgMusic.volume = 1;
-
-  if (!bgMusic.currentSrc) {
-    const track = PLAYLIST[currentTrackIndex];
-    bgMusic.src = track.src;
-    bgMusic.load();
-  }
-
-  const promise = bgMusic.play();
-
-  if (promise) {
-    promise.then(() => {
-      updatePlayState(true);
-    }).catch(err => {
-      console.error("Resume failed:", err);
-      updatePlayState(false);
-    });
-  }
-}
-
-
-// Reliable initial audio setup
-if (bgMusic && PLAYLIST.length) {
-  if (!bgMusic.getAttribute('src')) {
-    bgMusic.src = PLAYLIST[0].src;
-  }
-  bgMusic.preload = 'auto';
-  bgMusic.load();
-  bgMusic.addEventListener('play', () => updatePlayState(true));
-  bgMusic.addEventListener('pause', () => updatePlayState(false));
-}
-
-
-// ROMANTIC_HOOK_SEEK_FIX
-// Start each song at its configured romantic highlight.
-if (bgMusic) {
-  let hookTrackSrc = '';
-
-  const seekToRomanticHook = () => {
-    const track = PLAYLIST[currentTrackIndex];
-    if (!track || bgMusic.readyState < 1) return;
-
-    const src = bgMusic.currentSrc || bgMusic.src;
-    if (!src) return;
-
-    if (hookTrackSrc !== src) {
-      hookTrackSrc = src;
-      const start = Number(track.startTime) || 0;
-      if (start > 0) {
-        try {
-          bgMusic.currentTime = start;
-        } catch (err) {
-          console.warn('Music seek:', err);
-        }
-      }
+  if (track.type === 'youtube') {
+    if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') {
+      loadTrack(currentTrackIndex, true);
+      return;
     }
-  };
-
-  bgMusic.addEventListener('loadedmetadata', seekToRomanticHook);
-  bgMusic.addEventListener('play', seekToRomanticHook);
-  bgMusic.addEventListener('emptied', () => { hookTrackSrc = ''; });
-}
-
-
-// DILRUBA_INITIAL_TRACK_FIX
-if (bgMusic && PLAYLIST.length) {
-  bgMusic.pause();
-  bgMusic.src = PLAYLIST[0].src;
-  bgMusic.preload = 'auto';
-  bgMusic.muted = false;
-  bgMusic.volume = 1;
-  currentTrackIndex = 0;
-  if (mpTrackTitle) mpTrackTitle.textContent = PLAYLIST[0].title;
-  if (mpTrackArtist) mpTrackArtist.textContent = PLAYLIST[0].artist;
-  bgMusic.load();
+    const state = ytPlayer.getPlayerState();
+    if (state === 1) {
+      // currently playing -> pause
+      userMuted = true;
+      ytPlayer.pauseVideo();
+      updatePlayState(false);
+    } else {
+      userMuted = false;
+      ytPlayer.playVideo();
+      updatePlayState(true);
+    }
+  } else {
+    if (!bgMusic) return;
+    if (bgMusic.paused) {
+      userMuted = false;
+      const startSec = track?.startTime || 0;
+      if (startSec && bgMusic.currentTime < 2) {
+        try { bgMusic.currentTime = startSec; } catch (e) {}
+      }
+      bgMusic.play().then(() => {
+        updatePlayState(true);
+      }).catch(() => {});
+    } else {
+      userMuted = true;
+      bgMusic.pause();
+      updatePlayState(false);
+    }
+  }
 }
 
 function nextTrack() {
@@ -275,6 +447,94 @@ if (bgMusic) {
     nextTrack();
   });
 }
+
+// Global Romantic Music API for Admin & External Hooks
+window.RomanticPlayer = {
+  getPlaylist: () => PLAYLIST,
+  getDefaultPlaylist: () => DEFAULT_PLAYLIST,
+  getCustomPlaylist: getStoredCustomPlaylist,
+  getCurrentIndex: () => currentTrackIndex,
+  
+  addCustomSong: function(song) {
+    const list = getStoredCustomPlaylist();
+    const newSong = {
+      id: 'custom_' + Date.now(),
+      title: song.title || 'Romantic Melody ❤️',
+      artist: song.artist || 'YouTube Special',
+      type: 'youtube',
+      youtubeId: song.youtubeId,
+      startTime: song.startTime || 30,
+      endTime: song.endTime || (song.startTime ? song.startTime + 50 : 80)
+    };
+    list.unshift(newSong);
+    localStorage.setItem('yuvi_custom_playlist', JSON.stringify(list));
+    PLAYLIST = [...list, ...DEFAULT_PLAYLIST];
+    window.ActivePlaylist = PLAYLIST;
+    return newSong;
+  },
+
+  removeCustomSong: function(songId) {
+    let list = getStoredCustomPlaylist();
+    list = list.filter(s => s.id !== songId);
+    localStorage.setItem('yuvi_custom_playlist', JSON.stringify(list));
+    PLAYLIST = [...list, ...DEFAULT_PLAYLIST];
+    window.ActivePlaylist = PLAYLIST;
+    if (currentTrackIndex >= PLAYLIST.length) currentTrackIndex = 0;
+  },
+
+  playTrackByIdx: function(idx) {
+    loadTrack(idx, true);
+  },
+
+  testSnippet: function(videoId, startSec, endSec, onDone) {
+    isSnippetTesting = true;
+    stopAllAudio();
+    if (!ytPlayerReady) initYouTubePlayer();
+
+    const doTest = () => {
+      if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') return;
+      try {
+        ytPlayer.loadVideoById({
+          videoId: videoId,
+          startSeconds: startSec || 0,
+          endSeconds: endSec > startSec ? endSec : undefined
+        });
+        ytPlayer.playVideo();
+        updatePlayState(true);
+        if (mpTrackTitle) mpTrackTitle.textContent = '🎵 Testing Snippet...';
+        if (mpTrackArtist) mpTrackArtist.textContent = `Hook: ${startSec}s to ${endSec}s`;
+      } catch (err) {
+        console.warn('Snippet test error:', err);
+      }
+    };
+
+    if (ytPlayerReady) {
+      doTest();
+    } else {
+      setTimeout(doTest, 800);
+    }
+  },
+
+  stopSnippetTest: function() {
+    isSnippetTesting = false;
+    clearSnippetWatcher();
+    if (ytPlayer && ytPlayerReady) {
+      try { ytPlayer.pauseVideo(); } catch (_) {}
+    }
+    updatePlayState(false);
+    // Restore current active track info
+    const track = PLAYLIST[currentTrackIndex];
+    if (track) {
+      if (mpTrackTitle) mpTrackTitle.textContent = track.title;
+      if (mpTrackArtist) mpTrackArtist.textContent = track.artist;
+    }
+  }
+};
+
+// Initialize YouTube Player early on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initYouTubePlayer();
+});
 
 // Live India Standard Time (IST - Asia/Kolkata) Digital Clock
 function updateIndiaLiveClock() {
@@ -524,18 +784,88 @@ function buildScene() {
   rx = ry * 1.16;
   groundY = H * 0.93;
 
-  bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-  bgGrad.addColorStop(0, '#fff3e9');
-  bgGrad.addColorStop(0.46, '#ffe7d6');
-  bgGrad.addColorStop(0.78, '#fcd9c4');
-  bgGrad.addColorStop(1, '#f3c4b5');
-  glowGrad = ctx.createRadialGradient(cx, cy, ry * 0.1, cx, cy, ry * 1.55);
-  glowGrad.addColorStop(0, 'rgba(255,219,170,0.6)');
-  glowGrad.addColorStop(0.5, 'rgba(255,170,150,0.2)');
-  glowGrad.addColorStop(1, 'rgba(255,170,150,0)');
-  groundGrad = ctx.createRadialGradient(cx, H * 1.02, ry * 0.2, cx, H * 1.02, ry * 1.6);
-  groundGrad.addColorStop(0, 'rgba(255,205,165,0.5)');
-  groundGrad.addColorStop(1, 'rgba(255,205,165,0)');
+  const activeTheme = document.documentElement.getAttribute('data-theme') || window.SiteConfig?.theme || 'rose-pink';
+
+  if (activeTheme === 'emerald-fantasy') {
+    bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#02160e');
+    bgGrad.addColorStop(0.46, '#062d1e');
+    bgGrad.addColorStop(0.78, '#0b4530');
+    bgGrad.addColorStop(1, '#041c13');
+    glowGrad = ctx.createRadialGradient(cx, cy, ry * 0.1, cx, cy, ry * 1.55);
+    glowGrad.addColorStop(0, 'rgba(46, 213, 115, 0.65)');
+    glowGrad.addColorStop(0.5, 'rgba(16, 172, 132, 0.25)');
+    glowGrad.addColorStop(1, 'rgba(5, 35, 26, 0)');
+    groundGrad = ctx.createRadialGradient(cx, H * 1.02, ry * 0.2, cx, H * 1.02, ry * 1.6);
+    groundGrad.addColorStop(0, 'rgba(46, 213, 115, 0.45)');
+    groundGrad.addColorStop(1, 'rgba(46, 213, 115, 0)');
+  } else if (activeTheme === 'midnight-neon') {
+    bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#0a0017');
+    bgGrad.addColorStop(0.46, '#1f043b');
+    bgGrad.addColorStop(0.78, '#34085e');
+    bgGrad.addColorStop(1, '#120224');
+    glowGrad = ctx.createRadialGradient(cx, cy, ry * 0.1, cx, cy, ry * 1.55);
+    glowGrad.addColorStop(0, 'rgba(190, 46, 221, 0.65)');
+    glowGrad.addColorStop(0.5, 'rgba(142, 68, 173, 0.25)');
+    glowGrad.addColorStop(1, 'rgba(44, 0, 62, 0)');
+    groundGrad = ctx.createRadialGradient(cx, H * 1.02, ry * 0.2, cx, H * 1.02, ry * 1.6);
+    groundGrad.addColorStop(0, 'rgba(190, 46, 221, 0.45)');
+    groundGrad.addColorStop(1, 'rgba(190, 46, 221, 0)');
+  } else if (activeTheme === 'royal-wine-gold') {
+    bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#1a0309');
+    bgGrad.addColorStop(0.46, '#380614');
+    bgGrad.addColorStop(0.78, '#520b1f');
+    bgGrad.addColorStop(1, '#20030a');
+    glowGrad = ctx.createRadialGradient(cx, cy, ry * 0.1, cx, cy, ry * 1.55);
+    glowGrad.addColorStop(0, 'rgba(241, 196, 15, 0.65)');
+    glowGrad.addColorStop(0.5, 'rgba(231, 76, 60, 0.25)');
+    glowGrad.addColorStop(1, 'rgba(61, 7, 11, 0)');
+    groundGrad = ctx.createRadialGradient(cx, H * 1.02, ry * 0.2, cx, H * 1.02, ry * 1.6);
+    groundGrad.addColorStop(0, 'rgba(241, 196, 15, 0.45)');
+    groundGrad.addColorStop(1, 'rgba(241, 196, 15, 0)');
+  } else if (activeTheme === 'sunset-peach') {
+    bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#260c02');
+    bgGrad.addColorStop(0.46, '#4d1904');
+    bgGrad.addColorStop(0.78, '#732a08');
+    bgGrad.addColorStop(1, '#331102');
+    glowGrad = ctx.createRadialGradient(cx, cy, ry * 0.1, cx, cy, ry * 1.55);
+    glowGrad.addColorStop(0, 'rgba(255, 121, 63, 0.65)');
+    glowGrad.addColorStop(0.5, 'rgba(230, 126, 34, 0.25)');
+    glowGrad.addColorStop(1, 'rgba(78, 29, 3, 0)');
+    groundGrad = ctx.createRadialGradient(cx, H * 1.02, ry * 0.2, cx, H * 1.02, ry * 1.6);
+    groundGrad.addColorStop(0, 'rgba(255, 121, 63, 0.45)');
+    groundGrad.addColorStop(1, 'rgba(255, 121, 63, 0)');
+  } else if (activeTheme === 'sweet-chocolate') {
+    bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#1c0e07');
+    bgGrad.addColorStop(0.46, '#381c0e');
+    bgGrad.addColorStop(0.78, '#542d17');
+    bgGrad.addColorStop(1, '#241209');
+    glowGrad = ctx.createRadialGradient(cx, cy, ry * 0.1, cx, cy, ry * 1.55);
+    glowGrad.addColorStop(0, 'rgba(230, 126, 34, 0.65)');
+    glowGrad.addColorStop(0.5, 'rgba(160, 82, 45, 0.25)');
+    glowGrad.addColorStop(1, 'rgba(40, 20, 10, 0)');
+    groundGrad = ctx.createRadialGradient(cx, H * 1.02, ry * 0.2, cx, H * 1.02, ry * 1.6);
+    groundGrad.addColorStop(0, 'rgba(230, 126, 34, 0.45)');
+    groundGrad.addColorStop(1, 'rgba(230, 126, 34, 0)');
+  } else {
+    // Default rose-pink
+    bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#fff3e9');
+    bgGrad.addColorStop(0.46, '#ffe7d6');
+    bgGrad.addColorStop(0.78, '#fcd9c4');
+    bgGrad.addColorStop(1, '#f3c4b5');
+    glowGrad = ctx.createRadialGradient(cx, cy, ry * 0.1, cx, cy, ry * 1.55);
+    glowGrad.addColorStop(0, 'rgba(255,219,170,0.6)');
+    glowGrad.addColorStop(0.5, 'rgba(255,170,150,0.2)');
+    glowGrad.addColorStop(1, 'rgba(255,170,150,0)');
+    groundGrad = ctx.createRadialGradient(cx, H * 1.02, ry * 0.2, cx, H * 1.02, ry * 1.6);
+    groundGrad.addColorStop(0, 'rgba(255,205,165,0.5)');
+    groundGrad.addColorStop(1, 'rgba(255,205,165,0)');
+  }
 
   for (let i = 0; i < 11; i++) {
     orbs.push({
@@ -624,12 +954,29 @@ function buildScene() {
 }
 
 function drawBackground() {
+  if (window.__customBgImageObj && window.__customBgImageObj.complete && window.__customBgImageObj.naturalWidth > 0) {
+    const img = window.__customBgImageObj;
+    const scale = Math.max(W / img.width, H / img.height);
+    const dw = img.width * scale;
+    const dh = img.height * scale;
+    const dx = (W - dw) / 2;
+    const dy = (H - dh) / 2;
+    ctx.globalAlpha = 1;
+    ctx.drawImage(img, dx, dy, dw, dh);
+    ctx.fillStyle = 'rgba(10, 5, 20, 0.42)';
+    ctx.fillRect(0, 0, W, H);
+    return;
+  }
   ctx.globalAlpha = 1;
   ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, W, H);
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   ctx.globalAlpha = 1; ctx.fillStyle = groundGrad; ctx.fillRect(0, 0, W, H);
   ctx.restore();
 }
+
+window.rebuildTreeBackground = function() {
+  buildScene();
+};
 
 function drawGodRays(t, intensity) {
   if (intensity <= 0) return;
@@ -1016,41 +1363,6 @@ function buildFilm(m) {
     .to(aim, { opacity: 0, duration: 0.18 }, 0)
     .to([eyebrow, hint], { opacity: 0, duration: 0.2, ease: 'power1.out' }, 0);
 
-  t.call(() => {
-    userMuted = false;
-    if (bgMusic) {
-      bgMusic.muted = false;
-      bgMusic.volume = 1;
-      bgMusic.play().then(() => {
-        updatePlayState(true);
-      }).catch(err => {
-        console.warn("Crossbow music failed:", err);
-      });
-    }
-  }, null, 0.26);
-
-  t.call(() => {
-    // CROSSBOW_IMPACT_AUDIO
-    if (bgMusic) {
-      userMuted = false;
-      bgMusic.muted = false;
-      bgMusic.volume = 1;
-      if (bgMusic.paused) playMusic();
-    }
-  }, null, 0.26);
-
-  
-  t.call(() => {
-    if (bgMusic) {
-      userMuted = false;
-      bgMusic.muted = false;
-      bgMusic.volume = 1;
-      if (bgMusic.paused) {
-        playMusic();
-      }
-    }
-  }, null, 0.26); // DILRUBA_HEART_VOLUME_FIX
-
   t.add(burstHearts, 0.26)
     .to(target, { x: 7, y: -9, duration: 0.06, ease: 'power2.out' }, 0.26)
     .to(target, { x: 0, y: 0, duration: 0.32, ease: 'power2.out' }, 0.32)
@@ -1099,7 +1411,7 @@ function speakHappyBirthdayMisty() {
       window.speechSynthesis.cancel();
       const cfg = window.SiteConfig || {};
       const name = cfg.recipientName || 'Misty';
-      const textToSpeak = window.adminSpokenWishText || (cfg.occasion === 'anniversary' ? `Happy Anniversary ${name}!` : (cfg.occasion === 'love' ? `I Love You ${name}!` : `Happy Birthday ${name}!`));
+      const textToSpeak = cfg.spokenWishText || window.adminSpokenWishText || (cfg.occasion === 'anniversary' ? `Happy Anniversary ${name}!` : (cfg.occasion === 'love' || cfg.occasion === 'love_propose' ? `I Love You ${name}!` : (cfg.occasion === 'marriage_propose' ? `Will you marry me, ${name}?` : (cfg.occasion === 'sorry_request' ? `I am really sorry ${name}, please maaf kar do na!` : `Happy Birthday ${name}!`))));
       const utter = new SpeechSynthesisUtterance(textToSpeak);
       utter.rate = 0.9;
       utter.pitch = 1.15;
@@ -1120,20 +1432,6 @@ function speakHappyBirthdayMisty() {
 
 let played = false, drawing = false, startPX = 0, startPY = 0, startDraw = 0;
 
-
-function unlockCrossbowAudio() {
-  if (!bgMusic || !bgMusic.paused) return;
-  userMuted = false;
-  bgMusic.muted = false;
-  bgMusic.volume = 0;
-  if (!bgMusic.getAttribute('src')) {
-    bgMusic.src = PLAYLIST[currentTrackIndex].src;
-  }
-  bgMusic.play().catch(err =>
-    console.warn('Audio unlock:', err)
-  );
-}
-
 function fire() {
   if (played) return;
   played = true;
@@ -1148,6 +1446,72 @@ function fire() {
   filmTL = buildFilm(shotGeom());
   filmTL.play(0);
 }
+window.fireArrow = fire;
+
+function triggerCustomTemplateReveal() {
+  if (played) return;
+  played = true;
+  drawing = false;
+  userMuted = false;
+  if (bgMusic) {
+    bgMusic.muted = false;
+    bgMusic.volume = 1;
+  }
+  playMusic();
+  stopBeat();
+
+  const reach = Math.hypot(W / 2, H / 2);
+  const bloomScale = (reach * 1.2) / 30;
+
+  const t = gsap.timeline({
+    onComplete: () => {
+      gsap.set(field, { autoAlpha: 0 });
+      treeStart();
+      window.journey?.unlock('quiz');
+      gsap.to(bloom, { autoAlpha: 0, duration: 1.15, ease: 'power2.out' });
+    },
+  });
+
+  t.set([flood, bloom], { autoAlpha: 0, scale: 0.001, x: 0, y: 0 })
+    .set(field, { autoAlpha: 0 })
+    .set('.blob', { opacity: 0 })
+    .set(camera, { scale: 1, yPercent: 0 })
+    .set(fgrid, { xPercent: 0, yPercent: 0 })
+    .set(barTop, { yPercent: -100 })
+    .set(barBot, { yPercent: 100 })
+    .set(kEyebrow, { opacity: 0, y: 12 })
+    .set(kSub, { opacity: 0, y: 12 })
+    .set(kChars, { transformPerspective: 620, transformOrigin: '50% 100%', yPercent: 135, rotationX: -82 })
+    .set(uline, { drawn: 0 });
+
+  t.set(flood, { autoAlpha: 1 })
+    .fromTo(flood, { scale: 0.02 }, { scale: 30, duration: 0.45, ease: 'power2.in' }, 0)
+    .set(field, { autoAlpha: 1 }, 0.40)
+    .set(hero, { autoAlpha: 0 }, 0.42)
+    .to('.blob', { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.44)
+    .set(flood, { autoAlpha: 0 }, 0.46);
+
+  t.fromTo(camera, { scale: 1.0, yPercent: 0 }, { scale: 1.07, yPercent: -1.3, duration: 2.6, ease: 'none' }, 0.48)
+    .fromTo(fgrid, { xPercent: 0, yPercent: 0 }, { xPercent: -1.5, yPercent: -1.0, duration: 2.6, ease: 'none' }, 0.48);
+
+  t.to(barTop, { yPercent: 0, duration: 0.6, ease: 'power2.out' }, 0.60)
+    .to(barBot, { yPercent: 0, duration: 0.6, ease: 'power2.out' }, 0.60);
+
+  t.to(kEyebrow, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 0.64)
+    .to(line1Chars, { yPercent: 0, rotationX: 0, duration: 0.55, ease: 'power3.out', stagger: 0.033 }, 0.76)
+    .to(line2Chars, { yPercent: 0, rotationX: 0, duration: 0.55, ease: 'power3.out', stagger: 0.033 }, 1.14)
+    .call(speakHappyBirthdayMisty, null, 1.20)
+    .to(uline, { drawn: 1, duration: 0.45, ease: 'power2.inOut' }, 1.60)
+    .to(kSub, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 1.80);
+
+  t.to(barTop, { yPercent: -100, duration: 0.5, ease: 'power2.in' }, 2.38)
+    .to(barBot, { yPercent: 100, duration: 0.5, ease: 'power2.in' }, 2.38)
+    .set(bloom, { autoAlpha: 1 }, 2.48)
+    .fromTo(bloom, { scale: 0.02 }, { scale: bloomScale, duration: 0.58, ease: 'power2.in' }, 2.48);
+
+  t.play(0);
+}
+window.triggerCustomTemplateReveal = triggerCustomTemplateReveal;
 
 function springBack() {
   const from = curDraw;
@@ -1166,20 +1530,13 @@ function autoFire() {
 
 archery.addEventListener('pointerdown', (e) => {
   if (played) return;
-  unlockCrossbowAudio();
   drawing = true;
   userMuted = false;
   if (bgMusic) {
     bgMusic.muted = false;
     bgMusic.volume = 1;
   }
-  if (bgMusic && bgMusic.paused) {
-    userMuted = false;
-    if (!bgMusic.getAttribute('src')) {
-      loadTrack(currentTrackIndex, false);
-    }
-    playMusic();
-  }
+  playMusic();
   try { archery.setPointerCapture(e.pointerId); } catch (_) {}
   startPX = e.clientX; startPY = e.clientY; startDraw = curDraw;
   e.preventDefault();

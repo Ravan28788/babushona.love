@@ -149,9 +149,135 @@ class LovePuzzleGame {
     if (!this.modal) return;
     document.body.classList.add('modal-active');
     this.modal.classList.add('is-open');
+    this.refreshDynamicTexts();
     this.updateSkipButtonUI();
+
+    // Auto-load custom profile puzzle images if available
+    const cfg = window.SiteConfig || {};
+    this.onProfileChange(cfg);
+
     if (!this.tiles.length || this.isSolved) {
       this.initGame();
+    }
+  }
+
+  refreshDynamicTexts() {
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const puzzleTitle = document.getElementById('puzzleTitle') || document.querySelector('.puzzle-title');
+    if (puzzleTitle) {
+      puzzleTitle.innerHTML = `${girlName}'s Love Puzzle 👩‍❤️‍👨`;
+    }
+    const mandatoryHeading = document.getElementById('puzzleMandatoryHeading') || document.querySelector('.pmb-heading');
+    if (mandatoryHeading) {
+      mandatoryHeading.innerHTML = `👑 MANDATORY NOTICE FOR QUEEN ${girlName.toUpperCase()}:`;
+    }
+    const pickerThumbFirst = document.querySelector('.picker-thumb[data-src*="misty_cute_cheeks"] span');
+    if (pickerThumbFirst) {
+      pickerThumbFirst.textContent = `Queen ${girlName} 💕`;
+    }
+  }
+
+  updatePuzzlePickerStrip(images) {
+    const strip = document.getElementById('puzzlePickerScroll') || document.getElementById('puzzlePickerStrip');
+    if (!strip) return;
+    const cfg = window.SiteConfig || {};
+    const girlName = cfg.recipientName || cfg.name || 'Queen';
+    const isMisty = (!girlName || girlName.toLowerCase() === 'misty');
+
+    const AESTHETIC_PUZZLE_FALLBACKS = [
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80'
+    ];
+
+    let validImages = [];
+    if (Array.isArray(images) && images.length > 0) {
+      validImages = images.filter(img => typeof img === 'string' && img.trim() && !img.includes('undefined') && !img.includes('favicon.png'));
+    }
+
+    // If images is empty or incomplete, check all custom profile media
+    if (validImages.length === 0 && !isMisty) {
+      const p = cfg.customPhotos || {};
+      const candidates = [
+        p.puzzlePhoto, p.puzzle,
+        p.mainPortrait, p.portrait,
+        ...(Array.isArray(cfg.puzzleImages) ? cfg.puzzleImages : []),
+        ...(Array.isArray(cfg.albumPhotos) ? cfg.albumPhotos : []),
+        p.liveHug, p.hug,
+        p.bgTheme, p.bg
+      ].filter(img => typeof img === 'string' && img.trim() && !img.includes('undefined') && !img.includes('misty1.jpg') && !img.includes('gift_dress') && !img.includes('gift_thar') && !img.includes('gift_ps5') && !img.includes('paymentQr') && !img.includes('favicon.png'));
+      validImages = candidates;
+    }
+
+    let finalImages = null;
+    if (validImages.length > 0) {
+      finalImages = [...validImages];
+      const count = finalImages.length;
+      while (finalImages.length < 6) {
+        finalImages.push(finalImages[finalImages.length % count]);
+      }
+    } else if (!isMisty) {
+      finalImages = [...AESTHETIC_PUZZLE_FALLBACKS];
+    }
+
+    if (!finalImages) return; // Keep Misty defaults if Misty
+
+    strip.innerHTML = '';
+    finalImages.forEach((src, idx) => {
+      const btn = document.createElement('button');
+      btn.className = `picker-thumb ${idx === 0 ? 'is-active' : ''}`;
+      btn.type = 'button';
+      btn.dataset.src = src;
+      btn.title = `Queen ${girlName} Puzzle Photo ${idx + 1}`;
+      btn.innerHTML = `<img src="${src}" alt="Queen ${girlName} Photo ${idx + 1}" /><span>Photo ${idx + 1}</span>`;
+      const thumbImg = btn.querySelector('img');
+      if (thumbImg) {
+        thumbImg.onerror = () => {
+          thumbImg.onerror = null;
+          thumbImg.src = finalImages[0] || AESTHETIC_PUZZLE_FALLBACKS[idx % AESTHETIC_PUZZLE_FALLBACKS.length];
+        };
+      }
+      btn.addEventListener('click', () => {
+        this.setImage(src, btn);
+      });
+      strip.appendChild(btn);
+    });
+
+    if (finalImages[0]) {
+      this.setImage(finalImages[0], strip.firstChild);
+    }
+  }
+
+  onProfileChange(cfg) {
+    this.refreshDynamicTexts();
+    if (!cfg) return;
+    const girlName = cfg.recipientName || cfg.name || 'Queen';
+    const isMisty = (!girlName || girlName.toLowerCase() === 'misty');
+
+    const customP = [];
+    if (Array.isArray(cfg.puzzleImages) && cfg.puzzleImages.length > 0) {
+      cfg.puzzleImages.forEach(img => {
+        if (img && typeof img === 'string' && img.trim() && !img.includes('undefined') && !img.includes('favicon.png')) {
+          customP.push(img);
+        }
+      });
+    }
+    const p = cfg.customPhotos || {};
+    if (p.puzzlePhoto || p.puzzle) customP.push(p.puzzlePhoto || p.puzzle);
+    if (p.mainPortrait || p.portrait) customP.push(p.mainPortrait || p.portrait);
+    if (p.liveHug || p.hug) customP.push(p.liveHug || p.hug);
+    if (p.bgTheme || p.bg) customP.push(p.bgTheme || p.bg);
+    if (Array.isArray(cfg.albumPhotos)) {
+      cfg.albumPhotos.forEach(img => { if (img) customP.push(img); });
+    }
+
+    const uniqueP = Array.from(new Set(customP.filter(Boolean)));
+    if (uniqueP.length > 0 || !isMisty) {
+      this.updatePuzzlePickerStrip(uniqueP);
     }
   }
 
@@ -297,19 +423,30 @@ class LovePuzzleGame {
       }
       this.board?.classList.add('is-completed-glowing');
       setTimeout(() => {
-        if (this.winCard) this.winCard.style.display = 'block';
+        if (this.winCard) {
+          const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+          const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+          const winTitle = this.winCard.querySelector('.win-title');
+          if (winTitle) winTitle.textContent = `YOU DID IT, QUEEN ${girlName.toUpperCase()}! 👩‍❤️‍💋‍👨💖`;
+          const winWords = this.winCard.querySelector('.win-love-words');
+          if (winWords) {
+            winWords.innerHTML = `"${girlName} my babe, meri girlfriend, meri world, mera babu shona, my love...<br>Tumne hamara love puzzle solve kar diya! Tum mere dil ka sabse keemti tukda ho, aur tumhare bina meri zindagi bilkul incomplete hai! I love you so much! 💍🏰❤️💋"`;
+          }
+          this.winCard.style.display = 'block';
+        }
         this.spawnWinCelebration();
       }, 700);
     }
   }
 
-  // Yuvi Kiss-Exchange Help Modal
+  // Kiss-Exchange Help Modal
   openHelpModal() {
     if (!this.helpModal) return;
     this.currentHelpKisses = 0;
     this.updateHelpUI();
+    const boyName = window.SiteConfig?.senderName || 'Yuvi';
     if (this.phSpeech) {
-      this.phSpeech.innerHTML = '"Aise hi help nahi milegi babu! 😜 Pehle apne Yuvi ko <strong>5 sweet sweet kisses</strong> do, tabhi main help karunga puzzle solve karne mein! 😘💋"';
+      this.phSpeech.innerHTML = `"Aise hi help nahi milegi babu! 😜 Pehle apne ${boyName} ko <strong>5 sweet sweet kisses</strong> do, tabhi main help karunga puzzle solve karne mein! 😘💋"`;
     }
     this.helpModal.style.display = 'flex';
   }
@@ -341,13 +478,14 @@ class LovePuzzleGame {
     this.spawnFlyingKissAnimation(emoji);
     this.updateHelpUI();
 
-    // Yuvi's sweet reactions as she kisses him
+    // Sweet reactions as she kisses him
+    const boyName = window.SiteConfig?.senderName || 'Yuvi';
     const reactions = [
       '"Mmm... aur do babu! 🥰"',
       '"Kitni sweet kissi hai meri jaan! 💖"',
-      '"Yuvi ka dil khush ho gaya! Aur 2 kissi do! 💋"',
+      `"${boyName} ka dil khush ho gaya! Aur 2 kissi do! 💋"`,
       '"Bas ek aur sweet si kissi, babu! 🥺❤️"',
-      '"Awww my love! Kisses complete! Ab dekho Yuvi aapke 2 pieces solve karta hai! 🥰👑"'
+      `"Awww my love! Kisses complete! Ab dekho ${boyName} aapke 2 pieces solve karta hai! 🥰👑"`
     ];
     if (this.phSpeech) {
       this.phSpeech.innerHTML = reactions[this.currentHelpKisses - 1] || '"Thank you my love! 🥰"';
@@ -426,13 +564,15 @@ class LovePuzzleGame {
     this.renderBoard();
     this.updateStats();
 
-    // Show Yuvi Tip Banner
+    // Show Tip Banner
     if (this.tipBanner) {
       this.tipBanner.style.display = 'block';
+      const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const boyName = window.SiteConfig?.senderName || 'Yuvi';
       if (fixedIndices.length >= 2) {
-        this.tipBanner.innerHTML = `💡 <strong>Yuvi's Tip:</strong> 2 pieces solved in their exact place for Queen Misty! 💖 Agar aur help chahiye toh dubara button click karo babu! 😘💋`;
+        this.tipBanner.innerHTML = `💡 <strong>${boyName}'s Tip:</strong> 2 pieces solved in their exact place for Queen ${girlName}! 💖 Agar aur help chahiye toh dubara button click karo babu! 😘💋`;
       } else if (fixedIndices.length === 1) {
-        this.tipBanner.innerHTML = `💡 <strong>Yuvi's Tip:</strong> Last piece placed in its exact spot for Queen Misty! Puzzle Solved! 🏆💖`;
+        this.tipBanner.innerHTML = `💡 <strong>${boyName}'s Tip:</strong> Last piece placed in its exact spot for Queen ${girlName}! Puzzle Solved! 🏆💖`;
       }
     }
 

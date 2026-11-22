@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yuvi & Misty — Live Wallpaper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
   <style>
     * {
       margin: 0;
@@ -86,58 +89,101 @@
       100% { opacity: 1; }
     }
 
-    /* Top Neon Header with Yuvi & Misty */
-    .top-neon-banner {
+    /* Top Full-Width Neon Header Stage (Replaces static image text dynamically) */
+    .top-neon-stage {
       position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 125px;
+      z-index: 25;
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 8px 22px;
-      border-radius: 999px;
-      background: rgba(12, 4, 24, 0.45);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 120, 200, 0.28);
-      box-shadow: 0 0 25px rgba(255, 45, 155, 0.25);
+      justify-content: center;
+      padding: 10px 4vw;
+      background: radial-gradient(ellipse 95% 100% at 50% 0%, rgba(9, 3, 18, 0.98) 0%, rgba(9, 3, 18, 0.92) 55%, rgba(9, 3, 18, 0.65) 80%, transparent 100%);
+      backdrop-filter: blur(10px);
       pointer-events: none;
+      user-select: none;
+    }
+
+    .neon-name-slot {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .neon-name-slot.boy-slot {
+      justify-content: flex-end;
+      padding-right: 22px;
+    }
+
+    .neon-name-slot.girl-slot {
+      justify-content: flex-start;
+      padding-left: 22px;
+    }
+
+    .neon-crown {
+      font-size: clamp(1.4rem, 2.6vw, 2.4rem);
+      filter: drop-shadow(0 0 12px #ffd700);
+      animation: crownBounce 2.5s infinite ease-in-out alternate;
+    }
+
+    @keyframes crownBounce {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-4px) rotate(6deg); }
+    }
+
+    .neon-cursive {
+      font-family: 'Great Vibes', 'Dancing Script', cursive;
+      font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: 1.5px;
       white-space: nowrap;
+      line-height: 1.1;
     }
 
+    /* Boy Name Neon Glow (Electric Cyan / Royal Blue) */
     .name-yuvi {
-      font-size: clamp(1.2rem, 2.6vw, 2.2rem);
-      font-weight: 800;
-      font-style: italic;
-      color: #e8f8ff;
+      color: #ffffff;
       text-shadow:
-        0 0 6px #38bdf8,
-        0 0 14px #0284c7,
-        0 0 28px #0369a1;
-      animation: neonFlickerBlue 3.2s infinite alternate;
+        0 0 4px #ffffff,
+        0 0 10px #00f2fe,
+        0 0 20px #00d2d3,
+        0 0 40px #0984e3,
+        0 0 80px #0984e3;
+      animation: neonFlickerBlue 3.6s infinite alternate;
     }
 
-    .neon-heart {
-      font-size: clamp(1.2rem, 2.5vw, 2rem);
-      color: #ff5ec4;
+    /* Center Neon Heart */
+    .neon-heart-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 70px;
+    }
+
+    .neon-main-heart {
+      font-size: clamp(2rem, 4.5vw, 3.8rem);
+      color: #ff2a70;
       text-shadow:
-        0 0 8px #ff2a9d,
-        0 0 20px #ff2a9d,
-        0 0 35px #d946ef;
+        0 0 8px #ff758c,
+        0 0 22px #ff2a70,
+        0 0 45px #e84393;
       animation: heartBeat 1.4s ease-in-out infinite;
     }
 
+    /* Girl Name Neon Glow (Radiant Hot Pink / Magenta) */
     .name-misty {
-      font-size: clamp(1.2rem, 2.6vw, 2.2rem);
-      font-weight: 800;
-      font-style: italic;
-      color: #fff0f8;
+      color: #ffffff;
       text-shadow:
-        0 0 6px #ff5ec4,
-        0 0 14px #ec4899,
-        0 0 28px #db2777;
-      animation: neonFlickerPink 2.8s infinite alternate;
+        0 0 4px #ffffff,
+        0 0 10px #ff758c,
+        0 0 20px #ff2a70,
+        0 0 40px #e84393,
+        0 0 80px #e84393;
+      animation: neonFlickerPink 3.2s infinite alternate;
     }
 
     @keyframes heartBeat {
@@ -221,11 +267,21 @@
   </style>
 </head>
 <body>
-  <!-- Top Neon Name Header -->
-  <header class="top-neon-banner" aria-label="Yuvi and Misty">
-    <span class="name-yuvi">👑 Yuvi</span>
-    <span class="neon-heart">♥</span>
-    <span class="name-misty">Misty 👑</span>
+  <!-- Top Neon Couple Stage (Dynamically replaces static image text with glowing neon cursive) -->
+  <header class="top-neon-stage" aria-label="Couple Live Wallpaper">
+    <div class="neon-name-slot boy-slot">
+      <span class="neon-crown">👑</span>
+      <span class="neon-cursive name-yuvi" id="neonBoyName">Yuvi</span>
+    </div>
+
+    <div class="neon-heart-slot">
+      <span class="neon-main-heart" id="neonHeart">♥</span>
+    </div>
+
+    <div class="neon-name-slot girl-slot">
+      <span class="neon-cursive name-misty" id="neonGirlName">Misty</span>
+      <span class="neon-crown">👑</span>
+    </div>
   </header>
 
   <!-- Floating Hearts Container -->
@@ -244,6 +300,95 @@
   <a href="index.html" class="back-to-card-btn">🌸 Back to Birthday Card 💖</a>
 
   <script>
+    // Dynamic Profile & Name Configuration
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      let toName = params.get('to') || params.get('name') || params.get('girl') || params.get('recipientName');
+      let fromName = params.get('from') || params.get('sender') || params.get('boy') || params.get('senderName');
+      let customBg = null;
+
+      // 1. Check compact base64 payload (?pdata=...)
+      const pdata = params.get('pdata');
+      if (pdata) {
+        try {
+          const decoded = JSON.parse(decodeURIComponent(escape(atob(pdata))));
+          if (decoded) {
+            if (decoded.name || decoded.recipientName) toName = decoded.name || decoded.recipientName;
+            if (decoded.sender || decoded.senderName) fromName = decoded.sender || decoded.senderName;
+            if (decoded.customPhotos?.themeBackground || decoded.themeBg || decoded.bg) {
+              customBg = decoded.customPhotos?.themeBackground || decoded.themeBg || decoded.bg;
+            }
+          }
+        } catch (_) {}
+      }
+
+      // 2. Check profile key (?p=... or ?profile=...)
+      const pId = params.get('p') || params.get('profile');
+      if (pId) {
+        try {
+          const db = JSON.parse(localStorage.getItem('yuvi_profiles_db') || '{}');
+          const p = db[pId.toLowerCase()];
+          if (p) {
+            toName = p.name || p.recipientName || toName;
+            fromName = p.sender || p.senderName || fromName;
+            if (p.customPhotos?.themeBackground || p.customPhotos?.bgTheme || p.customPhotos?.bg || p.themeBg || p.bg) {
+              customBg = p.customPhotos?.themeBackground || p.customPhotos?.bgTheme || p.customPhotos?.bg || p.themeBg || p.bg;
+            }
+          }
+        } catch (_) {}
+      }
+
+      // 3. Check active profile in localStorage
+      if (!toName || !fromName) {
+        try {
+          const activeId = localStorage.getItem('yuvi_active_profile_id');
+          const db = JSON.parse(localStorage.getItem('yuvi_profiles_db') || '{}');
+          if (activeId && db[activeId]) {
+            const p = db[activeId];
+            if (!toName) toName = p.name || p.recipientName;
+            if (!fromName) fromName = p.sender || p.senderName;
+            if (!customBg && (p.customPhotos?.themeBackground || p.customPhotos?.bgTheme || p.customPhotos?.bg || p.themeBg || p.bg)) {
+              customBg = p.customPhotos?.themeBackground || p.customPhotos?.bgTheme || p.customPhotos?.bg || p.themeBg || p.bg;
+            }
+          }
+          if (!toName || !fromName) {
+            const cfg = JSON.parse(localStorage.getItem('yuvi_admin_config') || '{}');
+            if (!toName && cfg.recipientName) toName = cfg.recipientName;
+            if (!fromName && cfg.senderName) fromName = cfg.senderName;
+            if (!customBg && (cfg.customPhotos?.themeBackground || cfg.customPhotos?.bgTheme || cfg.customPhotos?.bg || cfg.themeBg || cfg.bg)) {
+              customBg = cfg.customPhotos?.themeBackground || cfg.customPhotos?.bgTheme || cfg.customPhotos?.bg || cfg.themeBg || cfg.bg;
+            }
+          }
+        } catch (_) {}
+      }
+
+      toName = toName || 'Misty';
+      fromName = fromName || 'Yuvi';
+
+      // Update DOM with dynamic profile names
+      const stage = document.querySelector('.top-neon-stage');
+      if (stage) stage.setAttribute('aria-label', `${fromName} and ${toName} Live Wallpaper`);
+
+      const elYuvi = document.getElementById('neonBoyName') || document.querySelector('.name-yuvi');
+      if (elYuvi) elYuvi.textContent = fromName;
+
+      const elMisty = document.getElementById('neonGirlName') || document.querySelector('.name-misty');
+      if (elMisty) elMisty.textContent = toName;
+
+      document.title = `${fromName} & ${toName} — Live Wallpaper`;
+
+      if (customBg) {
+        const img = document.querySelector('.wallpaper-media');
+        if (img) img.src = customBg;
+      }
+
+      const backBtn = document.querySelector('.back-to-card-btn');
+      if (backBtn) {
+        backBtn.textContent = `🌸 Back to ${toName}'s Celebration Card 💖`;
+        backBtn.href = window.location.search ? `index.html${window.location.search}` : 'index.html';
+      }
+    })();
+
     const heartsLayer = document.getElementById("heartsLayer");
     const heartSymbols = ["♥", "♡", "💕", "💖"];
 

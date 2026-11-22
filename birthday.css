@@ -33,6 +33,9 @@ body{
 
 .scene{
   position:fixed; inset:0; overflow:hidden;
+  background: radial-gradient(ellipse at 50% 30%, #3a0d28 0%, #1a0515 50%, #09020d 100%);
+}
+html.is-misty-profile .scene {
   background: #090312 url('./images/yuvi_misty_theme_bg.jpg') no-repeat center center / cover;
 }
 
@@ -62,9 +65,15 @@ body{
 /* Pure full-screen romantic theme wallpaper edge-to-edge */
 .hero__bg{
   position:absolute; inset:0;
-  background: #090312 url('./images/yuvi_misty_theme_bg.jpg') no-repeat center center / cover;
+  background: radial-gradient(ellipse at 50% 30%, #3a0d28 0%, #1a0515 50%, #09020d 100%);
   overflow:hidden;
   z-index:0;
+}
+html.is-misty-profile .hero__bg {
+  background: #090312 url('./images/yuvi_misty_theme_bg.jpg') no-repeat center center / cover;
+}
+[data-theme]:not([data-theme="rose-pink"]) .hero__bg {
+  background-image: none;
 }
 
 /* drifting light motes (JS fills this with a few spans) */
@@ -2526,6 +2535,113 @@ video#mistyVideo{
   backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
   box-shadow:0 4px 12px rgba(0,0,0,0.3);
 }
+
+/* ============================================================
+   DYNAMIC NEON NAME HEADER FOR COUPLE THUMBNAILS & LIGHTBOX
+   (Replaces static baked image names with active profile names)
+   ============================================================ */
+.thumb-neon-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 58px;
+  background: linear-gradient(180deg, rgba(8, 2, 16, 0.99) 0%, rgba(8, 2, 16, 0.96) 72%, rgba(8, 2, 16, 0.5) 90%, transparent 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 14px 10px;
+  z-index: 6;
+  pointer-events: none;
+  user-select: none;
+  border-bottom: 1px solid rgba(255, 42, 112, 0.35);
+}
+
+.tnh-boy, .tnh-girl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tnh-crown {
+  font-size: 13px;
+  filter: drop-shadow(0 0 6px #ffd700);
+}
+
+.tnh-boy-name {
+  font-family: 'Great Vibes', 'Dancing Script', cursive;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 5px #00d2ff, 0 0 10px #00d2ff, 0 0 18px #0088cc;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.tnh-heart {
+  font-size: 16px;
+  animation: thumbHeartPulse 1.4s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+}
+
+@keyframes thumbHeartPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px #ff2a70);
+  }
+  50% {
+    transform: scale(1.22);
+    filter: drop-shadow(0 0 14px #ff0055);
+  }
+}
+
+.tnh-girl-name {
+  font-family: 'Great Vibes', 'Dancing Script', cursive;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 5px #ff2a70, 0 0 10px #ff2a70, 0 0 18px #ff0055;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+/* Lightbox variant */
+.lightbox-neon-header {
+  height: 56px;
+  padding: 6px 18px;
+  border-radius: 18px 18px 0 0;
+}
+.lightbox-neon-header .tnh-boy-name,
+.lightbox-neon-header .tnh-girl-name {
+  font-size: 26px;
+}
+.lightbox-neon-header .tnh-heart {
+  font-size: 20px;
+}
+
+/* Reunion modal variant */
+.reunion-neon-header {
+  height: 42px;
+  border-radius: 12px 12px 0 0;
+}
+.reunion-neon-header .tnh-boy-name,
+.reunion-neon-header .tnh-girl-name {
+  font-size: 19px;
+}
+
+/* Position adjustment for .live-animation-pill so it doesn't collide with neon header */
+.live-hug-container .live-animation-pill {
+  top: auto;
+  bottom: 8px;
+  left: 8px;
+  right: auto;
+  padding: 4px 8px;
+  font-size: 10px;
+}
 .live-blip{
   width:7px; height:7px; border-radius:50%;
   background:#ff2a70; box-shadow:0 0 8px #ff2a70;
@@ -2544,8 +2660,8 @@ video#mistyVideo{
   position:absolute; inset:0; pointer-events:none; z-index:6;
 }
 .lightbox-live-badge{
-  position:absolute; top:14px; right:14px; z-index:7;
-  background:rgba(20, 4, 15, 0.8);
+  position:absolute; bottom:14px; left:14px; z-index:7;
+  background:rgba(20, 4, 15, 0.85);
   border:1.5px solid #ff2a70; border-radius:999px;
   padding:6px 14px; font:700 12px/1 "Fraunces", Georgia, serif;
   color:#ffffff; display:inline-flex; align-items:center; gap:6px;

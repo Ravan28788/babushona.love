@@ -33,10 +33,11 @@
       <nav class="top-nav" id="topNav" aria-label="Journey Navigation">
         <button class="nav-pill active" id="navIntroBtn" type="button">🌸 Intro Tree</button>
         <button class="nav-pill is-locked" id="navQuizBtn" type="button">🔒 Love Quiz</button>
-        <button class="nav-pill is-locked" id="navGameBtn" type="button">🔒 Car Mission</button>
+        <button class="nav-pill is-locked" id="navGameBtn" type="button">🔒 Romantic Games</button>
+        <button class="nav-pill nav-piano-pill" id="navPianoBtn" type="button">🎹 Love Piano</button>
         <button class="nav-pill is-locked" id="navPuzzleBtn" type="button">🔒 Love Puzzle</button>
         <button class="nav-pill is-locked" id="navGiftsBtn" type="button">🔒 Birthday Gifts</button>
-        <a class="nav-pill nav-wallpaper-pill" href="live-wallpaper.html" target="_blank" title="Yuvi &amp; Misty Live Wallpaper">✨ Live Wallpaper</a>
+        <a class="nav-pill nav-wallpaper-pill" href="live-wallpaper.html" target="_blank" title="Live Wallpaper">✨ Live Wallpaper</a>
         <button class="nav-pill nav-pay-pill is-locked" id="navPayBtn" type="button">🔒 Pay 143</button>
       </nav>
       <!-- Floating Journey Lock Notification Toast -->
@@ -177,6 +178,9 @@
       </div>
 
       <p class="hero__hint" id="hint">pull &amp; release</p>
+
+      <!-- Dynamic Template Interactive Hero Widget (Gift Box, Star Cannon, Chemistry Flasks, Ring Box...) -->
+      <div class="hero-template-trigger" id="heroTemplateTrigger" style="display:none;"></div>
     </section>
 
     <div class="flood" id="flood" aria-hidden="true"></div>
@@ -214,6 +218,12 @@
       <p class="wish__sub" id="wSub">to us and a love that blooms</p>
       <button class="start-quest-btn" id="startQuestBtn" type="button">
         💌 Start Misty's Love Quest &amp; Game ✨
+      </button>
+      <button class="hero-piano-btn" id="heroPianoBtn" type="button">
+        🎹 Play Romantic Piano &amp; Instruments 🎵
+      </button>
+      <button class="celebration-anim-btn" id="playTemplateAnimBtn" type="button">
+        🎬 Watch Celebration Animation ✨
       </button>
     </div>
 
@@ -264,7 +274,7 @@
   <!-- Multi-Mission Romantic Arcade Modal (3 Games) -->
   <div class="modal-overlay" id="gameModal" aria-modal="true" role="dialog">
     <div class="game-container">
-      <!-- Mission Mode Selector Tabs -->
+      <!-- Mission Mode Selector Tabs (All Games Arranged Together) -->
       <div class="game-mission-tabs" id="gameMissionTabs">
         <button class="mission-tab-btn active" id="tabMission1" data-mission="1" type="button">
           🚗 1. Love Car
@@ -273,7 +283,10 @@
           🔒 2. Thar 4x4
         </button>
         <button class="mission-tab-btn is-locked" id="tabMission3" data-mission="3" type="button">
-          🔒 3. Misty &amp; Yuvi
+          🔒 3. Couple Adventure
+        </button>
+        <button class="mission-tab-btn tab-piano-arcade" id="tabMissionPiano" type="button">
+          🎹 4. Love Piano &amp; Beats
         </button>
       </div>
 
@@ -447,6 +460,11 @@
           <div class="yuvi-avatar-duo live-reunion-duo">
             <div class="avatar-pair-wrap live-hug-pulse">
               <img class="duo-avatar-img" src="./images/gift_yuvi_misty.jpg" alt="Yuvi and Misty" />
+              <div class="thumb-neon-header reunion-neon-header" aria-hidden="true">
+                <div class="tnh-boy"><span class="tnh-crown">👑</span> <span class="tnh-boy-name">Yuvi</span></div>
+                <div class="tnh-heart">💖</div>
+                <div class="tnh-girl"><span class="tnh-girl-name">Misty</span> <span class="tnh-crown">👸</span></div>
+              </div>
               <div class="reunion-kiss-bursts" aria-hidden="true">
                 <span class="rk-kiss rk1">💋</span>
                 <span class="rk-kiss rk2">💖</span>
@@ -499,6 +517,212 @@
     </div>
   </div>
 
+  <!-- Romantic Love Piano & Musical Instruments Beats Modal -->
+  <div class="piano-modal" id="pianoModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="piano-card" id="pianoCard">
+      <!-- Piano Header -->
+      <div class="piano-header">
+        <div class="piano-title-wrap">
+          <h2 class="piano-title" id="pianoTitle">🎹 Romantic Love Piano &amp; Beats 🎵</h2>
+          <p class="piano-sub" id="pianoSub">Play sweet romantic melodies with mouse, touch or keyboard!</p>
+        </div>
+        <button type="button" class="piano-close-btn" id="closePianoBtn" aria-label="Close Piano">✕</button>
+      </div>
+
+      <!-- Realistic Instrument Cards Selector (Acoustic Grand Piano, Guitar, Strings, Beats) -->
+      <div class="piano-instruments-row">
+        <button type="button" class="inst-tab active" data-inst="piano" title="Acoustic Grand Concert Piano">
+          <div class="inst-card-thumb">
+            <svg viewBox="0 0 64 64" class="inst-svg-icon" aria-hidden="true">
+              <defs>
+                <linearGradient id="gpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#2d3436"/>
+                  <stop offset="60%" stop-color="#0f1115"/>
+                  <stop offset="100%" stop-color="#000000"/>
+                </linearGradient>
+                <linearGradient id="gpGold" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f9ca24"/>
+                  <stop offset="100%" stop-color="#f0932b"/>
+                </linearGradient>
+              </defs>
+              <path d="M8 44 C8 26 18 10 38 10 C46 10 54 16 56 24 L56 44 Z" fill="url(#gpGrad)" stroke="#4a5568" stroke-width="1.5"/>
+              <path d="M16 40 C16 28 24 18 38 18 C44 18 48 22 50 28 L50 40 Z" fill="none" stroke="url(#gpGold)" stroke-width="1.8"/>
+              <line x1="22" y1="38" x2="28" y2="22" stroke="#dff9fb" stroke-width="0.8" opacity="0.6"/>
+              <line x1="28" y1="38" x2="34" y2="20" stroke="#dff9fb" stroke-width="0.8" opacity="0.6"/>
+              <line x1="34" y1="38" x2="40" y2="20" stroke="#dff9fb" stroke-width="0.8" opacity="0.6"/>
+              <line x1="40" y1="38" x2="46" y2="24" stroke="#dff9fb" stroke-width="0.8" opacity="0.6"/>
+              <line x1="50" y1="12" x2="44" y2="26" stroke="#f0932b" stroke-width="1.5"/>
+              <path d="M8 42 L52 8" stroke="#ff758c" stroke-width="2.5" stroke-linecap="round"/>
+              <rect x="8" y="44" width="48" height="10" rx="2" fill="#fff" stroke="#111" stroke-width="1"/>
+              <rect x="14" y="44" width="3" height="6" fill="#111"/>
+              <rect x="20" y="44" width="3" height="6" fill="#111"/>
+              <rect x="29" y="44" width="3" height="6" fill="#111"/>
+              <rect x="35" y="44" width="3" height="6" fill="#111"/>
+              <rect x="41" y="44" width="3" height="6" fill="#111"/>
+              <rect x="47" y="44" width="3" height="6" fill="#111"/>
+              <line x1="8" y1="44" x2="56" y2="44" stroke="#c0392b" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="inst-card-meta">
+            <span class="inst-card-title">🎹 Grand Piano</span>
+            <span class="inst-card-badge">Concert Acoustic</span>
+          </div>
+          <span class="inst-live-dot" aria-hidden="true"></span>
+        </button>
+
+        <button type="button" class="inst-tab" data-inst="guitar" title="Acoustic Steel-String Guitar">
+          <div class="inst-card-thumb">
+            <svg viewBox="0 0 64 64" class="inst-svg-icon" aria-hidden="true">
+              <defs>
+                <linearGradient id="gtrGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#f39c12"/>
+                  <stop offset="50%" stop-color="#d35400"/>
+                  <stop offset="100%" stop-color="#962d00"/>
+                </linearGradient>
+              </defs>
+              <path d="M18 54 C10 50 10 38 18 34 C21 32 21 30 19 28 C14 24 14 16 22 13 C27 11 31 15 32 18 C33 15 37 11 42 13 C50 16 50 24 45 28 C43 30 43 32 46 34 C54 38 54 50 46 54 C38 58 26 58 18 54 Z" fill="url(#gtrGrad)" stroke="#5d2000" stroke-width="1.5"/>
+              <circle cx="32" cy="31" r="6" fill="#2c1a0e" stroke="#f1c40f" stroke-width="1.2"/>
+              <circle cx="32" cy="31" r="7.5" fill="none" stroke="#e67e22" stroke-width="0.8" stroke-dasharray="2,2"/>
+              <rect x="25" y="47" width="14" height="4" rx="1.5" fill="#3e1d08"/>
+              <circle cx="28" cy="49" r="0.8" fill="#fff"/>
+              <circle cx="30" cy="49" r="0.8" fill="#fff"/>
+              <circle cx="32" cy="49" r="0.8" fill="#fff"/>
+              <circle cx="34" cy="49" r="0.8" fill="#fff"/>
+              <circle cx="36" cy="49" r="0.8" fill="#fff"/>
+              <rect x="29" y="4" width="6" height="22" fill="#2c1a0e"/>
+              <path d="M28 4 L28 -1 L36 -1 L36 4 Z" fill="#962d00"/>
+              <line x1="30" y1="4" x2="30" y2="47" stroke="#ffffff" stroke-width="0.6" opacity="0.85"/>
+              <line x1="31" y1="4" x2="31" y2="47" stroke="#ffffff" stroke-width="0.6" opacity="0.85"/>
+              <line x1="32" y1="4" x2="32" y2="47" stroke="#ffffff" stroke-width="0.6" opacity="0.85"/>
+              <line x1="33" y1="4" x2="33" y2="47" stroke="#ffffff" stroke-width="0.6" opacity="0.85"/>
+              <line x1="34" y1="4" x2="34" y2="47" stroke="#ffffff" stroke-width="0.6" opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="inst-card-meta">
+            <span class="inst-card-title">🎸 Acoustic Guitar</span>
+            <span class="inst-card-badge">Warm Wood Pluck</span>
+          </div>
+          <span class="inst-live-dot" aria-hidden="true"></span>
+        </button>
+
+        <button type="button" class="inst-tab" data-inst="strings" title="Symphony Orchestral Strings">
+          <div class="inst-card-thumb">
+            <svg viewBox="0 0 64 64" class="inst-svg-icon" aria-hidden="true">
+              <defs>
+                <linearGradient id="vlnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#e17055"/>
+                  <stop offset="50%" stop-color="#d63031"/>
+                  <stop offset="100%" stop-color="#6c1517"/>
+                </linearGradient>
+              </defs>
+              <path d="M22 54 C13 51 14 41 21 38 C23 37 20 33 19 31 C15 26 17 19 23 16 C27 14 31 17 32 19 C33 17 37 14 41 16 C47 19 49 26 45 31 C44 33 41 37 43 38 C50 41 51 51 42 54 C36 57 28 57 22 54 Z" fill="url(#vlnGrad)" stroke="#4a0f11" stroke-width="1.5"/>
+              <path d="M24 29 C25 32 23 35 25 38" stroke="#1e0506" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+              <circle cx="24" cy="29" r="1.2" fill="#1e0506"/>
+              <circle cx="25.5" cy="38" r="1.2" fill="#1e0506"/>
+              <path d="M40 29 C39 32 41 35 39 38" stroke="#1e0506" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+              <circle cx="40" cy="29" r="1.2" fill="#1e0506"/>
+              <circle cx="38.5" cy="38" r="1.2" fill="#1e0506"/>
+              <rect x="29" y="8" width="6" height="26" fill="#111"/>
+              <rect x="29" y="37" width="6" height="2" fill="#e8d4a2"/>
+              <path d="M30 43 L34 43 L33 53 L31 53 Z" fill="#111"/>
+              <line x1="8" y1="52" x2="56" y2="12" stroke="#ecf0f1" stroke-width="1.4" stroke-dasharray="14,0.5"/>
+              <line x1="8" y1="53" x2="56" y2="13" stroke="#8c4314" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <div class="inst-card-meta">
+            <span class="inst-card-title">🎻 Symphony Strings</span>
+            <span class="inst-card-badge">Orchestral Ensemble</span>
+          </div>
+          <span class="inst-live-dot" aria-hidden="true"></span>
+        </button>
+
+        <button type="button" class="inst-tab" data-inst="drums" title="Studio Heartbeat Drums">
+          <div class="inst-card-thumb">
+            <svg viewBox="0 0 64 64" class="inst-svg-icon" aria-hidden="true">
+              <defs>
+                <linearGradient id="cymbalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ffeaa7"/>
+                  <stop offset="60%" stop-color="#fdcb6e"/>
+                  <stop offset="100%" stop-color="#e17055"/>
+                </linearGradient>
+                <linearGradient id="drumGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00cec9"/>
+                  <stop offset="100%" stop-color="#0984e3"/>
+                </linearGradient>
+              </defs>
+              <ellipse cx="42" cy="18" rx="16" ry="6" fill="url(#cymbalGrad)" stroke="#d63031" stroke-width="1"/>
+              <ellipse cx="42" cy="18" rx="3" ry="1.2" fill="#ffeaa7"/>
+              <line x1="42" y1="18" x2="42" y2="52" stroke="#b2bec3" stroke-width="2"/>
+              <ellipse cx="22" cy="38" rx="14" ry="7" fill="#f5f6fa" stroke="#636e72" stroke-width="1.8"/>
+              <path d="M8 38 L8 46 C8 51 36 51 36 46 L36 38 Z" fill="url(#drumGrad)" stroke="#2d3436" stroke-width="1.5"/>
+              <line x1="12" y1="39" x2="12" y2="48" stroke="#dfe6e9" stroke-width="1.2"/>
+              <line x1="22" y1="41" x2="22" y2="49" stroke="#dfe6e9" stroke-width="1.2"/>
+              <line x1="32" y1="39" x2="32" y2="48" stroke="#dfe6e9" stroke-width="1.2"/>
+              <line x1="8" y1="26" x2="30" y2="42" stroke="#f1c40f" stroke-width="2" stroke-linecap="round"/>
+              <line x1="36" y1="26" x2="14" y2="42" stroke="#f1c40f" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="inst-card-meta">
+            <span class="inst-card-title">🥁 Studio Beats</span>
+            <span class="inst-card-badge">Punchy 808 &amp; Snare</span>
+          </div>
+          <span class="inst-live-dot" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <!-- Guided Song Melody Mode Selector -->
+      <div class="piano-melody-bar">
+        <span class="pm-label">🎼 Play a Song:</span>
+        <button type="button" class="pm-song-btn active" data-song="free">✨ Free Play</button>
+        <button type="button" class="pm-song-btn" data-song="birthday">🎂 Happy Birthday</button>
+        <button type="button" class="pm-song-btn" data-song="tumhiho">💖 Tum Hi Ho</button>
+        <button type="button" class="pm-song-btn" data-song="dheere">🌹 Dheere Dheere</button>
+        <div class="pm-score-tag" id="pianoScoreTag" style="display:none;">⭐ Song Progress: 0 / 10</div>
+      </div>
+
+      <!-- Musical Notes Floating Visual Stage -->
+      <div class="piano-stage-visual" id="pianoStageVisual">
+        <div class="piano-note-spawner" id="pianoNoteSpawner"></div>
+        <div class="piano-guide-prompt" id="pianoGuidePrompt">Tap any key below to play music! 🎶</div>
+      </div>
+
+      <!-- 17-Key Interactive Piano Keyboard (White & Black Keys) -->
+      <div class="piano-keyboard-wrap">
+        <!-- Red Velvet Felt Fallboard Strip (Authentic Acoustic Piano styling like musicca.com) -->
+        <div class="piano-felt-strip"></div>
+        <div class="piano-keys" id="pianoKeys">
+          <!-- Octave 4 -->
+          <div class="piano-key white" data-note="C4" data-freq="261.63" data-key="a"><span>C4</span><small>A</small></div>
+          <div class="piano-key black" data-note="C#4" data-freq="277.18" data-key="w" style="left: 28px;"><span>C#</span><small>W</small></div>
+          <div class="piano-key white" data-note="D4" data-freq="293.66" data-key="s"><span>D4</span><small>S</small></div>
+          <div class="piano-key black" data-note="D#4" data-freq="311.13" data-key="e" style="left: 76px;"><span>D#</span><small>E</small></div>
+          <div class="piano-key white" data-note="E4" data-freq="329.63" data-key="d"><span>E4</span><small>D</small></div>
+          <div class="piano-key white" data-note="F4" data-freq="349.23" data-key="f"><span>F4</span><small>F</small></div>
+          <div class="piano-key black" data-note="F#4" data-freq="369.99" data-key="t" style="left: 172px;"><span>F#</span><small>T</small></div>
+          <div class="piano-key white" data-note="G4" data-freq="392.00" data-key="g"><span>G4</span><small>G</small></div>
+          <div class="piano-key black" data-note="G#4" data-freq="415.30" data-key="y" style="left: 220px;"><span>G#</span><small>Y</small></div>
+          <div class="piano-key white" data-note="A4" data-freq="440.00" data-key="h"><span>A4</span><small>H</small></div>
+          <div class="piano-key black" data-note="A#4" data-freq="466.16" data-key="u" style="left: 268px;"><span>A#</span><small>U</small></div>
+          <div class="piano-key white" data-note="B4" data-freq="493.88" data-key="j"><span>B4</span><small>J</small></div>
+          <!-- Octave 5 -->
+          <div class="piano-key white" data-note="C5" data-freq="523.25" data-key="k"><span>C5</span><small>K</small></div>
+          <div class="piano-key black" data-note="C#5" data-freq="554.37" data-key="o" style="left: 364px;"><span>C#</span><small>O</small></div>
+          <div class="piano-key white" data-note="D5" data-freq="587.33" data-key="l"><span>D5</span><small>L</small></div>
+          <div class="piano-key black" data-note="D#5" data-freq="622.25" data-key="p" style="left: 412px;"><span>D#</span><small>P</small></div>
+          <div class="piano-key white" data-note="E5" data-freq="659.25" data-key=";"><span>E5</span><small>;</small></div>
+        </div>
+      </div>
+
+      <!-- Quick Jump to Other Games -->
+      <div class="piano-games-dock">
+        <span class="pgd-label">🎮 Romantic Arcade:</span>
+        <button type="button" class="pgd-btn" id="pianoJumpCarBtn">🚗 Back to Arcade Missions (Cars &amp; Couple)</button>
+        <button type="button" class="pgd-btn" id="pianoJumpPuzzleBtn">🧩 3x3 Photo Puzzle</button>
+        <button type="button" class="pgd-btn" id="pianoJumpGiftsBtn">🎁 Birthday Gifts</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Special Romantic Photo Puzzle Modal (Yuvi & Misty Jigsaw) -->
   <div class="modal-overlay" id="puzzleModal" aria-modal="true" role="dialog">
     <div class="puzzle-container">
@@ -506,7 +730,7 @@
       
       <header class="puzzle-header">
         <div class="puzzle-badge">SPECIAL COUPLE GAME 🧩💖</div>
-        <h1 class="puzzle-title">Yuvi &amp; Misty Love Puzzle 👩‍❤️‍👨</h1>
+        <h1 class="puzzle-title" id="puzzleTitle">Yuvi &amp; Misty Love Puzzle 👩‍❤️‍👨</h1>
         <p class="puzzle-sub">Pieces ko tap karke swap karo aur hamari pyari photo assemble karo babu!</p>
         
         <!-- Mandatory Notice Banner as requested by user -->
@@ -515,7 +739,7 @@
             <span class="pmb-pulse-icon">⚠️ 🧩</span>
           </div>
           <div class="pmb-text-wrap">
-            <div class="pmb-heading">👑 MANDATORY NOTICE FOR QUEEN MISTY:</div>
+            <div class="pmb-heading" id="puzzleMandatoryHeading">👑 MANDATORY NOTICE FOR QUEEN MISTY:</div>
             <p class="pmb-body">
               In sabhi photo puzzles mein se <strong>koi bhi 1 puzzle solve karna MANDATORY hai</strong>! Tabhi aage ka mission aur grand birthday gifts unlock honge! 💖
               <br>
@@ -746,6 +970,12 @@
           <div class="gift-badge">LIFETIME GIFT 👑💍</div>
           <div class="gift-photo-wrap live-hug-container">
             <img class="gift-thumb-img live-hug-img" src="./images/yuvi_misty_theme_bg.jpg?v=5" alt="Yuvi & Misty Live Hug and Kiss" />
+            <!-- Dynamic Neon Name Header Overlay that covers static baked text in the image -->
+            <div class="thumb-neon-header" id="thumbNeonHeader" aria-hidden="true">
+              <div class="tnh-boy"><span class="tnh-crown">👑</span> <span class="tnh-boy-name">Yuvi</span></div>
+              <div class="tnh-heart">💖</div>
+              <div class="tnh-girl"><span class="tnh-girl-name">Misty</span> <span class="tnh-crown">👸</span></div>
+            </div>
             <div class="live-kiss-fx" aria-hidden="true">
               <span class="live-kiss k1">💋</span>
               <span class="live-kiss k2">💖</span>
@@ -964,6 +1194,11 @@
       <div class="lightbox-badge" id="lightboxBadge">UNBOXED WITH LOVE 🎁💖</div>
       <div class="lightbox-img-wrap" id="lightboxImgWrap">
         <img id="lightboxImg" src="./images/gift_ps5.jpg" alt="Gift Full View" />
+        <div class="thumb-neon-header lightbox-neon-header" id="lightboxNeonHeader" style="display:none;" aria-hidden="true">
+          <div class="tnh-boy"><span class="tnh-crown">👑</span> <span class="tnh-boy-name">Yuvi</span></div>
+          <div class="tnh-heart">💖</div>
+          <div class="tnh-girl"><span class="tnh-girl-name">Misty</span> <span class="tnh-crown">👸</span></div>
+        </div>
         <div class="lightbox-live-fx" id="lightboxLiveFx" style="display:none;" aria-hidden="true">
           <span class="live-kiss lk1">💋</span>
           <span class="live-kiss lk2">💖</span>
@@ -987,6 +1222,95 @@
   <!-- YouTube Audio Background Player Container (hidden / offscreen) -->
   <div id="ytPlayerContainer" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0.001;pointer-events:none;z-index:-1;">
     <div id="ytAudioPlayer"></div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- FULLSCREEN CELEBRATION ANIMATION OVERLAY -->
+  <!-- ============================================== -->
+  <div class="celebration-anim-overlay" id="celebrationAnimationOverlay" style="display:none;" aria-modal="true" role="dialog">
+    <canvas id="animStageCanvas" class="anim-stage-canvas"></canvas>
+    
+    <!-- Top Bar Controls -->
+    <div class="anim-top-bar">
+      <div class="anim-left-controls">
+        <div class="anim-badge" id="animMainBadge">✨ LUXURY CELEBRATION SHOW ✨</div>
+        <button type="button" class="anim-use-tmpl-btn" id="animUseTemplateBtn" style="display:none;">
+          ❤️ Use This Template for New Profile 🚀
+        </button>
+        <button type="button" class="anim-site-demo-btn" id="animOpenSiteDemoBtn" style="display:none;" title="Open full demo website in new tab">
+          🌐 Open Full Demo Website ↗
+        </button>
+      </div>
+      <div class="anim-btns">
+        <button type="button" class="anim-ctrl-btn" id="replayAnimBtn" title="Replay Animation">🔄 Replay</button>
+        <button type="button" class="anim-ctrl-btn close-btn" id="closeAnimOverlayBtn" title="Close Show">&times; Close</button>
+      </div>
+    </div>
+
+    <!-- Centered Animated Text Banner -->
+    <div class="anim-banner-box" id="animBannerBox">
+      <h2 class="anim-banner-title" id="animBannerTitle">Happy Birthday Queen! 💖</h2>
+      <p class="anim-banner-sub" id="animBannerSub">To the love of my life, forever &amp; always</p>
+    </div>
+
+    <!-- Bottom Interactive Experience Dock (Missions, Puzzle, Gifts, Letter, Explore) -->
+    <div class="anim-bottom-dock" id="animBottomDock">
+      <div class="abd-title">🎮 PLAY THIS TEMPLATE'S INTERACTIVE EXPERIENCES:</div>
+      <div class="abd-actions">
+        <button type="button" class="abd-btn piano-dock-btn" id="animPlayPianoBtn">
+          🎹 Play Love Piano &amp; Instruments 🎵
+        </button>
+        <button type="button" class="abd-btn bloom-tree-btn" id="animBloomTreeBtn">
+          🌸 Bloom Celebration Tree &amp; Website 💖
+        </button>
+        <button type="button" class="abd-btn game-btn" id="animPlayMissionsBtn">
+          🎮 Play Romantic Games (Cars &amp; Couple)
+        </button>
+        <button type="button" class="abd-btn puzzle-btn" id="animPlayPuzzleBtn">
+          🧩 Play Love Puzzle
+        </button>
+        <button type="button" class="abd-btn gifts-btn" id="animOpenGiftsBtn">
+          🎁 Open Gifts &amp; Surprises
+        </button>
+        <button type="button" class="abd-btn letter-btn" id="animReadLetterBtn">
+          💌 Read Romantic Letter
+        </button>
+        <button type="button" class="abd-btn explore-btn" id="animExploreSiteBtn">
+          🌐 Explore Full Website ⬇️
+        </button>
+      </div>
+      <div class="abd-hint">👆 Click any button above to jump directly into the piano, game, puzzle or surprise website!</div>
+    </div>
+  </div>
+
+  <!-- FLOATING STICKY BAR FOR LIVE TEMPLATE DEMO MODE -->
+  <div class="demo-mode-sticky-bar" id="demoModeStickyBar" style="display:none;">
+    <div class="dms-left">
+      <span class="dms-badge">🎬 LIVE TEMPLATE DEMO</span>
+      <span class="dms-title" id="dmsTitle">Template: Midnight Fireworks Gala</span>
+      <span class="dms-hint">All 3 Car Missions, Love Piano &amp; Instruments, Love Puzzle &amp; Gifts are unlocked below!</span>
+    </div>
+    <div class="dms-right">
+      <button type="button" class="dms-btn piano" id="dmsPianoBtn">🎹 Play Love Piano 🎵</button>
+      <button type="button" class="dms-btn replay" id="dmsReplayBtn">▶️ Replay Intro Show</button>
+      <button type="button" class="dms-btn create" id="dmsCreateBtn">✨ Create New Profile with This Template 🚀</button>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- PAUSED PROFILE OVERLAY (?p=paused_profile) -->
+  <!-- ============================================== -->
+  <div class="profile-paused-overlay" id="profilePausedOverlay" style="display:none;" aria-modal="true" role="dialog">
+    <div class="profile-paused-card">
+      <div class="ppc-icon">⏳💖</div>
+      <div class="ppc-badge">CELEBRATION MOMENT PAUSED</div>
+      <h2 class="ppc-title" id="pausedGirlTitle">Celebration Link is Paused</h2>
+      <p class="ppc-sub" id="pausedMsg">Yeh romantic celebration link admin dwaara temporarily pause ki gayi hai.</p>
+      <div class="ppc-details">
+        <p>Aapke liye banayi gayi website abhi unpaused hone wali hai! Kripya kuch samay baad link open karein ya sender se contact karein. 🌹✨</p>
+      </div>
+      <button type="button" class="ppc-admin-btn" id="pausedAdminUnlockBtn">🔑 Admin Login / Unpause Link</button>
+    </div>
   </div>
 
   <!-- Floating Bottom-Left Corner Admin Control Trigger -->
@@ -1081,364 +1405,1209 @@
         <p class="admin-dash-sub">Change names, occasions (Birthday/Anniversary), generate custom links, skip missions, and customize photos!</p>
       </header>
 
-      <!-- Admin Tabs Navigation -->
-      <div class="admin-tabs-nav">
-        <button class="atab-btn active" data-panel="panelProfiles" type="button">👑 Profiles (Neha, Misty...)</button>
-        <button class="atab-btn" data-panel="panelThemes" type="button">🎨 Themes &amp; Styling</button>
-        <button class="atab-btn" data-panel="panelPhotos" type="button">📸 All Photos &amp; Media</button>
-        <button class="atab-btn" data-panel="panelGeneral" type="button">👤 Names &amp; Wishes</button>
-        <button class="atab-btn" data-panel="panelMusic" type="button">🎵 Add Music (YouTube)</button>
-        <button class="atab-btn" data-panel="panelMissions" type="button">🚀 Missions &amp; Skip</button>
-        <button class="atab-btn" data-panel="panelAdmins" type="button">👥 Manage Admins</button>
-        <button class="atab-btn" data-panel="panelPayment" type="button">💳 Payment &amp; Social</button>
-      </div>
+      <!-- Admin Tabs Navigation (4 Clean High-Level Tabs) -->
+        <div class="admin-tabs-nav">
+          <button class="atab-btn active" data-panel="panelStudio" type="button">✨ Create &amp; Edit Profile Studio</button>
+          <button class="atab-btn" data-panel="panelAnalytics" type="button">📊 Profiles &amp; Live Tracking Monitor</button>
+          <button class="atab-btn" data-panel="panelMissions" type="button">🚀 Missions &amp; Test Bypass</button>
+          <button class="atab-btn" data-panel="panelAdmins" type="button">👥 Manage Admins &amp; Security</button>
+        </div>
 
-      <!-- Tab Panel 1: Multi-Girl Profiles Manager (Misty, Neha, Rani...) -->
-      <div class="atab-panel active" id="panelProfiles">
-        <div class="profile-mgmt-card">
-          <div class="pmc-header">
-            <div class="pmc-badge">MULTI-CELEBRATION ENGINE 👑✨</div>
-            <h3>Celebration Profiles Manager (Neha, Misty, Rani...)</h3>
-            <p>
-              Yahan aap kisi bhi ladki (jaise <strong>Neha</strong>, <strong>Misty</strong>, <strong>Rani</strong>) ka naya profile bana sakte hain! Naya profile create karne par turant ek <strong>unique personalized link generate</strong> ho jayega, jise open karne par poori website usi ladki ke naam, photos, theme, wishes aur occasion ke sath live ho jayegi!
-            </p>
-          </div>
-
-          <!-- Section A: Create / Edit Profile Form -->
-          <div class="pmc-form-box">
-            <h4 class="pmc-box-title" id="profFormTitle">✨ Create / Edit Celebration Profile</h4>
-            <form id="profileForm" onsubmit="event.preventDefault();">
-              <input type="hidden" id="profEditId" value="" />
-
-              <div class="admin-grid-2">
-                <div class="form-group">
-                  <label for="profName">👑 Girl's Name (Recipient):</label>
-                  <input type="text" id="profName" class="admin-input" placeholder="e.g. Neha, Rani, Pooja..." />
-                  <span class="field-hint">Website par har jagah ye naam show hoga!</span>
+        <!-- ============================================================ -->
+        <!-- TAB PANEL 1: UNIFIED FULL-SCREEN STUDIO WIZARD (6 STEPS)    -->
+        <!-- ============================================================ -->
+        <div class="atab-panel active" id="panelStudio">
+          <div class="profile-mgmt-card studio-card">
+            <div class="wiz-container is-full-studio" id="profWizardContainer" style="display:block;">
+              <div class="wiz-card">
+                <!-- Wizard Header -->
+                <div class="wiz-header">
+                  <div class="wiz-header-left">
+                    <span class="wiz-pill-tag">PORTAL STUDIO WIZARD 🪄</span>
+                    <h4 class="wiz-heading" id="profWizardTitle">✨ Create &amp; Edit Customer Profile Studio</h4>
+                  </div>
+                  <div class="wiz-header-right">
+                    <button type="button" class="mini-preset-btn" id="btnStudioResetForm">🔄 New Blank Form</button>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label for="profSender">🤴 Boy's Name (Sender):</label>
-                  <input type="text" id="profSender" class="admin-input" placeholder="e.g. Yuvi" value="Yuvi" />
+
+                <!-- 6 Interactive Stepper Progress Pills -->
+                <div class="wiz-stepper" id="wizStepper">
+                  <div class="wiz-step active" data-step="1" id="stepPill1">
+                    <div class="wiz-step-circle">1</div>
+                    <div class="wiz-step-text">
+                      <span class="ws-main">Couple Details</span>
+                      <span class="ws-sub">Names &amp; Letter</span>
+                    </div>
+                  </div>
+                  <div class="wiz-step" data-step="2" id="stepPill2">
+                    <div class="wiz-step-circle">2</div>
+                    <div class="wiz-step-text">
+                      <span class="ws-main">Theme &amp; Style</span>
+                      <span class="ws-sub">18 Visual Themes</span>
+                    </div>
+                  </div>
+                  <div class="wiz-step" data-step="3" id="stepPill3">
+                    <div class="wiz-step-circle">3</div>
+                    <div class="wiz-step-text">
+                      <span class="ws-main">Media Studio</span>
+                      <span class="ws-sub">Photos, Reel, Gifts</span>
+                    </div>
+                  </div>
+                  <div class="wiz-step" data-step="4" id="stepPill4">
+                    <div class="wiz-step-circle">4</div>
+                    <div class="wiz-step-text">
+                      <span class="ws-main">10+ Games &amp; Quiz</span>
+                      <span class="ws-sub">Select Games &amp; Qs</span>
+                    </div>
+                  </div>
+                  <div class="wiz-step" data-step="5" id="stepPill5">
+                    <div class="wiz-step-circle">5</div>
+                    <div class="wiz-step-text">
+                      <span class="ws-main">Payment &amp; Music</span>
+                      <span class="ws-sub">ON/OFF &amp; Songs</span>
+                    </div>
+                  </div>
+                  <div class="wiz-step" data-step="6" id="stepPill6">
+                    <div class="wiz-step-circle">6</div>
+                    <div class="wiz-step-text">
+                      <span class="ws-main">Review &amp; Share</span>
+                      <span class="ws-sub">Generate Link &amp; QR</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div class="admin-grid-3">
-                <div class="form-group">
-                  <label for="profNickname">Pet Name / Nickname:</label>
-                  <input type="text" id="profNickname" class="admin-input" placeholder="e.g. Babu Shona, Princess" value="Babu Shona" />
+                <!-- Hidden Profile Edit ID -->
+                <input type="hidden" id="profEditId" value="" />
+                <div class="prof-status-banner" id="profStatusBanner" style="display:none;"></div>
+
+                <!-- ============================================== -->
+                <!-- STEP 1 PANE: Couple Details & Occasion         -->
+                <!-- ============================================== -->
+                <div class="wiz-pane active" id="wizPane1">
+                  <div class="wiz-pane-banner">
+                    <h5>📝 Step 1: Customer &amp; Couple Details, Occasion &amp; Love Letter</h5>
+                    <p>Ladki ka naam, ladke ka naam, occasion type aur romantic letter enter karein:</p>
+                  </div>
+
+                  <div class="admin-grid-2">
+                  <div class="form-group">
+                    <label for="profName">👑 Girl's Name (Recipient) <span class="required-star">*</span>:</label>
+                    <input type="text" id="profName" class="admin-input" placeholder="e.g. Neha, Rani, Pooja, Neelu..." />
+                    <span class="field-hint">Website par har jagah ye naam dynamically aayega!</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="profSender">🤴 Boy's Name (Sender):</label>
+                    <input type="text" id="profSender" class="admin-input" placeholder="e.g. Yuvi, Demoo..." value="Yuvi" />
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label for="profOccasion">Occasion Type:</label>
-                  <select id="profOccasion" class="admin-input admin-select">
-                    <option value="birthday">🎂 Birthday Celebration</option>
-                    <option value="anniversary">💍 Anniversary Celebration</option>
-                    <option value="love">💖 Love &amp; Romantic Surprise</option>
-                    <option value="valentine">🌹 Valentine's Special</option>
-                  </select>
+
+                <div class="admin-grid-2">
+                  <div class="form-group">
+                    <label for="profNickname">Pet Name / Nickname:</label>
+                    <input type="text" id="profNickname" class="admin-input" placeholder="e.g. Babu Shona, Meri Jaan..." value="Babu Shona" />
+                  </div>
+                  <div class="form-group">
+                    <label for="profOccasion">Occasion Type (Celebration Mode):</label>
+                    <select id="profOccasion" class="admin-input admin-select">
+                      <option value="birthday">🎂 Birthday Celebration</option>
+                      <option value="anniversary">💍 Anniversary Celebration</option>
+                      <option value="party">🎉 Party &amp; Special Day</option>
+                      <option value="love_propose">💖 Love Propose / Romance</option>
+                      <option value="marriage_propose">👰 Marriage Proposal ("Will You Marry Me?")</option>
+                      <option value="sorry_request">🥺 Sorry Request ("Maaf Kar Do Meri Jaan")</option>
+                      <option value="valentine">🌹 Valentine's Special</option>
+                      <option value="other">✨ Other / Custom Celebration</option>
+                    </select>
+                  </div>
                 </div>
+
+                <!-- Visual Occasion Grid Pills -->
                 <div class="form-group">
-                  <label for="profThemeSelect">🎨 Theme Style:</label>
-                  <select id="profThemeSelect" class="admin-input admin-select">
-                    <option value="rose-pink">🌹 Romantic Rose Pink (Default)</option>
-                    <option value="midnight-neon">🔮 Midnight Purple &amp; Neon</option>
-                    <option value="royal-wine-gold">🍷 Royal Wine &amp; Gold</option>
-                    <option value="sunset-peach">🍑 Sunset Peach &amp; Coral</option>
-                    <option value="emerald-fantasy">🌿 Enchanted Emerald</option>
-                  </select>
+                  <label>⚡ Quick Occasion Selector:</label>
+                  <div class="occ-pills-wrap" id="occPillsWrap">
+                    <button type="button" class="occ-pill active" data-occ="birthday">🎂 Birthday</button>
+                    <button type="button" class="occ-pill" data-occ="anniversary">💍 Anniversary</button>
+                    <button type="button" class="occ-pill" data-occ="party">🎉 Party</button>
+                    <button type="button" class="occ-pill" data-occ="love_propose">💖 Love Propose</button>
+                    <button type="button" class="occ-pill" data-occ="marriage_propose">👰 Marriage Proposal</button>
+                    <button type="button" class="occ-pill" data-occ="sorry_request">🥺 Sorry Request</button>
+                    <button type="button" class="occ-pill" data-occ="valentine">🌹 Valentine</button>
+                    <button type="button" class="occ-pill" data-occ="other">✨ Other</button>
+                  </div>
                 </div>
+
+                <div class="form-group">
+                  <label for="profWish">Custom Tagline / Subtitle:</label>
+                  <input type="text" id="profWish" class="admin-input" placeholder="e.g. to us and a love that blooms forever" value="to us and a love that blooms" />
+                </div>
+
+                <div class="form-group">
+                  <label for="profVoice">🔊 Spoken Voice Wish (Text-to-Speech):</label>
+                  <input type="text" id="profVoice" class="admin-input" placeholder="e.g. Happy Birthday Neha!" value="Happy Birthday Neha!" />
+                </div>
+
+                <div class="form-group">
+                  <div class="label-with-action">
+                    <label for="profLetter">💌 Custom Romantic Letter / Message:</label>
+                    <button type="button" class="mini-preset-btn" id="btnAutoLetterPreset">✨ Auto-Fill Template for this Occasion</button>
+                  </div>
+                  <textarea id="profLetter" class="admin-textarea" rows="4" placeholder="Write custom sweet message for her..."></textarea>
+                </div>
+
+                  <div class="wiz-nav-actions">
+                    <div></div>
+                    <button type="button" class="wiz-nav-btn next-btn" id="btnWizStep1Next">
+                      Next: Theme &amp; 18 Templates (Step 2) ➡️
+                    </button>
+                  </div>
+                </div>
+
+                <!-- ============================================== -->
+                <!-- STEP 2 PANE: Themes & 18 Celebration Templates -->
+                <!-- ============================================== -->
+                <div class="wiz-pane" id="wizPane2" style="display:none;">
+                  <div class="wiz-pane-banner">
+                    <h5>🎨 Step 2: Visual Color Theme &amp; 18 Celebration Templates</h5>
+                    <p>Website ka color palette chunein aur 18 unique celebration animation styles mein se pasand karein:</p>
+                  </div>
+
+                  <div class="form-group">
+                  <label>🎨 Visual Color Palette Theme:</label>
+                  <input type="hidden" id="profThemeSelect" value="rose-pink" />
+                  <div class="wiz-themes-grid">
+                    <div class="wiz-theme-card active" data-theme="rose-pink">
+                      <div class="wtc-dots">
+                        <span style="background:#ff2a70;"></span>
+                        <span style="background:#ff5f86;"></span>
+                        <span style="background:#6e0a31;"></span>
+                      </div>
+                      <strong>🌹 Rose Pink</strong>
+                      <small>Romantic Soft Glow</small>
+                    </div>
+                    <div class="wiz-theme-card" data-theme="midnight-neon">
+                      <div class="wtc-dots">
+                        <span style="background:#be2edd;"></span>
+                        <span style="background:#8e44ad;"></span>
+                        <span style="background:#2c003e;"></span>
+                      </div>
+                      <strong>🔮 Midnight Neon</strong>
+                      <small>Purple Starlight</small>
+                    </div>
+                    <div class="wiz-theme-card" data-theme="royal-wine-gold">
+                      <div class="wtc-dots">
+                        <span style="background:#e74c3c;"></span>
+                        <span style="background:#f1c40f;"></span>
+                        <span style="background:#3d070b;"></span>
+                      </div>
+                      <strong>🍷 Royal Wine &amp; Gold</strong>
+                      <small>Crimson Luxury</small>
+                    </div>
+                    <div class="wiz-theme-card" data-theme="sunset-peach">
+                      <div class="wtc-dots">
+                        <span style="background:#ff793f;"></span>
+                        <span style="background:#fed330;"></span>
+                        <span style="background:#4e1d03;"></span>
+                      </div>
+                      <strong>🍑 Sunset Peach</strong>
+                      <small>Golden Hour Warmth</small>
+                    </div>
+                    <div class="wiz-theme-card" data-theme="emerald-fantasy">
+                      <div class="wtc-dots">
+                        <span style="background:#2ed573;"></span>
+                        <span style="background:#10ac84;"></span>
+                        <span style="background:#05231a;"></span>
+                      </div>
+                      <strong>🌿 Emerald Fantasy</strong>
+                      <small>Fairytale Romance</small>
+                    </div>
+                    <div class="wiz-theme-card" data-theme="sweet-chocolate">
+                      <div class="wtc-dots">
+                        <span style="background:#d35400;"></span>
+                        <span style="background:#f39c12;"></span>
+                        <span style="background:#2c1503;"></span>
+                      </div>
+                      <strong>🍫 Sweet Chocolate</strong>
+                      <small>Warm Caramel Brown</small>
+                    </div>
+                  </div>
+                </div>
+
+                  <div class="form-group templates-wiz-group">
+                  <div class="label-with-action">
+                    <label>✨ Choose Celebration Animation Template (12 Unique Themes):</label>
+                    <button type="button" class="mini-preset-btn" id="btnPreviewSelectedTemplate">🎬 Preview Selected Animation</button>
+                  </div>
+                  <p class="field-hint">Template chunte hi celebration animation, occasion, wishes aur romantic letter automatically set ho jayenge:</p>
+                  <input type="hidden" id="profTemplateSelect" value="crossbow_heart" />
+                  <div class="wiz-templates-grid" id="wizTemplatesGrid">
+                    <!-- 1. CROSSBOW HEART -->
+                    <div class="wiz-template-card active" data-template="crossbow_heart" data-occ="birthday" data-theme="rose-pink">
+                      <div class="wt-badge">POPULAR 💘</div>
+                      <div class="wt-icon">🏹💘</div>
+                      <strong class="wt-title">Crossbow Love Strike</strong>
+                      <span class="wt-style">Fires Arrow &bull; Heartbeat Glow</span>
+                      <small class="wt-desc">Arrow strikes 3D heart with rhythmic heartbeat pulses &amp; golden glitter burst.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="crossbow_heart" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="crossbow_heart" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="crossbow_heart">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 2. WATERFALL CASCADE (WATER WALL) -->
+                    <div class="wiz-template-card" data-template="waterfall_cascade" data-occ="love_propose" data-theme="crystal-waterfall">
+                      <div class="wt-badge">NEW WATERFALL 🌊</div>
+                      <div class="wt-icon">🌊💧</div>
+                      <strong class="wt-title">Crystal Water Wall &amp; Waterfall</strong>
+                      <span class="wt-style">Falling Water &bull; Splashing Ripples</span>
+                      <small class="wt-desc">Cascading liquid water wall stream with falling water droplets, ripples &amp; aquatic hearts.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="waterfall_cascade" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="waterfall_cascade" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="waterfall_cascade">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 3. 3D GIFT BOX -->
+                    <div class="wiz-template-card" data-template="gift_unboxing" data-occ="birthday" data-theme="royal-wine-gold">
+                      <div class="wt-badge">SURPRISE 🎁</div>
+                      <div class="wt-icon">🎁💥</div>
+                      <strong class="wt-title">3D Gift Box Explosion</strong>
+                      <span class="wt-style">Unties Ribbon &bull; Confetti Blast</span>
+                      <small class="wt-desc">Lid flies open into colorful balloons, confetti &amp; golden floating stars.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="gift_unboxing" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="gift_unboxing" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="gift_unboxing">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 4. APOLOGY HEALING HEART -->
+                    <div class="wiz-template-card" data-template="apology_healing" data-occ="sorry_request" data-theme="sunset-peach">
+                      <div class="wt-badge">MAAF KAR DO 🥺</div>
+                      <div class="wt-icon">🥺🩹</div>
+                      <strong class="wt-title">Apology &amp; Healing Heart</strong>
+                      <span class="wt-style">Rain Clears &bull; Heart Stitches</span>
+                      <small class="wt-desc">Sad raincloud turns into sunshine; broken heart heals with gold &amp; blooms roses.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="apology_healing" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="apology_healing" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="apology_healing">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 5. RING REVEAL -->
+                    <div class="wiz-template-card" data-template="ring_reveal" data-occ="marriage_propose" data-theme="royal-wine-gold">
+                      <div class="wt-badge">PROPOSE 💍</div>
+                      <div class="wt-icon">💍💎</div>
+                      <strong class="wt-title">Royal Velvet Ring Box</strong>
+                      <span class="wt-style">Velvet Box &bull; Diamond Sparkle</span>
+                      <small class="wt-desc">Jewelry box opens in slow motion with shimmering diamond rays &amp; golden sparkles.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="ring_reveal" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="ring_reveal" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="ring_reveal">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 6. MIDNIGHT FIREWORKS -->
+                    <div class="wiz-template-card" data-template="midnight_fireworks" data-occ="party" data-theme="midnight-neon">
+                      <div class="wt-badge">GRAND 🎆</div>
+                      <div class="wt-icon">🎆🌌</div>
+                      <strong class="wt-title">Midnight Fireworks Gala</strong>
+                      <span class="wt-style">Colorful Sky &bull; Glitter Trails</span>
+                      <small class="wt-desc">Spectacular midnight fireworks show lighting up her name in the night sky.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="midnight_fireworks" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="midnight_fireworks" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="midnight_fireworks">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 7. FLOATING LANTERN RIVER (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="golden_lantern_river" data-occ="anniversary" data-theme="sunset-peach">
+                      <div class="wt-badge">NIGHT RIVER 🏮</div>
+                      <div class="wt-icon">🏮✨</div>
+                      <strong class="wt-title">Floating Water Lantern River</strong>
+                      <span class="wt-style">Glowing Water &bull; Candle Glow</span>
+                      <small class="wt-desc">Serene river night with glowing sky and water lanterns drifting on ripple waves.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="golden_lantern_river" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="golden_lantern_river" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="golden_lantern_river">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 8. VELVET ROSE RAIN (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="rose_rain_storm" data-occ="valentine" data-theme="rose-pink">
+                      <div class="wt-badge">ROSE RAIN 🌹</div>
+                      <div class="wt-icon">🌹🥀</div>
+                      <strong class="wt-title">Velvet Rose Petal Waterfall</strong>
+                      <span class="wt-style">Million Petals &bull; Velvet Rain</span>
+                      <small class="wt-desc">Soft cascade of hundreds of red velvet rose petals falling gracefully like rain.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="rose_rain_storm" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="rose_rain_storm" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="rose_rain_storm">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 9. ROYAL CORONATION (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="royal_coronation" data-occ="birthday" data-theme="royal-wine-gold">
+                      <div class="wt-badge">ROYALTY 👑</div>
+                      <div class="wt-icon">👑💎</div>
+                      <strong class="wt-title">Royal Queen Diamond Coronation</strong>
+                      <span class="wt-style">Golden Crown &bull; Royal Sparkles</span>
+                      <small class="wt-desc">Sparkling golden royal crown descends from velvet drape with diamond fireworks.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="royal_coronation" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="royal_coronation" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="royal_coronation">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 10. LOVE CHEMISTRY (2 CHEMICALS MIX & GIANT HEART REACTION) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="magic_potion_bubbles" data-occ="love_propose" data-theme="emerald-fantasy">
+                      <div class="wt-badge">CHEMISTRY 🧪</div>
+                      <div class="wt-icon">🧪💖</div>
+                      <strong class="wt-title">Love Chemistry Laboratory</strong>
+                      <span class="wt-style">2 Chemicals Mix &bull; Giant Heart Explosion</span>
+                      <small class="wt-desc">Two secret formulas pour into central beaker, mixing &amp; exploding into a giant 3D glowing heart!</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="magic_potion_bubbles" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="magic_potion_bubbles" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="magic_potion_bubbles">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 11. NEON CYBERPUNK (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="neon_cyber_pulse" data-occ="party" data-theme="midnight-neon">
+                      <div class="wt-badge">CYBERPUNK ⚡</div>
+                      <div class="wt-icon">⚡🎧</div>
+                      <strong class="wt-title">Neon Cyberpunk Heartbeat</strong>
+                      <span class="wt-style">Audio Spectrum &bull; Laser Pulses</span>
+                      <small class="wt-desc">Equalizer soundwave spectrum bars bouncing to vibrant neon lasers and cyber heart.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="neon_cyber_pulse" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="neon_cyber_pulse" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="neon_cyber_pulse">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 12. SAKURA BLOSSOM (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="sakura_waterfall" data-occ="love_propose" data-theme="rose-pink">
+                      <div class="wt-badge">ROMANTIC 🌸</div>
+                      <div class="wt-icon">🌸🍃</div>
+                      <strong class="wt-title">Sakura Blossom Rain</strong>
+                      <span class="wt-style">Cherry Petals &bull; Gentle Breeze</span>
+                      <small class="wt-desc">Cascading Japanese cherry blossoms swirling with soft romantic piano glow.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="sakura_waterfall" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="sakura_waterfall" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="sakura_waterfall">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 13. CHOCOLATE FONDUE (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="chocolate_fondue" data-occ="valentine" data-theme="sweet-chocolate">
+                      <div class="wt-badge">SWEET 🍫</div>
+                      <div class="wt-icon">🍫🍓</div>
+                      <strong class="wt-title">Sweet Chocolate Fondue</strong>
+                      <span class="wt-style">Liquid Fondue &bull; ₹143 Love</span>
+                      <small class="wt-desc">Warm chocolate fountain with strawberries, truffles &amp; sweet ₹143 tokens.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="chocolate_fondue" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="chocolate_fondue" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="chocolate_fondue">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 14. CINDERELLA CASTLE (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="cinderella_castle" data-occ="anniversary" data-theme="emerald-fantasy">
+                      <div class="wt-badge">FAIRYTALE 🏰</div>
+                      <div class="wt-icon">🏰🪄</div>
+                      <strong class="wt-title">Fairytale Castle &amp; Wand</strong>
+                      <span class="wt-style">Golden Wand &bull; Stardust Rain</span>
+                      <small class="wt-desc">Golden fairy wand waves over an enchanted fairytale castle with starlight.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="cinderella_castle" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="cinderella_castle" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="cinderella_castle">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 15. CHAMPAGNE TOAST (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="champagne_toast" data-occ="anniversary" data-theme="royal-wine-gold">
+                      <div class="wt-badge">LUXURY 🥂</div>
+                      <div class="wt-icon">🥂🍾</div>
+                      <strong class="wt-title">Royal Champagne Toast</strong>
+                      <span class="wt-style">Clinking Flutes &bull; Golden Fizz</span>
+                      <small class="wt-desc">Two crystal glasses clink in celebration with rising effervescent bubbles.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="champagne_toast" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="champagne_toast" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="champagne_toast">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 16. BUTTERFLY GARDEN (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="butterfly_garden" data-occ="love_propose" data-theme="rose-pink">
+                      <div class="wt-badge">MAGICAL 🦋</div>
+                      <div class="wt-icon">🦋🌺</div>
+                      <strong class="wt-title">Enchanted Butterfly Garden</strong>
+                      <span class="wt-style">3D Butterflies &bull; Glowing Flora</span>
+                      <small class="wt-desc">Iridescent 3D glowing butterflies flutter across blooming botanical flowers.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="butterfly_garden" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="butterfly_garden" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="butterfly_garden">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 17. VINTAGE SCROLL (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="vintage_scroll" data-occ="love_propose" data-theme="royal-wine-gold">
+                      <div class="wt-badge">ROYAL 📜</div>
+                      <div class="wt-icon">📜🕯️</div>
+                      <strong class="wt-title">Wax-Sealed Love Scroll</strong>
+                      <span class="wt-style">Royal Wax &bull; Golden Calligraphy</span>
+                      <small class="wt-desc">Royal seal breaks open and golden parchment unfurls her romantic love letter.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="vintage_scroll" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="vintage_scroll" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="vintage_scroll">✓ Choose</button>
+                      </div>
+                    </div>
+
+                    <!-- 18. COSMIC STARS (EXTRA) -->
+                    <div class="wiz-template-card wiz-tmpl-extra" data-template="cosmic_stars" data-occ="birthday" data-theme="midnight-neon">
+                      <div class="wt-badge">COSMIC 🌌</div>
+                      <div class="wt-icon">🌌⭐</div>
+                      <strong class="wt-title">Cosmic Star Constellation</strong>
+                      <span class="wt-style">Deep Galaxy &bull; Star Letters</span>
+                      <small class="wt-desc">Galactic nebula swirls as stars connect lines to spell her name across universe.</small>
+                      <div class="wt-card-actions">
+                        <button type="button" class="wt-action-btn demo-btn" data-demotemplate="cosmic_stars" title="Play Fullscreen Animation Demo">🎬 Live Demo</button>
+                        <button type="button" class="wt-action-btn site-btn" data-sitetemplate="cosmic_stars" title="Open Full Demo Website in New Tab">🌐 Demo Site ↗</button>
+                        <button type="button" class="wt-action-btn select-btn" data-selecttemplate="cosmic_stars">✓ Choose</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- SEE ALL 18+ TEMPLATES TOGGLE BUTTON -->
+                  <div class="wiz-see-all-wrap">
+                    <button type="button" class="btn-see-all-templates" id="btnToggleAllTemplates">
+                      ✨ See All 18+ Luxury Templates (Water Wall, Lanterns, Roses...) ⬇️
+                    </button>
+                  </div>
+                </div>
+
+                  <div class="wiz-nav-actions">
+                    <button type="button" class="wiz-nav-btn back-btn" id="btnWizStep2Back">⬅️ Back to Details</button>
+                    <button type="button" class="wiz-nav-btn next-btn" id="btnWizStep2Next">Next: Photos &amp; Media Studio (Step 3) ➡️</button>
+                  </div>
+                </div>
+
+                <!-- ============================================== -->
+                <!-- STEP 3 PANE: Complete Media Studio             -->
+                <!-- ============================================== -->
+                <div class="wiz-pane" id="wizPane3" style="display:none;">
+                  <div class="wiz-pane-banner">
+                    <h5>📸 Step 3: Complete Photos &amp; Media Studio (100% Customization)</h5>
+                    <p>Wallpaper, portrait, couple hug, 6 puzzle photos, 6 album photos, reel video aur 4 surprise gifts set karein (Misty ki purani photo kabhi nahi dikhegi!):</p>
+                  </div>
+
+                  <!-- Photos Customization -->
+                <div class="form-group">
+                  <label>📸 Key Website Photos (Upload File ya URL paste karein):</label>
+                  <div class="admin-grid-2">
+                    <div class="photo-input-card">
+                      <label>🌌 Background Wallpaper Image:</label>
+                      <input type="file" id="wizPhotoBgFile" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPhotoBgUrl" class="admin-input" placeholder="Or paste background image URL..." />
+                    </div>
+                    <div class="photo-input-card">
+                      <label>👸 Main Girl Portrait Photo:</label>
+                      <input type="file" id="wizPhotoPortraitFile" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPhotoPortraitUrl" class="admin-input" placeholder="Or paste portrait image URL..." />
+                    </div>
+                    <div class="photo-input-card">
+                      <label>🧩 Love Photo Puzzle Image (Default Slot #1):</label>
+                      <input type="file" id="wizPhotoPuzzleFile" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPhotoPuzzleUrl" class="admin-input" placeholder="Or paste puzzle image URL..." />
+                    </div>
+                    <div class="photo-input-card">
+                      <label>👩‍❤️‍💋‍👨 Live Hug Couple Photo (Gift #4):</label>
+                      <input type="file" id="wizPhotoHugFile" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPhotoHugUrl" class="admin-input" placeholder="Or paste couple hug image URL..." />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- All 6 Jigsaw Puzzle Images Customizer -->
+                <div class="form-group puzzle-wiz-section">
+                  <div class="label-with-action">
+                    <label>🧩 All 6 Jigsaw Puzzle Images (Har ek puzzle photo badlein):</label>
+                    <button type="button" class="mini-preset-btn" id="btnAutoFillPuzzleSlots">✨ Auto-Fill Empty Slots with Aesthetic Photos</button>
+                  </div>
+                  <p class="field-hint">Puzzle game mein 6 alag photos solve karne ka option hota hai. Yahan sabhi 6 photos customize karein taaki purani photos na dikhein:</p>
+                  
+                  <div class="puzzle-slots-grid">
+                    <!-- Slot 1 -->
+                    <div class="puzzle-slot-card">
+                      <div class="psc-badge">PUZZLE #1 (MAIN) 🧩</div>
+                      <div class="psc-preview"><img src="./images/misty_cute_cheeks.jpg" alt="Puzzle 1" id="puzzlePrev1" /></div>
+                      <input type="file" id="wizPuzzle1File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPuzzle1Url" class="admin-input" placeholder="Puzzle #1 image URL..." />
+                    </div>
+
+                    <!-- Slot 2 -->
+                    <div class="puzzle-slot-card">
+                      <div class="psc-badge">PUZZLE #2 🌸</div>
+                      <div class="psc-preview"><img src="./images/misty_white_kurti.jpg" alt="Puzzle 2" id="puzzlePrev2" /></div>
+                      <input type="file" id="wizPuzzle2File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPuzzle2Url" class="admin-input" placeholder="Puzzle #2 image URL..." />
+                    </div>
+
+                    <!-- Slot 3 -->
+                    <div class="puzzle-slot-card">
+                      <div class="psc-badge">PUZZLE #3 💖</div>
+                      <div class="psc-preview"><img src="./images/misty_cute_cheeks.jpg" alt="Puzzle 3" id="puzzlePrev3" /></div>
+                      <input type="file" id="wizPuzzle3File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPuzzle3Url" class="admin-input" placeholder="Puzzle #3 image URL..." />
+                    </div>
+
+                    <!-- Slot 4 -->
+                    <div class="puzzle-slot-card">
+                      <div class="psc-badge">PUZZLE #4 📸</div>
+                      <div class="psc-preview"><img src="./images/misty_black_saree.jpg" alt="Puzzle 4" id="puzzlePrev4" /></div>
+                      <input type="file" id="wizPuzzle4File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPuzzle4Url" class="admin-input" placeholder="Puzzle #4 image URL..." />
+                    </div>
+
+                    <!-- Slot 5 -->
+                    <div class="puzzle-slot-card">
+                      <div class="psc-badge">PUZZLE #5 ✨</div>
+                      <div class="psc-preview"><img src="./images/misty_white_kurti.jpg" alt="Puzzle 5" id="puzzlePrev5" /></div>
+                      <input type="file" id="wizPuzzle5File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPuzzle5Url" class="admin-input" placeholder="Puzzle #5 image URL..." />
+                    </div>
+
+                    <!-- Slot 6 -->
+                    <div class="puzzle-slot-card">
+                      <div class="psc-badge">PUZZLE #6 👑</div>
+                      <div class="psc-preview"><img src="./images/misty_cute_cheeks.jpg" alt="Puzzle 6" id="puzzlePrev6" /></div>
+                      <input type="file" id="wizPuzzle6File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizPuzzle6Url" class="admin-input" placeholder="Puzzle #6 image URL..." />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- All 6 Memories & Album Photos Customizer -->
+                <div class="form-group album-wiz-section">
+                  <div class="label-with-action">
+                    <label>📸 All 6 Memories &amp; Album Photos (Har ek memories photo badlein):</label>
+                    <button type="button" class="mini-preset-btn" id="btnAutoFillAlbumSlots">✨ Auto-Fill Empty Album Slots with Aesthetic Photos</button>
+                  </div>
+                  <p class="field-hint">Ye 6 photos website ke 'Album of Love' polaroid showcase aur Car Game ke doran aane wale Milestone Notification toasts mein dikhti hain:</p>
+                  
+                  <div class="album-slots-grid">
+                    <!-- Album Slot 1 -->
+                    <div class="album-slot-card">
+                      <div class="asc-badge">MEMORIES #1 (MAIN) 📸</div>
+                      <div class="asc-preview"><img src="./images/misty1.jpg" alt="Memories 1" id="albumPrev1" /></div>
+                      <input type="file" id="wizAlbum1File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizAlbum1Url" class="admin-input" placeholder="Memories #1 image URL..." />
+                    </div>
+
+                    <!-- Album Slot 2 -->
+                    <div class="album-slot-card">
+                      <div class="asc-badge">MEMORIES #2 🌸</div>
+                      <div class="asc-preview"><img src="./images/misty2.jpg" alt="Memories 2" id="albumPrev2" /></div>
+                      <input type="file" id="wizAlbum2File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizAlbum2Url" class="admin-input" placeholder="Memories #2 image URL..." />
+                    </div>
+
+                    <!-- Album Slot 3 -->
+                    <div class="album-slot-card">
+                      <div class="asc-badge">MEMORIES #3 💖</div>
+                      <div class="asc-preview"><img src="./images/misty3.jpg" alt="Memories 3" id="albumPrev3" /></div>
+                      <input type="file" id="wizAlbum3File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizAlbum3Url" class="admin-input" placeholder="Memories #3 image URL..." />
+                    </div>
+
+                    <!-- Album Slot 4 -->
+                    <div class="album-slot-card">
+                      <div class="asc-badge">MEMORIES #4 🦋</div>
+                      <div class="asc-preview"><img src="./images/misty4.jpg" alt="Memories 4" id="albumPrev4" /></div>
+                      <input type="file" id="wizAlbum4File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizAlbum4Url" class="admin-input" placeholder="Memories #4 image URL..." />
+                    </div>
+
+                    <!-- Album Slot 5 -->
+                    <div class="album-slot-card">
+                      <div class="asc-badge">MEMORIES #5 ✨</div>
+                      <div class="asc-preview"><img src="./images/misty5.jpg" alt="Memories 5" id="albumPrev5" /></div>
+                      <input type="file" id="wizAlbum5File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizAlbum5Url" class="admin-input" placeholder="Memories #5 image URL..." />
+                    </div>
+
+                    <!-- Album Slot 6 -->
+                    <div class="album-slot-card">
+                      <div class="asc-badge">MEMORIES #6 👑</div>
+                      <div class="asc-preview"><img src="./images/misty6.jpg" alt="Memories 6" id="albumPrev6" /></div>
+                      <input type="file" id="wizAlbum6File" accept="image/*" class="admin-file-input" />
+                      <input type="text" id="wizAlbum6Url" class="admin-input" placeholder="Memories #6 image URL..." />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dynamic Gifts Selection System -->
+                <div class="form-group gifts-wiz-section">
+                  <div class="label-with-action">
+                    <label>🎁 Dynamic Gifts Customizer (Har Occasion ke liye alag gifts):</label>
+                    <div class="gift-preset-bar" id="giftPresetsBar">
+                      <button type="button" class="mini-preset-btn" data-giftpreset="birthday">🎂 Birthday Set</button>
+                      <button type="button" class="mini-preset-btn" data-giftpreset="anniversary">💍 Anniversary Set</button>
+                      <button type="button" class="mini-preset-btn" data-giftpreset="sorry">🥺 Sorry Request Set</button>
+                      <button type="button" class="mini-preset-btn" data-giftpreset="marriage">👰 Marriage Proposal Set</button>
+                      <button type="button" class="mini-preset-btn" data-giftpreset="love">💖 Romance Set</button>
+                    </div>
+                  </div>
+                  <p class="field-hint">Aap niche diye gaye 4 gifts ke naam aur descriptions customize kar sakte hain:</p>
+
+                  <div class="wiz-gifts-slots">
+                    <!-- Gift Slot 1 -->
+                    <div class="gift-slot-card">
+                      <div class="gsc-header">
+                        <span class="gsc-num">GIFT #1</span>
+                        <input type="text" id="wizGift1Badge" class="gsc-badge-input" placeholder="Badge (e.g. GIFT #1 🎮📀)" value="GIFT #1 🎮📀" />
+                      </div>
+                      <input type="text" id="wizGift1Title" class="admin-input" placeholder="Gift Title (e.g. Sony PS5 + GTA 6 Disc)" value="Sony PS5 + GTA VI CD Disc 🎮📀" />
+                      <textarea id="wizGift1Desc" class="admin-textarea" rows="2" placeholder="Gift Description...">Ultra HD PlayStation 5 console bundled with Grand Theft Auto VI (GTA 6) CD Game Disc!</textarea>
+                      <input type="url" id="wizGift1Photo" class="admin-input" placeholder="Gift photo URL (optional)" value="./images/gift_ps5_gta6.jpg" />
+                    </div>
+
+                    <!-- Gift Slot 2 -->
+                    <div class="gift-slot-card">
+                      <div class="gsc-header">
+                        <span class="gsc-num">GIFT #2</span>
+                        <input type="text" id="wizGift2Badge" class="gsc-badge-input" placeholder="Badge (e.g. GIFT #2 🚙)" value="GIFT #2 🚙" />
+                      </div>
+                      <input type="text" id="wizGift2Title" class="admin-input" placeholder="Gift Title (e.g. Mahindra Thar 4x4)" value="Mahindra Thar 4x4 (Dream Beast) 🚙" />
+                      <textarea id="wizGift2Desc" class="admin-textarea" rows="2" placeholder="Gift Description...">Starting with this cute mini Thar collectible for your room, and real mountain road trips with me next!</textarea>
+                      <input type="url" id="wizGift2Photo" class="admin-input" placeholder="Gift photo URL (optional)" value="./images/gift_thar.jpg" />
+                    </div>
+
+                    <!-- Gift Slot 3 -->
+                    <div class="gift-slot-card">
+                      <div class="gsc-header">
+                        <span class="gsc-num">GIFT #3</span>
+                        <input type="text" id="wizGift3Badge" class="gsc-badge-input" placeholder="Badge (e.g. GIFT #3 👗)" value="GIFT #3 👗" />
+                      </div>
+                      <input type="text" id="wizGift3Title" class="admin-input" placeholder="Gift Title (e.g. Princess Designer Outfits)" value="Princess Dresses & Cute Outfits 👗" />
+                      <textarea id="wizGift3Desc" class="admin-textarea" rows="2" placeholder="Gift Description...">The prettiest dresses for the prettiest girl in the world! To make you shine like an absolute queen!</textarea>
+                      <input type="url" id="wizGift3Photo" class="admin-input" placeholder="Gift photo URL (optional)" value="./images/gift_dress.jpg" />
+                    </div>
+
+                    <!-- Gift Slot 4: Lifetime Gift -->
+                    <div class="gift-slot-card lifetime-gift-slot">
+                      <div class="gsc-header">
+                        <span class="gsc-num">LIFETIME GIFT</span>
+                        <input type="text" id="wizGift4Badge" class="gsc-badge-input" placeholder="Badge" value="LIFETIME GIFT 👑💍" />
+                      </div>
+                      <input type="text" id="wizGift4Title" class="admin-input" placeholder="Gift Title" value="Yuvi (Her Forever Boyfriend) 👑❤️" />
+                      <textarea id="wizGift4Desc" class="admin-textarea" rows="2" placeholder="Gift Description...">100% genuine, lifetime warranty, unlimited warm hugs & kisses, 24/7 care & loyalty, exclusively reserved forever!</textarea>
+                    </div>
+                  </div>
+                </div>
+
+                  <!-- Romantic Video / Photo Reel -->
+                <div class="wiz-sub-box">
+                  <div class="wsb-header">
+                    <span class="wsb-title">🎬 Romantic Video / Photo Reel Customizer</span>
+                  </div>
+                  <p class="field-hint">Ladki ke liye special romantic video reel upload karein ya direct video link paste karein:</p>
+                  
+                  <div class="admin-grid-2">
+                    <div class="form-group">
+                      <div class="label-with-action">
+                        <label for="wizReelUrl">🎥 Video File (Upload ya Link):</label>
+                        <button type="button" class="mini-preset-btn" id="btnTriggerReelUpload">📹 Choose Video File</button>
+                      </div>
+                      <input type="file" id="wizReelFile" accept="video/mp4,video/*" class="admin-file-input" style="display:none;" />
+                      <input type="text" id="wizReelUrl" class="admin-input" placeholder="./images/misty_video.mp4 ya direct video URL" />
+                      <video id="wizReelPreview" controls style="display:none; width: 100%; max-height: 140px; border-radius: 8px; margin-top: 8px; background: #000;"></video>
+                    </div>
+                    <div class="form-group">
+                      <label for="wizReelCaption">Reel Caption / Romantic Note:</label>
+                      <textarea id="wizReelCaption" class="admin-textarea" rows="4" placeholder="Reel ke niche likhne wala pyara message...">Seeing you smile is my favorite view in this whole universe! 🥰🎬🌹</textarea>
+                    </div>
+                  </div>
+                </div>
+
+                  <div class="wiz-nav-actions">
+                    <button type="button" class="wiz-nav-btn back-btn" id="btnWizStep3Back">⬅️ Back to Themes</button>
+                    <button type="button" class="wiz-nav-btn next-btn" id="btnWizStep3Next">Next: 10+ Games &amp; Love Quiz (Step 4) ➡️</button>
+                  </div>
+                </div>
+
+                <!-- ============================================== -->
+                <!-- STEP 4 PANE: 10+ Games & Love Quiz Manager     -->
+                <!-- ============================================== -->
+                <div class="wiz-pane" id="wizPane4" style="display:none;">
+                  <div class="wiz-pane-banner">
+                    <h5>🎮 Step 4: 10+ Interactive Games Selection &amp; Romantic Love Quiz Manager</h5>
+                    <p>Chunein ki is customer profile link mein kaun kaun se games active honge, aur Love Quiz ke questions customize karein:</p>
+                  </div>
+
+                  <!-- 10+ Interactive Games Selection Grid -->
+                  <div class="form-group">
+                    <div class="label-with-action">
+                      <label>🎮 Select Interactive Games for this Customer Link (12 Available Games):</label>
+                      <div style="display:flex; gap:8px;">
+                        <button type="button" class="mini-preset-btn" id="btnSelectAllGames">✅ Select All</button>
+                        <button type="button" class="mini-preset-btn" id="btnDeselectAllGames">❌ Deselect All</button>
+                      </div>
+                    </div>
+                    <p class="field-hint">Aap multiple games select kar sakte hain. Unchecked game website par skip ho jayega:</p>
+
+                    <div class="games-selector-grid">
+                      <!-- 1. Quiz -->
+                      <label class="game-select-card active" for="wizGame_quiz">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_quiz" value="quiz" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">🎯 Romantic Love Quiz</span>
+                          <span class="gsc-desc">10 sweet personal questions with runaway 'NO' button &amp; loving answers.</span>
+                          <span class="gsc-badge">MISSION #0</span>
+                        </div>
+                      </label>
+
+                      <!-- 2. Car 1 -->
+                      <label class="game-select-card active" for="wizGame_car1">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_car1" value="car1" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">🚗 Love Sports Car</span>
+                          <span class="gsc-desc">Mission 1: Drive red roadster, collect 50 love hearts &amp; nitro boosts.</span>
+                          <span class="gsc-badge">MISSION #1</span>
+                        </div>
+                      </label>
+
+                      <!-- 3. Thar 2 -->
+                      <label class="game-select-card active" for="wizGame_car2">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_car2" value="car2" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">🚙 Mahindra Thar 4x4</span>
+                          <span class="gsc-desc">Mission 2: Rugged mountain beast expedition, collect 50 Thar badges.</span>
+                          <span class="gsc-badge">MISSION #2</span>
+                        </div>
+                      </label>
+
+                      <!-- 4. Couple Drive 3 -->
+                      <label class="game-select-card active" for="wizGame_car3">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_car3" value="car3" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">👩‍❤️‍👨 Couple Reunion Drive</span>
+                          <span class="gsc-desc">Mission 3: Dodge Mummy, Papa &amp; Bhai obstacles to reach Yuvi's arms!</span>
+                          <span class="gsc-badge">MISSION #3</span>
+                        </div>
+                      </label>
+
+                      <!-- 5. Piano -->
+                      <label class="game-select-card active" for="wizGame_piano">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_piano" value="piano" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">🎹 Musical Grand Piano</span>
+                          <span class="gsc-desc">Interactive virtual piano with real high-def acoustic sound &amp; chords.</span>
+                          <span class="gsc-badge">ALWAYS UNLOCKED</span>
+                        </div>
+                      </label>
+
+                      <!-- 6. Puzzle -->
+                      <label class="game-select-card active" for="wizGame_puzzle">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_puzzle" value="puzzle" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">🧩 9-Piece Photo Puzzle</span>
+                          <span class="gsc-desc">Couple photo sliding jigsaw puzzle with custom uploaded memories!</span>
+                          <span class="gsc-badge">STAGE #4</span>
+                        </div>
+                      </label>
+
+                      <!-- 7. Gifts Box -->
+                      <label class="game-select-card active" for="wizGame_gifts">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_gifts" value="gifts" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">🎁 4 Secret Surprise Gifts</span>
+                          <span class="gsc-desc">Interactive unboxing of PS5, Thar, lifetime boyfriend warranty &amp; hug.</span>
+                          <span class="gsc-badge">STAGE #5</span>
+                        </div>
+                      </label>
+
+                      <!-- 8. Kisses Arcade -->
+                      <label class="game-select-card active" for="wizGame_kisses">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_kisses" value="kisses" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">💋 Flying Kisses Arcade</span>
+                          <span class="gsc-desc">Tap-to-catch falling romantic kisses, pink lips &amp; flying heart balloons.</span>
+                          <span class="gsc-badge">MINI GAME</span>
+                        </div>
+                      </label>
+
+                      <!-- 9. Cupid Arrow -->
+                      <label class="game-select-card active" for="wizGame_cupid">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_cupid" value="cupid" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">💘 Cupid's Arrow Target</span>
+                          <span class="gsc-desc">Draw the romantic bow and shoot heart arrows into glowing targets.</span>
+                          <span class="gsc-badge">INTRO GAME</span>
+                        </div>
+                      </label>
+
+                      <!-- 10. Fireworks -->
+                      <label class="game-select-card active" for="wizGame_fireworks">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_fireworks" value="fireworks" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">🎆 Midnight Fireworks Show</span>
+                          <span class="gsc-desc">Tap screen to burst colorful multi-spark romantic celebratory fireworks.</span>
+                          <span class="gsc-badge">CELEBRATION</span>
+                        </div>
+                      </label>
+
+                      <!-- 11. Reel Video -->
+                      <label class="game-select-card active" for="wizGame_reel">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_reel" value="reel" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">🎬 Memories Video Reel</span>
+                          <span class="gsc-desc">Nostalgic vertical video player with glowing border &amp; love caption.</span>
+                          <span class="gsc-badge">MEDIA</span>
+                        </div>
+                      </label>
+
+                      <!-- 12. Love Letter -->
+                      <label class="game-select-card active" for="wizGame_letter">
+                        <div class="gsc-check-wrap">
+                          <input type="checkbox" id="wizGame_letter" value="letter" checked />
+                        </div>
+                        <div class="gsc-body">
+                          <span class="gsc-name">💌 Deep Romantic Letter</span>
+                          <span class="gsc-desc">Wax seal opening animation with handwritten romantic confession.</span>
+                          <span class="gsc-badge">ROMANCE</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Love Quiz Manager & Editable Questions -->
+                  <div class="wiz-sub-box" style="margin-top: 20px;">
+                    <div class="wsb-header">
+                      <div class="toggle-switch-row">
+                        <label class="ios-switch">
+                          <input type="checkbox" id="wizQuizEnable" checked />
+                          <span class="ios-slider"></span>
+                        </label>
+                        <div>
+                          <strong>🎯 Enable Romantic Love Quiz for this Profile</strong>
+                          <div class="field-hint" style="margin:2px 0 0;">Agar OFF karenge toh link open karne par quiz skip hokar direct arcade games start honge.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="wizQuizQuestionsContainer">
+                      <div class="label-with-action" style="margin-top: 14px;">
+                        <label>📝 Customize Quiz Questions &amp; Romantic Answers:</label>
+                        <div style="display:flex; gap:8px;">
+                          <button type="button" class="mini-preset-btn" id="btnAddQuizQuestion">➕ Add Another Question</button>
+                          <button type="button" class="mini-preset-btn" id="btnResetQuizQuestions">🔄 Reset Romantic Defaults</button>
+                        </div>
+                      </div>
+                      <p class="field-hint">Aap ladki ke hisaab se har sawaal aur uska sweet "Yes" answer customize kar sakte hain:</p>
+
+                      <div class="quiz-editor-list" id="wizQuizQuestionsList">
+                        <!-- Questions dynamically rendered by admin.js -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="wiz-nav-actions">
+                    <button type="button" class="wiz-nav-btn back-btn" id="btnWizStep4Back">⬅️ Back to Media Studio</button>
+                    <button type="button" class="wiz-nav-btn next-btn" id="btnWizStep4Next">Next: Payment Switch &amp; Music (Step 5) ➡️</button>
+                  </div>
+                </div>
+
+                <!-- ============================================== -->
+                <!-- STEP 5 PANE: Payment Switch & Romantic Music   -->
+                <!-- ============================================== -->
+                <div class="wiz-pane" id="wizPane5" style="display:none;">
+                  <div class="wiz-pane-banner">
+                    <h5>💳 Step 5: Payment ON/OFF Switch &amp; Romantic Background Music</h5>
+                    <p>Customer ke payment status ke hisaab se switch set karein aur background romantic song chunein:</p>
+                  </div>
+
+                  <!-- Payment ON/OFF Switch -->
+                  <div class="wiz-sub-box">
+                    <div class="wsb-header">
+                      <div class="toggle-switch-row">
+                        <label class="ios-switch">
+                          <input type="checkbox" id="wizPaymentEnable" checked />
+                          <span class="ios-slider"></span>
+                        </label>
+                        <div>
+                          <strong>💳 Enable ₹143 Payment Card on Customer Website?</strong>
+                          <div class="field-hint" style="margin:2px 0 0;">
+                            💡 <strong>Important Tip:</strong> Agar customer ne pehle hi Instagram ya direct UPI par aapko paise bhej diye hain, toh is switch ko <strong>OFF</strong> kar dein! OFF karne par website par <strong>kisi bhi jagah payment card ya ₹143 token nahi dikhega</strong>!
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="wizPaymentOptionsWrap">
+                      <div class="admin-grid-3" style="margin-top: 14px;">
+                        <div class="form-group">
+                          <label for="wizUpiId">UPI ID (for receiving ₹143):</label>
+                          <input type="text" id="wizUpiId" class="admin-input" value="baby8389@nyes" />
+                        </div>
+                        <div class="form-group">
+                          <label for="wizAmount">Love Token Amount (₹):</label>
+                          <input type="number" id="wizAmount" class="admin-input" value="143" />
+                        </div>
+                        <div class="form-group">
+                          <label for="wizInstaId">Instagram Username (for proof DM):</label>
+                          <input type="text" id="wizInstaId" class="admin-input" value="tim_aary" />
+                        </div>
+                      </div>
+
+                      <div class="admin-grid-2">
+                        <div class="form-group">
+                          <label for="wizPaymentQrUrl">Custom Payment QR Image (Optional):</label>
+                          <input type="text" id="wizPaymentQrUrl" class="admin-input" placeholder="./images/payment_qr.png" />
+                        </div>
+                        <div class="form-group">
+                          <label for="wizPaymentPopupText">Pop-Up Promise Text (Romantic Token Note):</label>
+                          <input type="text" id="wizPaymentPopupText" class="admin-input" value="143 AMMOUNT PAY KRDO, CHOCLATE KHARID KE TUM KO DUNGA! 🥰🍫" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="wiz-sub-box">
+                  <div class="wsb-header">
+                    <span class="wsb-title">🎵 Romantic Music (MP3 Upload &amp; YouTube Hook)</span>
+                  </div>
+
+                  <!-- Direct MP3 File Upload from Device/Browser -->
+                  <div class="form-group custom-audio-upload-box">
+                    <div class="label-with-action">
+                      <label>📁 Upload MP3 Audio from Browser / Phone / PC:</label>
+                      <button type="button" class="mini-preset-btn" id="btnTriggerAudioUpload">🎵 Choose MP3 File</button>
+                    </div>
+                    <p class="field-hint">Downloaded song ka MP3 file upload karein ya direct audio link paste karein, yeh profile par bajega:</p>
+                    <input type="file" id="wizAudioFile" accept="audio/mp3,audio/*" class="admin-file-input" style="display:none;" />
+                    <div class="audio-input-action-row">
+                      <input type="text" id="wizAudioUrl" class="admin-input" placeholder="Or paste direct MP3 audio link..." />
+                      <button type="button" id="btnTestCustomAudio" class="mini-preset-btn">▶️ Test Play MP3</button>
+                      <button type="button" id="btnStopCustomAudio" class="mini-preset-btn stop" style="display:none;">⏹️ Stop</button>
+                    </div>
+                    <audio id="wizAudioPreview" controls style="display:none; width: 100%; margin-top: 8px;"></audio>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 14px;">
+                    <label for="wizPlaylistSelect">Or Select from Built-in Romantic Songs:</label>
+                    <select id="wizPlaylistSelect" class="admin-input admin-select">
+                      <option value="happybirthday">🎂 Happy Birthday Romantic Tune (Default)</option>
+                      <option value="tum_hi_ho">❤️ Tum Hi Ho (Arijit Singh)</option>
+                      <option value="kesariya">🧡 Kesariya Ishq Hai Piya</option>
+                      <option value="raatan_lambiyan">🌙 Raatan Lambiyan</option>
+                      <option value="dil_diyan_gallan">🌹 Dil Diyan Gallan</option>
+                      <option value="custom_yt">🔗 Custom YouTube Song (Set Hook Below)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="wizYtUrl">🔗 YouTube Song URL:</label>
+                    <input type="text" id="wizYtUrl" class="admin-input" placeholder="e.g. https://www.youtube.com/watch?v=... ya youtu.be/..." />
+                    <span class="field-hint">Song ka <strong>sirf main point / romantic hook</strong> play hoga, full song nahi!</span>
+                  </div>
+
+                  <div class="admin-grid-2">
+                    <div class="form-group">
+                      <label for="wizYtStart">⏱️ Main Hook Start Time (seconds ya mm:ss):</label>
+                      <input type="text" id="wizYtStart" class="admin-input" placeholder="e.g. 0:30 ya 30" value="0:30" />
+                    </div>
+                    <div class="form-group">
+                      <label for="wizYtEnd">⏹️ Snippet End Time (seconds ya mm:ss):</label>
+                      <input type="text" id="wizYtEnd" class="admin-input" placeholder="e.g. 1:20 ya 80" value="1:20" />
+                    </div>
+                  </div>
+
+                  <div class="wiz-music-test-row">
+                    <button type="button" id="btnWizTestSong" class="mini-preset-btn">▶️ Test Play YouTube Hook</button>
+                    <button type="button" id="btnWizStopSong" class="mini-preset-btn stop" style="display:none;">⏹️ Stop Audio</button>
+                  </div>
+                </div>
+
+                  <div class="wiz-nav-actions">
+                    <button type="button" class="wiz-nav-btn back-btn" id="btnWizStep5Back">⬅️ Back to Games &amp; Quiz</button>
+                    <button type="button" class="wiz-nav-btn next-btn" id="btnWizStep5Next">Next: Review &amp; Generate Link (Step 6) ➡️</button>
+                  </div>
+                </div>
+
+                <!-- ============================================== -->
+                <!-- STEP 6 PANE: Review, Save & Generate Link      -->
+                <!-- ============================================== -->
+                <div class="wiz-pane" id="wizPane6" style="display:none;">
+                  <div class="wiz-pane-banner">
+                    <h5>🚀 Step 6: Review Summary, Save Profile &amp; Generate Shareable Link</h5>
+                    <p>Saari details check karein, profile save karein aur instant personalized link copy karke customer ko dein:</p>
+                  </div>
+
+                  <!-- Live Summary Card -->
+                <div class="wiz-summary-card">
+                  <div class="wsc-header">
+                    <span class="wsc-badge">READY TO GENERATE ✨</span>
+                    <h4 class="wsc-title" id="sumHeading">Celebration for Queen Neha</h4>
+                  </div>
+                  <div class="wsc-grid">
+                    <div class="wsc-item">
+                      <span class="wsc-label">👑 Recipient Girl:</span>
+                      <strong id="sumRecipient" class="wsc-val">Neha</strong>
+                    </div>
+                    <div class="wsc-item">
+                      <span class="wsc-label">🤴 Sender Boy:</span>
+                      <strong id="sumSender" class="wsc-val">Yuvi</strong>
+                    </div>
+                    <div class="wsc-item">
+                      <span class="wsc-label">🏷️ Occasion Type:</span>
+                      <strong id="sumOccasion" class="wsc-val">🎂 Birthday Celebration</strong>
+                    </div>
+                    <div class="wsc-item">
+                      <span class="wsc-label">🎨 Color Theme:</span>
+                      <strong id="sumTheme" class="wsc-val">🌹 Romantic Rose Pink</strong>
+                    </div>
+                    <div class="wsc-item">
+                      <span class="wsc-label">🎁 Gifts Configured:</span>
+                      <strong id="sumGifts" class="wsc-val">4 Custom Gifts Ready</strong>
+                    </div>
+                    <div class="wsc-item">
+                      <span class="wsc-label">💳 Payment QR:</span>
+                      <strong id="sumPayment" class="wsc-val">Enabled (₹143 Chocolate Token)</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Big Save CTA -->
+                <div class="wiz-save-cta-row">
+                  <button type="button" id="btnWizSaveProfile" class="wiz-hero-save-btn">
+                    💾 Save Profile &amp; Generate Unique Link! 🚀✨
+                  </button>
+                </div>
+
+                <!-- Unique Link Output & QR Card (Appears on save) -->
+                <div class="pmc-link-box" id="profLinkCard" style="display:none;">
+                  <div class="plk-header">
+                    <span class="plk-badge">SUCCESS! LINK READY 🔗🎉</span>
+                    <h4>Unique Shareable Profile Link</h4>
+                    <p>Is link ko copy karke jisko bhejoge, link open hote hi website unke naam se live ho jayegi!</p>
+                  </div>
+
+                  <div class="link-output-group">
+                    <input type="text" id="profShareLinkInput" class="admin-input link-input" readonly />
+                    <button type="button" id="profCopyShareLinkBtn" class="admin-action-btn primary-action">📋 Copy Link</button>
+                    <button type="button" id="profWhatsappBtn" class="admin-action-btn whatsapp-action">💬 WhatsApp</button>
+                    <button type="button" id="profOpenShareLinkBtn" class="admin-action-btn secondary-action">🚀 Test in New Tab</button>
+                  </div>
+
+                  <!-- QR Code for mobile scanning -->
+                  <div class="qr-share-preview-box">
+                    <div class="qsp-img-wrap">
+                      <img id="profQrPreviewImg" src="" alt="Scan Link QR Code" />
+                    </div>
+                    <div class="qsp-text">
+                      <strong>📱 Scan with Mobile Camera:</strong>
+                      <p>Apne phone ka camera open karke is QR ko scan karein aur direct mobile par live result dekhein!</p>
+                    </div>
+                  </div>
+                </div>
+
+                  <div class="wiz-nav-actions" style="margin-top: 20px;">
+                    <button type="button" class="wiz-nav-btn back-btn" id="btnWizStep6Back">⬅️ Edit Something (Back)</button>
+                    <button type="button" class="wiz-nav-btn done-btn" id="btnWizGoToAnalytics">📊 View Profiles &amp; Live Tracking Monitor 📋</button>
+                  </div>
+                </div>
+
               </div>
-
-              <div class="form-group">
-                <label for="profWish">Custom Tagline / Subtitle:</label>
-                <input type="text" id="profWish" class="admin-input" placeholder="e.g. to us and a love that blooms forever" value="to us and a love that blooms" />
-              </div>
-
-              <div class="form-group">
-                <label for="profVoice">🔊 Spoken Voice Wish (Text-to-Speech):</label>
-                <input type="text" id="profVoice" class="admin-input" placeholder="e.g. Happy Birthday Neha!" value="Happy Birthday Neha!" />
-              </div>
-
-              <div class="form-group">
-                <label for="profLetter">💌 Custom Romantic Love Letter:</label>
-                <textarea id="profLetter" class="admin-textarea" rows="3" placeholder="Write custom sweet message for her..."></textarea>
-              </div>
-
-              <div class="pmc-actions-row">
-                <button type="button" id="profSaveBtn" class="pmc-btn save-btn">
-                  💾 Save &amp; Create Profile 🚀
-                </button>
-                <button type="button" id="profResetFormBtn" class="pmc-btn clear-btn">
-                  ➕ New Blank Profile
-                </button>
-              </div>
-
-              <div class="pmc-status-banner" id="profStatusBanner" style="display:none;"></div>
-            </form>
-          </div>
-
-          <!-- Section B: Shareable Link Box -->
-          <div class="pmc-link-box" id="profLinkCard">
-            <h4 class="pmc-box-title">🔗 Generated Unique Shareable Link</h4>
-            <div class="link-output-group">
-              <input type="text" id="profShareLinkInput" class="admin-input link-input" readonly />
-              <button type="button" id="profCopyShareLinkBtn" class="admin-action-btn primary-action">📋 Copy Profile Link</button>
-              <button type="button" id="profOpenShareLinkBtn" class="admin-action-btn secondary-action">🚀 Test Link in New Tab</button>
             </div>
-            <span class="field-hint">Ye link kisi ko bhi share karein—chahe phone par khole ya computer par, website automatically is ladki ke profile se open hogi!</span>
           </div>
+        </div>
 
-          <!-- Section C: Saved Profiles List -->
-          <div class="pmc-list-section">
-            <h4 class="pmc-box-title">📋 Saved Celebration Profiles</h4>
-            <div class="pmc-profiles-container" id="profilesListContainer">
+        <!-- ============================================================ -->
+        <!-- TAB PANEL 2: SAVED PROFILES & LIVE VISITOR TRACKING MONITOR -->
+        <!-- ============================================================ -->
+        <div class="atab-panel" id="panelAnalytics">
+          <div class="analytics-monitor-card">
+            <div class="amc-top-bar">
+              <div class="amc-title-box">
+                <span class="plk-badge">LIVE ACTIVITY RADAR 📡✨</span>
+                <h3>📊 Customer Profiles &amp; Real-Time Visitor Monitor</h3>
+                <p>Live dekhein kaunsa link open hai, partner online hai ya offline, aur usne kaun kaun se missions complete kar liye hain:</p>
+              </div>
+              <div class="amc-actions-row">
+                <button type="button" class="mini-preset-btn" id="btnCreateNewFromAnalytics">➕ Create New Profile</button>
+                <button type="button" class="mini-preset-btn" id="btnRefreshAnalytics">🔄 Refresh Live Radar</button>
+              </div>
+            </div>
+
+            <!-- Real-Time Quick Stats Counter -->
+            <div class="admin-grid-3" style="margin-bottom: 20px;">
+              <div class="quick-stat-box" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; text-align: center;">
+                <span style="font-size: 24px;">📋</span>
+                <div style="font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0;" id="statTotalProfiles">0</div>
+                <div style="font-size: 11.5px; color: #c49eb0;">Total Profiles Created</div>
+              </div>
+              <div class="quick-stat-box" style="background: rgba(46, 213, 115, 0.08); border: 1px solid rgba(46, 213, 115, 0.4); border-radius: 14px; padding: 14px; text-align: center;">
+                <span style="font-size: 24px;">🟢</span>
+                <div style="font-size: 26px; font-weight: 800; color: #2ed573; margin: 4px 0;" id="statOnlineNow">0</div>
+                <div style="font-size: 11.5px; color: #2ed573;">Visitors Online Right Now</div>
+              </div>
+              <div class="quick-stat-box" style="background: rgba(255, 42, 112, 0.08); border: 1px solid rgba(255, 42, 112, 0.4); border-radius: 14px; padding: 14px; text-align: center;">
+                <span style="font-size: 24px;">🎯</span>
+                <div style="font-size: 26px; font-weight: 800; color: #ff9ec0; margin: 4px 0;" id="statMissionsCompleted">0</div>
+                <div style="font-size: 11.5px; color: #ff9ec0;">Total Missions Conquered</div>
+              </div>
+            </div>
+
+            <!-- Dynamic Customer Profiles & Live Radar Grid -->
+            <div class="amc-profiles-grid" id="analyticsProfilesContainer">
               <!-- Rendered dynamically by admin.js -->
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Tab Panel 2: Themes & Styling -->
-      <div class="atab-panel" id="panelThemes">
-        <div class="themes-card">
-          <div class="tc-header">
-            <h3>🎨 Visual Website Themes (5 Luxury Color Palettes)</h3>
-            <p>Poori website ka visual mood, neon glow, button accents aur background vibe ek click mein change karein:</p>
-          </div>
-
-          <div class="theme-grid">
-            <div class="theme-card-option" data-theme="rose-pink">
-              <div class="tco-preview rose-preview">
-                <span class="tco-dot dot-1" style="background:#ff2a70;"></span>
-                <span class="tco-dot dot-2" style="background:#ff5f86;"></span>
-                <span class="tco-dot dot-3" style="background:#6e0a31;"></span>
-              </div>
-              <div class="tco-title">🌹 Romantic Rose Pink (Default)</div>
-              <div class="tco-desc">Classic romance, soft pink neon, warm paper and rose glow.</div>
-              <button type="button" class="tco-btn" data-settheme="rose-pink">Apply Theme ✨</button>
-            </div>
-
-            <div class="theme-card-option" data-theme="midnight-neon">
-              <div class="tco-preview neon-preview">
-                <span class="tco-dot dot-1" style="background:#be2edd;"></span>
-                <span class="tco-dot dot-2" style="background:#8e44ad;"></span>
-                <span class="tco-dot dot-3" style="background:#2c003e;"></span>
-              </div>
-              <div class="tco-title">🔮 Midnight Purple &amp; Neon</div>
-              <div class="tco-desc">Dreamy starry night, glowing neon purple &amp; lilac romance.</div>
-              <button type="button" class="tco-btn" data-settheme="midnight-neon">Apply Theme ✨</button>
-            </div>
-
-            <div class="theme-card-option" data-theme="royal-wine-gold">
-              <div class="tco-preview wine-preview">
-                <span class="tco-dot dot-1" style="background:#e74c3c;"></span>
-                <span class="tco-dot dot-2" style="background:#f1c40f;"></span>
-                <span class="tco-dot dot-3" style="background:#3d070b;"></span>
-              </div>
-              <div class="tco-title">🍷 Royal Wine &amp; Golden Luxury</div>
-              <div class="tco-desc">Deep crimson velvet, royal golden borders &amp; passionate luxury.</div>
-              <button type="button" class="tco-btn" data-settheme="royal-wine-gold">Apply Theme ✨</button>
-            </div>
-
-            <div class="theme-card-option" data-theme="sunset-peach">
-              <div class="tco-preview peach-preview">
-                <span class="tco-dot dot-1" style="background:#ff793f;"></span>
-                <span class="tco-dot dot-2" style="background:#fed330;"></span>
-                <span class="tco-dot dot-3" style="background:#4e1d03;"></span>
-              </div>
-              <div class="tco-title">🍑 Sunset Peach &amp; Coral</div>
-              <div class="tco-desc">Warm golden hour, soft sunset glow &amp; aesthetic peach warmth.</div>
-              <button type="button" class="tco-btn" data-settheme="sunset-peach">Apply Theme ✨</button>
-            </div>
-
-            <div class="theme-card-option" data-theme="emerald-fantasy">
-              <div class="tco-preview emerald-preview">
-                <span class="tco-dot dot-1" style="background:#2ed573;"></span>
-                <span class="tco-dot dot-2" style="background:#10ac84;"></span>
-                <span class="tco-dot dot-3" style="background:#05231a;"></span>
-              </div>
-              <div class="tco-title">🌿 Enchanted Emerald Fantasy</div>
-              <div class="tco-desc">Fairytale forest, mystical emerald green &amp; sparkling fairy dust.</div>
-              <button type="button" class="tco-btn" data-settheme="emerald-fantasy">Apply Theme ✨</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab Panel 3: All Photos & Media (Complete 8-Photo Customizer) -->
-      <div class="atab-panel" id="panelPhotos">
-        <div class="photos-mgmt-card">
-          <div class="pmc-header">
-            <h3>📸 All Website Photos &amp; Media Customizer (8 Photos)</h3>
-            <p>Website ke andar ki har ek photo aur video change karein (File upload karein ya image URL paste karein):</p>
-          </div>
-
-          <div class="photos-control-grid">
-            <div class="photo-card-item">
-              <div class="pci-header">
-                <h4>🌌 1. Background Theme Wallpaper</h4>
-                <span class="pci-tag">Main Scene</span>
-              </div>
-              <p>Main website wallpaper background photo:</p>
-              <input type="file" id="adminUploadBg" accept="image/*" class="admin-file-input" />
-              <input type="url" id="adminUrlBg" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
-            </div>
-
-            <div class="photo-card-item">
-              <div class="pci-header">
-                <h4>👸 2. Main Girl Portrait Photo</h4>
-                <span class="pci-tag">Toasts &amp; Lightbox</span>
-              </div>
-              <p>Girl's profile photo in notifications, dialogs &amp; frames:</p>
-              <input type="file" id="adminUploadPortrait" accept="image/*" class="admin-file-input" />
-              <input type="url" id="adminUrlPortrait" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
-            </div>
-
-            <div class="photo-card-item">
-              <div class="pci-header">
-                <h4>🧩 3. Love Photo Puzzle Image</h4>
-                <span class="pci-tag">3x3 Jigsaw Game</span>
-              </div>
-              <p>Puzzle game solve karne ke liye photo:</p>
-              <input type="file" id="adminUploadPuzzle" accept="image/*" class="admin-file-input" />
-              <input type="url" id="adminUrlPuzzle" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
-            </div>
-
-            <div class="photo-card-item">
-              <div class="pci-header">
-                <h4>👩‍❤️‍💋‍👨 4. Live Hug &amp; Kiss Couple Photo</h4>
-                <span class="pci-tag">Gift #4 &amp; Wallpaper</span>
-              </div>
-              <p>Gift #4 live animated wallpaper photo:</p>
-              <input type="file" id="adminUploadHug" accept="image/*" class="admin-file-input" />
-              <input type="url" id="adminUrlHug" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
-            </div>
-
-            <div class="photo-card-item">
-              <div class="pci-header">
-                <h4>👗 5. Gift 1: Princess Royal Dress</h4>
-                <span class="pci-tag">Gift Showcase</span>
-              </div>
-              <p>Gift #1 princess gown photo:</p>
-              <input type="file" id="adminUploadGiftDress" accept="image/*" class="admin-file-input" />
-              <input type="url" id="adminUrlGiftDress" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
-            </div>
-
-            <div class="photo-card-item">
-              <div class="pci-header">
-                <h4>🚙 6. Gift 2: Mahindra Thar 4x4</h4>
-                <span class="pci-tag">Dream Car</span>
-              </div>
-              <p>Gift #2 Thar 4x4 vehicle photo:</p>
-              <input type="file" id="adminUploadGiftThar" accept="image/*" class="admin-file-input" />
-              <input type="url" id="adminUrlGiftThar" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
-            </div>
-
-            <div class="photo-card-item">
-              <div class="pci-header">
-                <h4>🎮 7. Gift 3: PS5 + GTA 6 Gaming</h4>
-                <span class="pci-tag">Console &amp; Games</span>
-              </div>
-              <p>Gift #3 PlayStation 5 console photo:</p>
-              <input type="file" id="adminUploadGiftPs5" accept="image/*" class="admin-file-input" />
-              <input type="url" id="adminUrlGiftPs5" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
-            </div>
-
-            <div class="photo-card-item">
-              <div class="pci-header">
-                <h4>💳 8. Payment UPI QR Code Photo</h4>
-                <span class="pci-tag">Payment Frame</span>
-              </div>
-              <p>Step 5 mein display hone wala QR code:</p>
-              <input type="file" id="adminUploadPaymentQr" accept="image/*" class="admin-file-input" />
-              <input type="url" id="adminUrlPaymentQr" placeholder="Or paste image URL..." class="admin-input photo-url-input" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab Panel 4: Names & Wishes -->
-      <div class="atab-panel" id="panelGeneral">
-        <div class="admin-grid-2">
-          <div class="form-group">
-            <label for="adminToName">Recipient Girl's Name:</label>
-            <input type="text" id="adminToName" class="admin-input" placeholder="e.g. Misty, Neha, Pooja..." value="Misty" />
-            <span class="field-hint">Pure website par sab jagah ye naam use hoga!</span>
-          </div>
-          <div class="form-group">
-            <label for="adminFromName">Sender Boy's Name:</label>
-            <input type="text" id="adminFromName" class="admin-input" placeholder="e.g. Yuvi" value="Yuvi" />
-            <span class="field-hint">Letters, dialogs aur QR frame mein aapka naam</span>
-          </div>
-        </div>
-
-        <div class="admin-grid-2">
-          <div class="form-group">
-            <label for="adminNickname">Girl's Pet Name / Nickname:</label>
-            <input type="text" id="adminNickname" class="admin-input" placeholder="e.g. Babu Shona, Princess, Sweetheart" value="Babu Shona" />
-          </div>
-          <div class="form-group">
-            <label for="adminOccasion">Occasion Type:</label>
-            <select id="adminOccasion" class="admin-input admin-select">
-              <option value="birthday">🎂 Birthday Celebration (Default)</option>
-              <option value="anniversary">💍 Anniversary Celebration</option>
-              <option value="love">💖 Love &amp; Romantic Surprise</option>
-              <option value="valentine">🌹 Valentine's Special</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="adminCustomWish">Custom Subtitle / Tagline:</label>
-          <input type="text" id="adminCustomWish" class="admin-input" placeholder="e.g. to us and a love that blooms forever" value="to us and a love that blooms" />
-        </div>
-
-        <div class="admin-grid-2">
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="adminToggleVoice" checked />
-              <span>🔊 Spoken Voice Audio Wish (Text-to-Speech)</span>
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="adminVoiceText">Spoken Voice Phrase:</label>
-            <input type="text" id="adminVoiceText" class="admin-input" placeholder="e.g. Happy Birthday Neha!" value="Happy Birthday Misty!" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="adminLetterText">Custom Love Letter Message:</label>
-          <textarea id="adminLetterText" class="admin-textarea" rows="4"></textarea>
-        </div>
-      </div>
-
-      <!-- Tab Panel 2: Shareable Link Generator -->
-      <div class="atab-panel" id="panelShareLink">
-        <div class="link-gen-card">
-          <div class="lg-badge">INSTANT PERSONALIZED LINK 🚀</div>
-          <h3 class="lg-title">Unique Link for Any Girl / Occasion</h3>
-          <p class="lg-desc">
-            Aapko bar-bar website code edit karne ki zaroorat nahi hai! Bas upar naam (jaise <strong>Neha</strong>) aur occasion (jaise <strong>Anniversary</strong>) daal kar niche se link copy karke send kar dijiye! Link khulte hi website unke naam se live ho jayegi!
-          </p>
-          
-          <div class="link-output-group">
-            <input type="text" id="adminGeneratedLink" class="admin-input link-input" readonly />
-            <button type="button" id="adminCopyLinkBtn" class="admin-action-btn primary-action">📋 Copy Shareable Custom Link</button>
-            <button type="button" id="adminOpenLinkBtn" class="admin-action-btn secondary-action">🚀 Test Link in New Tab</button>
-          </div>
-          
-          <div class="example-links-box">
-            <div class="elb-title">💡 Quick Examples:</div>
-            <ul>
-              <li><code>?to=Neha&amp;from=Yuvi&amp;occ=birthday</code> &rarr; Neha Birthday Edition 🎂</li>
-              <li><code>?to=Pooja&amp;from=Yuvi&amp;occ=anniversary</code> &rarr; Pooja Anniversary Edition 💍</li>
-              <li><code>?to=Simran&amp;from=Yuvi&amp;occ=love</code> &rarr; Simran Love Surprise Edition 💖</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab Panel 3: Missions & Skip Controls -->
-      <div class="atab-panel" id="panelMissions">
+        <!-- ============================================================ -->
+        <!-- TAB PANEL 3: MISSIONS UNLOCK & QUICK TEST BYPASS            -->
+        <!-- ============================================================ -->
+        <div class="atab-panel" id="panelMissions">
         <div class="missions-control-card">
           <div class="mc-header">
             <h3>⚡ Instant Mission Unlock &amp; Bypass (Full Control)</h3>
@@ -1447,7 +2616,7 @@
 
           <div class="master-unlock-row">
             <button type="button" id="adminUnlockAllBtn" class="admin-master-unlock-btn">
-              🔓 Master Unlock ALL (Quiz, Car, Thar, Misty&amp;Yuvi, Puzzle, Gifts, Pay)
+              🔓 Master Unlock ALL (Quiz, Car, Thar, Misty&amp;Yuvi, Piano, Puzzle, Gifts, Pay)
             </button>
             <button type="button" id="adminResetProgressBtn" class="admin-reset-progress-btn">
               🔄 Lock Everything Back to Start
@@ -1459,6 +2628,7 @@
             <button type="button" class="admin-jump-btn" data-jump="car1">🚗 Jump to Love Car (Mission 1)</button>
             <button type="button" class="admin-jump-btn" data-jump="car2">🚙 Jump to Thar 4x4 (Mission 2)</button>
             <button type="button" class="admin-jump-btn" data-jump="car3">👩‍❤️‍👨 Jump to Couple Game (Mission 3)</button>
+            <button type="button" class="admin-jump-btn piano-jump" data-jump="piano" style="border-color:#00ffff; color:#e0ffff; box-shadow:0 0 10px rgba(0,255,255,0.3); background: rgba(0, 255, 255, 0.08);">🎹 Jump to Love Piano &amp; Instruments</button>
             <button type="button" class="admin-jump-btn" data-jump="puzzle">🧩 Jump to Photo Puzzle</button>
             <button type="button" class="admin-jump-btn" data-jump="gifts">🎁 Jump to Birthday Gifts</button>
             <button type="button" class="admin-jump-btn" data-jump="pay">💳 Jump to Payment ₹143</button>
@@ -1469,69 +2639,11 @@
 
 
       <!-- Tab Panel 5: Music & YouTube Songs Snippet Manager -->
-      <div class="atab-panel" id="panelMusic">
-        <div class="music-admin-card">
-          <div class="mac-header">
-            <h3>🎵 YouTube Music &amp; Snippet Hook Player</h3>
-            <p>YouTube se kisi bhi romantic song ka link paste karein aur portal playlist me add karein. Song ka <strong>sirf main point / romantic hook</strong> play hoga, full song play nahi hoga!</p>
-          </div>
 
-          <div class="mac-form-box">
-            <div class="form-group">
-              <label for="adminYtUrl">🔗 YouTube Song URL:</label>
-              <input type="text" id="adminYtUrl" class="admin-input" placeholder="e.g. https://www.youtube.com/watch?v=... ya https://youtu.be/..." />
-              <span class="field-hint">YouTube watch link, youtu.be, shorts ya embed link paste karein</span>
-            </div>
-
-            <div class="admin-grid-2">
-              <div class="form-group">
-                <label for="adminYtTitle">Song Title:</label>
-                <input type="text" id="adminYtTitle" class="admin-input" placeholder="e.g. Tum Hi Ho ❤️" />
-              </div>
-              <div class="form-group">
-                <label for="adminYtArtist">Artist / Singer:</label>
-                <input type="text" id="adminYtArtist" class="admin-input" placeholder="e.g. Arijit Singh" />
-              </div>
-            </div>
-
-            <div class="admin-grid-2">
-              <div class="form-group">
-                <label for="adminYtStart">⏱️ Main Hook Start Time (seconds ya mm:ss):</label>
-                <input type="text" id="adminYtStart" class="admin-input" placeholder="e.g. 0:45 ya 45" value="0:30" />
-                <span class="field-hint">Romantic chorus hook kahan se shuru ho</span>
-              </div>
-              <div class="form-group">
-                <label for="adminYtEnd">⏹️ Snippet End Time (seconds ya mm:ss):</label>
-                <input type="text" id="adminYtEnd" class="admin-input" placeholder="e.g. 1:25 ya 85" value="1:20" />
-                <span class="field-hint">Sirf itna hi play hoga, fir next romantic song aayega</span>
-              </div>
-            </div>
-
-            <div class="mac-actions-row">
-              <button type="button" id="adminAddSongBtn" class="mac-btn add-btn">
-                ➕ Add Song to Portal Playlist
-              </button>
-              <button type="button" id="adminTestSongBtn" class="mac-btn test-btn">
-                ▶️ Test Play Snippet (Check Hook)
-              </button>
-              <button type="button" id="adminStopTestBtn" class="mac-btn stop-btn" style="display:none;">
-                ⏹️ Stop Preview
-              </button>
-            </div>
-            <div class="mac-status-msg" id="macStatusMsg" style="display:none;"></div>
-          </div>
-
-          <div class="mac-playlist-section">
-            <h4 class="mac-sub-title">🎶 Live Romantic Playlist (Built-in + Custom YouTube Songs)</h4>
-            <div class="mac-playlist-list" id="adminPlaylistContainer">
-              <!-- Rendered dynamically by admin.js -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab Panel 6: Multi-Admin Creator & Manager -->
-      <div class="atab-panel" id="panelAdmins">
+        <!-- ============================================================ -->
+        <!-- TAB PANEL 4: MULTI-ADMIN ACCOUNTS & SECURITY                 -->
+        <!-- ============================================================ -->
+        <div class="atab-panel" id="panelAdmins">
         <div class="admins-mgmt-card">
           <div class="amc-header">
             <h3>👥 Multi-Admin Management (Create More Admins)</h3>
@@ -1579,26 +2691,8 @@
       </div>
 
       <!-- Tab Panel 7: Payment & Social -->
-      <div class="atab-panel" id="panelPayment">
-        <div class="admin-grid-3">
-          <div class="form-group">
-            <label for="adminUpiId">UPI ID for Payment:</label>
-            <input type="text" id="adminUpiId" class="admin-input" value="baby8389@nyes" />
-          </div>
-          <div class="form-group">
-            <label for="adminAmount">Love Token Amount (₹):</label>
-            <input type="number" id="adminAmount" class="admin-input" value="143" />
-            <span class="field-hint">143 = I Love You</span>
-          </div>
-          <div class="form-group">
-            <label for="adminInstaId">Instagram Handle:</label>
-            <input type="text" id="adminInstaId" class="admin-input" value="tim_aary" />
-          </div>
-        </div>
-      </div>
 
-      <!-- Admin Actions Footer -->
-      <footer class="admin-dash-footer">
+        <footer class="admin-dash-footer">
         <button type="button" id="adminSaveBtn" class="admin-save-btn">
           💾 Save &amp; Apply Changes Instantly ✨
         </button>
@@ -1617,12 +2711,14 @@
   <!-- Core Scripts -->
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="./sound.js"></script>
+  <script src="./piano.js" defer></script>
   <script src="./heartClicks.js" defer></script>
   <script src="./birthday.js" defer></script>
   <script src="./quest.js" defer></script>
   <script src="./game.js" defer></script>
   <script src="./puzzle.js" defer></script>
   <script src="./gifts.js" defer></script>
+  <script src="./templatesAnimation.js" defer></script>
   <script src="./admin.js" defer></script>
 
   <!-- Step-by-Step Romantic Journey Manager with Anti-Skip Locks -->
@@ -1649,8 +2745,8 @@
           },
           game: {
             unlocked: false,
-            label: '🚗 Car Mission',
-            lockedLabel: '🔒 Car Mission',
+            label: '🎮 Romantic Games',
+            lockedLabel: '🔒 Romantic Games',
             btnId: 'navGameBtn',
             requiredMsg: '🔒 Pehle 10 Love Questions complete karo babu! 💖📝'
           },
@@ -1685,10 +2781,24 @@
       }
 
       initUI() {
+        const isPayEnabled = (window.SiteConfig?.payment && window.SiteConfig.payment.enabled !== false) && (window.SiteConfig?.paymentEnabled !== false);
+        const navPayBtn = document.getElementById('navPayBtn');
+        if (navPayBtn) {
+          navPayBtn.style.display = isPayEnabled ? 'inline-flex' : 'none';
+        }
+        const vipPaymentSection = document.getElementById('vipPaymentSection');
+        if (vipPaymentSection) {
+          vipPaymentSection.style.display = isPayEnabled ? 'block' : 'none';
+        }
+
         Object.keys(this.steps).forEach((k) => {
           const s = this.steps[k];
           const btn = document.getElementById(s.btnId);
           if (!btn) return;
+          if (k === 'pay' && !isPayEnabled) {
+            btn.style.display = 'none';
+            return;
+          }
           if (s.unlocked) {
             btn.classList.remove('is-locked');
             btn.innerHTML = s.label;
@@ -1700,6 +2810,10 @@
       }
 
       unlock(stepKey, silent = false) {
+        if (stepKey === 'pay') {
+          const isPayEnabled = (window.SiteConfig?.payment && window.SiteConfig.payment.enabled !== false) && (window.SiteConfig?.paymentEnabled !== false);
+          if (!isPayEnabled) return;
+        }
         const s = this.steps[stepKey];
         if (!s) return;
         if (s.unlocked) return; // already unlocked
@@ -1749,6 +2863,7 @@
         document.getElementById('puzzleModal')?.classList.remove('is-open');
         document.getElementById('giftsModal')?.classList.remove('is-open');
         document.getElementById('giftLightboxModal')?.classList.remove('is-open');
+        document.getElementById('pianoModal')?.classList.remove('is-open');
       }
 
       setActiveNav(btnId) {
@@ -1758,6 +2873,14 @@
       }
 
       handleNavClick(stepKey, openFn) {
+        if (stepKey === 'pay') {
+          const isPayEnabled = (window.SiteConfig?.payment && window.SiteConfig.payment.enabled !== false) && (window.SiteConfig?.paymentEnabled !== false);
+          if (!isPayEnabled) {
+            this.showToast('ℹ️ Payment is turned OFF for this profile in Admin Settings! 🔒');
+            return;
+          }
+        }
+
         const s = this.steps[stepKey];
         if (!s) return;
 
@@ -1791,12 +2914,51 @@
         guardBtn('navIntroBtn', 'intro', () => {});
         guardBtn('navQuizBtn', 'quiz', () => window.loveQuest?.open());
         guardBtn('navGameBtn', 'game', () => {
-          window.loveGame?.switchMode(window.loveGame?.currentMode || 1);
           window.loveGame?.open();
         });
         guardBtn('navPuzzleBtn', 'puzzle', () => window.lovePuzzle?.open());
-        guardBtn('navGiftsBtn', 'gifts', () => window.birthdayGifts?.open());
-        guardBtn('navPayBtn', 'pay', () => window.birthdayGifts?.scrollToPayment());
+        guardBtn('navGiftsBtn', 'gifts', () => {
+          if (!window.birthdayGifts && typeof BirthdayGifts !== 'undefined') {
+            window.birthdayGifts = new BirthdayGifts();
+          }
+          if (window.birthdayGifts) {
+            window.birthdayGifts.open();
+          } else {
+            const m = document.getElementById('giftsModal');
+            if (m) {
+              document.body.classList.add('modal-active');
+              m.classList.add('is-open');
+              m.style.display = 'flex';
+            }
+          }
+        });
+        guardBtn('navPayBtn', 'pay', () => {
+          const isPayEnabled = (window.SiteConfig?.payment && window.SiteConfig.payment.enabled !== false) && (window.SiteConfig?.paymentEnabled !== false);
+          if (!isPayEnabled) {
+            this.showToast('ℹ️ Payment is turned OFF for this profile in Admin Settings! 🔒');
+            return;
+          }
+          if (!window.birthdayGifts && typeof BirthdayGifts !== 'undefined') {
+            window.birthdayGifts = new BirthdayGifts();
+          }
+          window.birthdayGifts?.scrollToPayment();
+        });
+
+        // Piano Navigation (Never locked per user rule)
+        const navPianoBtn = document.getElementById('navPianoBtn');
+        navPianoBtn?.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.closeAllModals();
+          window.lovePiano?.open();
+          this.setActiveNav('navPianoBtn');
+        });
+
+        const heroPianoBtn = document.getElementById('heroPianoBtn');
+        heroPianoBtn?.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.closeAllModals();
+          window.lovePiano?.open();
+        });
 
         // In-modal actions
         const startQuestBtn = document.getElementById('startQuestBtn');
@@ -1804,11 +2966,22 @@
         const closeGameBtn = document.getElementById('closeGameBtn');
         const claimGiftsBtn = document.getElementById('claimGiftsBtn');
         const closeGiftsBtn = document.getElementById('closeGiftsBtn');
+        const closePianoBtn = document.getElementById('closePianoBtn');
 
         startQuestBtn?.addEventListener('click', () => {
-          this.unlock('quiz', true);
-          window.loveQuest?.open();
-          this.setActiveNav('navQuizBtn');
+          const isQuizEnabled = (window.SiteConfig?.quizEnabled !== false) && (!window.SiteConfig?.enabledGames || window.SiteConfig.enabledGames.includes('quiz'));
+          if (isQuizEnabled) {
+            this.unlock('quiz', true);
+            window.loveQuest?.open();
+            this.setActiveNav('navQuizBtn');
+          } else {
+            this.unlock('game', true);
+            if (window.loveGame) {
+              window.loveGame.switchMode(1);
+              window.loveGame.open();
+            }
+            this.setActiveNav('navGameBtn');
+          }
         });
 
         closeQuestBtn?.addEventListener('click', () => {
@@ -1818,6 +2991,11 @@
 
         closeGameBtn?.addEventListener('click', () => {
           window.loveGame?.close();
+          this.setActiveNav('navIntroBtn');
+        });
+
+        closePianoBtn?.addEventListener('click', () => {
+          window.lovePiano?.close();
           this.setActiveNav('navIntroBtn');
         });
 
@@ -1840,11 +3018,46 @@
       const p = new URLSearchParams(window.location.search);
       const m = p.get('open_modal');
       if (m === 'quiz') { setTimeout(() => window.loveQuest?.open(), 100); }
-      else if (m === 'game') { setTimeout(() => window.loveGame?.open(), 100); }
+      else if (m === 'game') {
+        const targetMode = parseInt(p.get('mode') || '1', 10);
+        setTimeout(() => {
+          if (targetMode > 1) window.loveGame?.unlockedGameModes.add(targetMode);
+          window.loveGame?.switchMode(targetMode);
+          window.loveGame?.open();
+        }, 150);
+      }
       else if (m === 'puzzle') { setTimeout(() => window.lovePuzzle?.open(), 100); }
-      else if (m === 'gifts') { setTimeout(() => window.birthdayGifts?.open(), 100); }
+      else if (m === 'gifts') {
+        setTimeout(() => {
+          window.birthdayGifts?.open();
+          const cardParam = p.get('card');
+          if (cardParam) {
+            const cardEl = document.getElementById('giftCard' + cardParam.charAt(0).toUpperCase() + cardParam.slice(1).toLowerCase()) || document.getElementById('giftCardYuvi');
+            cardEl?.scrollIntoView({ block: 'center' });
+            if (p.get('lightbox') === '1') {
+              setTimeout(() => cardEl?.click(), 200);
+            }
+          }
+        }, 150);
+      }
+      else if (m === 'piano') { setTimeout(() => window.lovePiano?.open(), 150); }
+      else if (m === 'couple') {
+        setTimeout(() => {
+          window.loveGame?.unlockedGameModes.add(3);
+          window.loveGame?.switchMode(3);
+          window.loveGame?.open();
+        }, 150);
+      }
+      else if (m === 'admin') {
+        const wizStep = parseInt(p.get('wiz_step') || '1', 10);
+        setTimeout(() => {
+          window.adminManager?.openDashboard();
+          if (wizStep > 1) {
+            window.adminManager?.goToStep(wizStep);
+          }
+        }, 200);
+      }
     });
   </script>
-<script src="./reel-play-fix.js"></script>
 </body>
 </html>

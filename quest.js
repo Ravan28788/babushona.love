@@ -152,11 +152,37 @@ class LoveQuest {
     });
   }
 
+  getQuestions() {
+    const girl = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boy = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    if (Array.isArray(window.SiteConfig?.quizQuestions) && window.SiteConfig.quizQuestions.length > 0) {
+      return window.SiteConfig.quizQuestions.map((item, idx) => ({
+        num: idx + 1,
+        emoji: item.emoji || "🥺💖",
+        badge: `Question ${idx + 1} of ${window.SiteConfig.quizQuestions.length} 💕`,
+        question: (item.q || item.question || '').replace(/Misty/gi, girl).replace(/Yuvi/gi, boy),
+        subtext: (item.sub || item.subtext || "Ek sach sach jawab dena meri jaan... no lies allowed!").replace(/Misty/gi, girl).replace(/Yuvi/gi, boy),
+        response: (item.yes || item.response || "YAYYY! I love you so much! 🥰❤️").replace(/Misty/gi, girl).replace(/Yuvi/gi, boy),
+        no: item.no || "Can't touch this! 😜"
+      }));
+    }
+    return LOVE_QUESTIONS.map(item => ({
+      ...item,
+      question: item.question.replace(/Misty/gi, girl).replace(/Yuvi/gi, boy),
+      subtext: item.subtext.replace(/Misty/gi, girl).replace(/Yuvi/gi, boy),
+      response: item.response.replace(/Misty/gi, girl).replace(/Yuvi/gi, boy)
+    }));
+  }
+
   open() {
+    if (window.SiteConfig?.quizEnabled === false) {
+      this.completeQuest();
+      return;
+    }
     if (!this.container) return;
     document.body.classList.add('modal-active');
     this.container.classList.add('is-open');
-    this.loadQuestion(this.currentIndex);
+    this.loadQuestion(0);
     if (window.soundFX) window.soundFX.chime(1);
   }
 
@@ -167,12 +193,13 @@ class LoveQuest {
   }
 
   loadQuestion(idx) {
-    if (idx >= LOVE_QUESTIONS.length) {
+    const questions = this.getQuestions();
+    if (idx >= questions.length) {
       this.completeQuest();
       return;
     }
 
-    const q = LOVE_QUESTIONS[idx];
+    const q = questions[idx];
     this.currentIndex = idx;
     this.dodgeCount = 0;
 
@@ -194,8 +221,14 @@ class LoveQuest {
     this.subtextEl.textContent = q.subtext;
 
     // Progress bar
-    const pct = ((idx + 1) / LOVE_QUESTIONS.length) * 100;
+    const pct = ((idx + 1) / questions.length) * 100;
     this.progressFill.style.width = `${pct}%`;
+  }
+
+  onProfileChange(cfg) {
+    if (this.questionEl && LOVE_QUESTIONS[this.currentIndex]) {
+      this.loadQuestion(this.currentIndex);
+    }
   }
 
   dodgeNoButton() {
@@ -239,7 +272,8 @@ class LoveQuest {
 
   handleYes() {
     this.isTransitioning = true;
-    const q = LOVE_QUESTIONS[this.currentIndex];
+    const questions = this.getQuestions();
+    const q = questions[this.currentIndex] || questions[0];
 
     // Sound and massive heart confetti
     if (window.soundFX) {
@@ -249,7 +283,14 @@ class LoveQuest {
     this.spawnHeartConfetti();
 
     // Show congratulations feedback toast
-    this.congratsMsg.innerHTML = `<strong>${q.response}</strong>`;
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const cleanResp = q.response
+      .replace(/Misty/g, girlName)
+      .replace(/MISTY/g, girlName.toUpperCase())
+      .replace(/Yuvi/g, boyName)
+      .replace(/YUVI/g, boyName.toUpperCase());
+    this.congratsMsg.innerHTML = `<strong>${cleanResp}</strong>`;
     this.congratsToast.classList.add('is-shown');
 
     setTimeout(() => {
@@ -289,6 +330,7 @@ class LoveQuest {
   completeQuest() {
     this.close();
     window.journey?.unlock('game');
+    if (window.trackMissionEvent) window.trackMissionEvent('quiz', 'done');
     // Launch Car Mission automatically strictly on Mode 1 (Love Car)
     if (window.loveGame) {
       window.loveGame.switchMode(1);

@@ -79,6 +79,10 @@ class BirthdayGifts {
     this.bindEvents();
     this.bindVideoSync();
     this.initPaymentSection();
+
+    if (window.SiteConfig) {
+      this.onProfileChange(window.SiteConfig);
+    }
   }
 
   initPhotos() {
@@ -125,7 +129,8 @@ class BirthdayGifts {
           img.src = item.fallbackSrc;
         }
       };
-      img.alt = `Misty thumb ${i + 1}`;
+      const girlName = window.SiteConfig?.recipientName || 'Misty';
+      img.alt = `${girlName} thumb ${i + 1}`;
       thumb.appendChild(img);
       thumb.addEventListener('click', () => this.goToPhoto(i));
       this.photoThumbnails.appendChild(thumb);
@@ -140,30 +145,21 @@ class BirthdayGifts {
 
     const data = this.photos[index];
 
-    if (this.photoImg) {
-      this.photoImg.style.opacity = '0.3';
-      this.photoImg.style.transform = 'scale(0.96)';
-
-      const tempImg = new Image();
-      tempImg.onload = () => {
-        this.photoImg.src = tempImg.src;
-        this.photoImg.style.opacity = '1';
-        this.photoImg.style.transform = 'scale(1)';
-      };
-      tempImg.onerror = () => {
-        if (data.fallbackSrc && tempImg.src !== data.fallbackSrc) {
-          tempImg.src = data.fallbackSrc;
-        } else {
-          this.photoImg.src = data.src;
-          this.photoImg.style.opacity = '1';
-          this.photoImg.style.transform = 'scale(1)';
+    if (this.photoImg && data) {
+      this.photoImg.src = data.src;
+      this.photoImg.style.opacity = '1';
+      this.photoImg.style.transform = 'scale(1)';
+      this.photoImg.onerror = () => {
+        if (data.fallbackSrc && this.photoImg.src !== data.fallbackSrc) {
+          this.photoImg.src = data.fallbackSrc;
         }
       };
-      tempImg.src = data.src;
     }
 
-    if (this.photoTitle) this.photoTitle.textContent = data.title;
-    if (this.photoCaption) this.photoCaption.textContent = `"${data.caption}"`;
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    if (this.photoTitle) this.photoTitle.textContent = data.title.replace(/Misty/g, girlName).replace(/Yuvi/g, boyName);
+    if (this.photoCaption) this.photoCaption.textContent = `"${data.caption.replace(/Misty/g, girlName).replace(/Yuvi/g, boyName)}"`;
     if (this.photoCounter) this.photoCounter.textContent = `Photo ${index + 1} of ${this.photos.length} 💕`;
 
     // Update dots
@@ -311,18 +307,39 @@ class BirthdayGifts {
 
         const data = GIFT_DETAILS[giftKey];
         if (data && lightboxModal && lightboxImg) {
-          lightboxImg.src = data.img;
-          if (lightboxTitle) lightboxTitle.textContent = data.title;
-          if (lightboxDesc) lightboxDesc.textContent = data.desc;
+          const rawGirl = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+          const cleanGirl = rawGirl.replace(/^Queen\s+/i, '');
+          const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+          const isMisty = (!cleanGirl || cleanGirl.toLowerCase() === 'misty');
+          const p = window.SiteConfig?.customPhotos || {};
+          const customGifts = window.SiteConfig?.customGifts || [];
+
+          let displayImg = data.img;
+          if (giftKey === 'yuvi') {
+            const customHug = (customGifts[3] && customGifts[3].photo) || p.liveHug || p.hug || (!isMisty ? (p.mainPortrait || p.portrait) : null);
+            if (customHug) displayImg = customHug;
+          } else if (giftKey === 'ps5' && customGifts[0]?.photo) {
+            displayImg = customGifts[0].photo;
+          } else if (giftKey === 'thar' && (customGifts[1]?.photo || p.giftThar)) {
+            displayImg = customGifts[1]?.photo || p.giftThar;
+          } else if (giftKey === 'dress' && (customGifts[2]?.photo || p.giftDress)) {
+            displayImg = customGifts[2]?.photo || p.giftDress;
+          }
+
+          lightboxImg.src = displayImg;
+          if (lightboxTitle) lightboxTitle.textContent = data.title.replace(/Misty/g, cleanGirl).replace(/Yuvi/g, boyName);
+          if (lightboxDesc) lightboxDesc.textContent = data.desc.replace(/Misty/g, cleanGirl).replace(/Yuvi/g, boyName).replace(/Queen\s+Queen/gi, 'Queen');
           
           const liveFx = document.getElementById('lightboxLiveFx');
           const liveBadge = document.getElementById('lightboxLiveBadge');
           const imgWrap = document.getElementById('lightboxImgWrap');
+          const lightboxNeon = document.getElementById('lightboxNeonHeader');
 
           if (giftKey === 'yuvi') {
             if (liveFx) liveFx.style.display = 'block';
             if (liveBadge) liveBadge.style.display = 'inline-flex';
             if (imgWrap) imgWrap.classList.add('live-hug-active');
+            if (lightboxNeon) lightboxNeon.style.display = 'flex';
             if (window.soundFX) {
               window.soundFX.chime(1.3);
               setTimeout(() => window.soundFX.kissSound?.(), 250);
@@ -331,6 +348,7 @@ class BirthdayGifts {
             if (liveFx) liveFx.style.display = 'none';
             if (liveBadge) liveBadge.style.display = 'none';
             if (imgWrap) imgWrap.classList.remove('live-hug-active');
+            if (lightboxNeon) lightboxNeon.style.display = 'none';
             if (window.soundFX) window.soundFX.chime(1.3);
           }
 
@@ -376,25 +394,209 @@ class BirthdayGifts {
     });
   }
 
-  open() {
-    if (!this.section) return;
-    document.body.classList.add('modal-active');
-    this.section.classList.add('is-open');
-    window.journey?.unlock('pay');
-    if (window.soundFX) window.soundFX.victoryFanfare();
-    this.spawnBigCelebration();
+  ensureElements() {
+    if (!this.section) this.section = document.getElementById('giftsModal');
+    if (!this.photoImg) this.photoImg = document.getElementById('mistyPhotoImg');
+    if (!this.photoTitle) this.photoTitle = document.getElementById('photoTitle');
+    if (!this.photoCaption) this.photoCaption = document.getElementById('photoCaption');
+    if (!this.photoCounter) this.photoCounter = document.getElementById('photoCounter');
+    if (!this.photoDots) this.photoDots = document.getElementById('photoDots');
+    if (!this.photoThumbnails) this.photoThumbnails = document.getElementById('photoThumbnails');
+    if (!this.prevBtn) this.prevBtn = document.getElementById('prevPhotoBtn');
+    if (!this.nextBtn) this.nextBtn = document.getElementById('nextPhotoBtn');
+    if (!this.photoInput) this.photoInput = document.getElementById('photoUploadInput');
+    if (!this.changePhotoBtn) this.changePhotoBtn = document.getElementById('changePhotoBtn');
+    if (!this.videoEl) this.videoEl = document.getElementById('mistyVideo');
   }
 
-  scrollToPayment() {
+  open() {
+    this.ensureElements();
+    const modal = this.section || document.getElementById('giftsModal');
+    if (modal) {
+      document.body.classList.add('modal-active');
+      modal.classList.add('is-open');
+      modal.style.display = 'flex';
+      this.section = modal;
+    }
+
+    try {
+      if (window.SiteConfig) {
+        this.onProfileChange(window.SiteConfig);
+      }
+      this.refreshDynamicGifts();
+    } catch (e) {
+      console.warn('Gifts refresh warning:', e);
+    }
+
+    // Payment Section & Pay Nav Pill visibility check
+    const isPayEnabled = (window.SiteConfig?.payment && window.SiteConfig.payment.enabled !== false) && (window.SiteConfig?.paymentEnabled !== false);
+    const paySec = document.getElementById('vipPaymentSection');
+    const navPay = document.getElementById('navPayBtn');
+
+    if (isPayEnabled) {
+      window.journey?.unlock('pay');
+      if (paySec) paySec.style.display = '';
+      if (navPay) navPay.style.display = 'inline-flex';
+    } else {
+      if (paySec) paySec.style.display = 'none';
+      if (navPay) navPay.style.display = 'none';
+    }
+
+    try {
+      if (window.soundFX) window.soundFX.victoryFanfare?.();
+      this.spawnBigCelebration();
+    } catch (e) {
+      console.warn('Celebration animation warning:', e);
+    }
+  }
+
+  refreshDynamicGifts() {
+    const rawGirl = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const cleanGirl = rawGirl.replace(/^Queen\s+/i, '');
+    const girlName = cleanGirl;
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const occ = window.SiteConfig?.occasion || 'birthday';
+    const occWish = occ === 'anniversary' ? 'Happy Anniversary' : (occ === 'love_propose' || occ === 'love' ? 'I Love You' : (occ === 'marriage_propose' ? 'Will You Marry Me?' : (occ === 'sorry_request' ? 'I Am Sorry' : (occ === 'party' ? 'Party Time' : 'Happy Birthday'))));
+
+    // Dynamic couple neon headers on thumbnail, reunion, and lightbox
+    document.querySelectorAll('.tnh-boy-name').forEach(el => el.textContent = boyName);
+    document.querySelectorAll('.tnh-girl-name').forEach(el => el.textContent = cleanGirl);
+
+    const titleEl = document.querySelector('.gifts-title');
+    if (titleEl) {
+      if (occ === 'sorry_request') {
+        titleEl.textContent = `Gifts & Sweet Apology for Queen ${cleanGirl} 🥺💖`;
+      } else if (occ === 'marriage_propose') {
+        titleEl.textContent = `Will You Marry Me, Queen ${cleanGirl}? 💍🏰`;
+      } else {
+        titleEl.textContent = `${occWish}, Queen ${cleanGirl}! 🎁🎉`;
+      }
+    }
+
+    // Dynamic Gifts Customization if present in SiteConfig
+    const customGifts = window.SiteConfig?.customGifts;
+    if (Array.isArray(customGifts) && customGifts.length >= 3) {
+      const g1 = customGifts[0];
+      const g2 = customGifts[1];
+      const g3 = customGifts[2];
+      const g4 = customGifts[3];
+
+      const c1 = document.getElementById('giftCardPS5');
+      if (c1 && g1) {
+        const badge = c1.querySelector('.gift-badge');
+        if (badge) badge.textContent = g1.badge || 'GIFT #1 🎁';
+        const title = c1.querySelector('.gift-item-title');
+        if (title) title.textContent = g1.title;
+        const desc = c1.querySelector('.gift-item-desc');
+        if (desc) desc.textContent = g1.desc;
+        const img = c1.querySelector('.gift-thumb-img');
+        if (img && g1.photo) img.src = g1.photo;
+      }
+
+      const c2 = document.getElementById('giftCardThar');
+      if (c2 && g2) {
+        const badge = c2.querySelector('.gift-badge');
+        if (badge) badge.textContent = g2.badge || 'GIFT #2 🎁';
+        const title = c2.querySelector('.gift-item-title');
+        if (title) title.textContent = g2.title;
+        const desc = c2.querySelector('.gift-item-desc');
+        if (desc) desc.textContent = g2.desc;
+        const img = c2.querySelector('.gift-thumb-img');
+        if (img && g2.photo) img.src = g2.photo;
+      }
+
+      const c3 = document.getElementById('giftCardDress');
+      if (c3 && g3) {
+        const badge = c3.querySelector('.gift-badge');
+        if (badge) badge.textContent = g3.badge || 'GIFT #3 🎁';
+        const title = c3.querySelector('.gift-item-title');
+        if (title) title.textContent = g3.title;
+        const desc = c3.querySelector('.gift-item-desc');
+        if (desc) desc.textContent = g3.desc;
+        const img = c3.querySelector('.gift-thumb-img');
+        if (img && g3.photo) img.src = g3.photo;
+      }
+    }
+
+    const customPhotos = window.SiteConfig?.customPhotos || {};
+    const isMisty = (!cleanGirl || cleanGirl.toLowerCase() === 'misty');
+    const customCouplePhoto = (customGifts && customGifts[3]?.photo) || customPhotos.liveHug || customPhotos.hug || (!isMisty ? (customPhotos.mainPortrait || customPhotos.portrait) : null);
+
+    const c4 = document.getElementById('giftCardYuvi');
+    if (c4) {
+      const g4 = (Array.isArray(customGifts) && customGifts[3]) ? customGifts[3] : null;
+      const badge = c4.querySelector('.gift-badge');
+      if (badge) badge.textContent = g4?.badge || 'LIFETIME GIFT 👑💍';
+      const title = c4.querySelector('.gift-item-title');
+      const rawTitle = g4?.title || `${boyName} (${cleanGirl}'s Forever Partner) 👑❤️`;
+      if (title) title.textContent = rawTitle.replace(/Queen's/gi, `${cleanGirl}'s`).replace(/Her Forever/gi, `${cleanGirl}'s Forever`).replace(/Misty's/gi, `${cleanGirl}'s`);
+      const desc = c4.querySelector('.gift-item-desc');
+      const rawDesc = g4?.desc || `100% genuine, lifetime warranty, unlimited warm hugs & kisses, 24/7 care & loyalty, exclusively reserved for Queen ${cleanGirl} forever!`;
+      if (desc) desc.textContent = rawDesc.replace(/Queen Queen/gi, `Queen ${cleanGirl}`).replace(/for Queen forever/gi, `for Queen ${cleanGirl} forever`).replace(/Misty/gi, cleanGirl);
+      const img = c4.querySelector('.gift-thumb-img');
+      if (img && customCouplePhoto) {
+        img.src = customCouplePhoto;
+      }
+      const liveWallBtn = c4.querySelector('.launch-live-wallpaper-btn');
+      if (liveWallBtn) {
+        const pId = window.SiteConfig?.id || (window.SiteConfig?.recipientName || 'queen').toLowerCase().replace(/[^a-z0-9]/g, '');
+        liveWallBtn.href = `live-wallpaper.html?p=${encodeURIComponent(pId)}&to=${encodeURIComponent(cleanGirl)}&from=${encodeURIComponent(boyName)}`;
+      }
+    }
+
+    // Payment Section toggle & message
+    const paySec = document.getElementById('vipPaymentSection');
+    if (paySec) {
+      if (window.SiteConfig?.payment && window.SiteConfig.payment.enabled === false) {
+        paySec.style.display = 'none';
+      } else {
+        paySec.style.display = '';
+        if (window.SiteConfig?.payment?.popupText) {
+          const cppTitle = document.querySelector('.cpp-big-title');
+          if (cppTitle) cppTitle.textContent = `"${window.SiteConfig.payment.popupText}"`;
+        }
+      }
+    }
+
+    const secTitle = document.querySelector('.gallery-sec-title');
+    if (secTitle) secTitle.textContent = `${girlName}'s Sweetest Moments & Memories`;
+
+    const photoTitle = document.getElementById('photoTitle');
+    if (photoTitle) photoTitle.textContent = `Queen ${girlName} ♥`;
+
+    const videoBadge = document.querySelector('.video-badge-tag');
+    if (videoBadge) videoBadge.textContent = `${girlName} In Motion`;
+  }
+
+  scrollToPayment(force = false) {
+    const isPayEnabled = (window.SiteConfig?.payment && window.SiteConfig.payment.enabled !== false) && (window.SiteConfig?.paymentEnabled !== false);
+    const paySec = document.getElementById('vipPaymentSection');
+    const navPay = document.getElementById('navPayBtn');
+
+    if (!isPayEnabled && !force) {
+      if (paySec) paySec.style.display = 'none';
+      if (navPay) navPay.style.display = 'none';
+      if (window.journey) {
+        window.journey.showToast('ℹ️ Payment is turned OFF for this profile in Admin Settings! 🔒');
+      }
+      this.open();
+      return;
+    }
     this.open();
+    if (paySec) paySec.style.display = 'block';
     setTimeout(() => {
       const el = document.getElementById('vipPaymentSection');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const container = document.querySelector('.gifts-container');
+      if (container && el) {
+        container.scrollTo({ top: el.offsetTop - 30, behavior: 'smooth' });
+      } else if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
       if (window.journey) {
         window.journey.showToast('🍫 "143 AMMOUNT PAY KRDO, CHOCLATE KHARID KE TUM KO DUNGA!" 🥰💖');
       }
       if (window.soundFX) window.soundFX.chime?.(1.5);
-    }, 350);
+    }, 300);
   }
 
   initPaymentSection() {
@@ -479,6 +681,7 @@ class BirthdayGifts {
       if (utrVerifyBox) utrVerifyBox.style.display = 'none';
       if (paymentSuccessCard) {
         paymentSuccessCard.style.display = 'block';
+      if (window.trackMissionEvent) window.trackMissionEvent('payment', 'paid');
         paymentSuccessCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
@@ -488,11 +691,184 @@ class BirthdayGifts {
   }
 
   close() {
-    if (!this.section) return;
+    this.ensureElements();
+    const modal = this.section || document.getElementById('giftsModal');
+    if (modal) {
+      modal.classList.remove('is-open');
+    }
     document.body.classList.remove('modal-active');
-    this.section.classList.remove('is-open');
     if (this.videoEl && !this.videoEl.paused) {
       this.videoEl.pause();
+    }
+  }
+
+  onProfileChange(cfg) {
+    if (!cfg) return;
+    const girlName = cfg.recipientName || cfg.name || '';
+    const isMisty = (!girlName || girlName.toLowerCase() === 'misty') && (!cfg.id || cfg.id.toLowerCase() === 'misty');
+    const name = girlName || 'Queen';
+    const boyName = cfg.senderName || cfg.sender || 'Yuvi';
+
+    if (isMisty) {
+      this.photos = [...MISTY_PHOTOS];
+      const customPhoto = localStorage.getItem('misty_custom_photo');
+      if (customPhoto) {
+        this.photos.unshift({
+          src: customPhoto,
+          title: 'Special Memory ♥',
+          caption: 'A precious moment captured with all my love! 📸✨'
+        });
+      }
+    } else {
+      // Custom profile for other girl (Neha, Puja, Rani, Neelu, etc.)
+      const customList = [];
+      const p = cfg.customPhotos || {};
+
+      // 1. Dedicated Album & Memories Photos (Highest priority - user explicitly uploaded these 6 photos for the album!)
+      if (Array.isArray(cfg.albumPhotos) && cfg.albumPhotos.length > 0) {
+        cfg.albumPhotos.forEach((imgUrl, idx) => {
+          if (imgUrl && !customList.some(item => item.src === imgUrl)) {
+            customList.push({
+              src: imgUrl,
+              title: `${name}'s Sweetest Memory #${idx + 1} ♥`,
+              caption: `Every heartbeat whispers your name, sweetest ${name}! 💖✨`
+            });
+          }
+        });
+      }
+
+      // 2. Portrait photo (Main girl portrait)
+      const portrait = p.mainPortrait || p.portrait || '';
+      if (portrait && !customList.some(item => item.src === portrait)) {
+        customList.unshift({
+          src: portrait,
+          title: `Queen ${name} ♥`,
+          caption: `The most gorgeous smile in the whole universe! 👑✨`
+        });
+      }
+
+      // 3. All 6 Jigsaw Puzzle images
+      if (Array.isArray(cfg.puzzleImages) && cfg.puzzleImages.length > 0) {
+        cfg.puzzleImages.forEach((imgUrl, idx) => {
+          if (imgUrl && !customList.some(item => item.src === imgUrl)) {
+            customList.push({
+              src: imgUrl,
+              title: `${name}'s Beautiful Memory #${customList.length + 1} ♥`,
+              caption: `A piece of my heart that belongs only to you, ${name}! 🌸💫`
+            });
+          }
+        });
+      }
+
+      // 4. Puzzle photo slot 1
+      const puzPhoto = p.puzzlePhoto || p.puzzle || '';
+      if (puzPhoto && !customList.some(item => item.src === puzPhoto)) {
+        customList.push({
+          src: puzPhoto,
+          title: `${name}'s Love Puzzle Photo ♥`,
+          caption: `Every heartbeat whispers your name, sweetest ${name}! 💖✨`
+        });
+      }
+
+      // 5. Live Hug Couple photo
+      const hugPhoto = p.liveHug || p.hug || '';
+      if (hugPhoto && !customList.some(item => item.src === hugPhoto)) {
+        customList.push({
+          src: hugPhoto,
+          title: `${name} & ${boyName} Forever ♥`,
+          caption: `Wrapped in your warm embrace... my favorite place in the world! 👩‍❤️‍💋‍👨`
+        });
+      }
+
+      // 6. Background wallpaper photo
+      const bgPhoto = p.bgTheme || p.bg || '';
+      if (bgPhoto && !customList.some(item => item.src === bgPhoto)) {
+        customList.push({
+          src: bgPhoto,
+          title: `Our Love Starlight ♥`,
+          caption: `A romantic background of eternal love and togetherness! ✨🌙`
+        });
+      }
+
+      // 7. Fallback aesthetic photos so Misty NEVER appears
+      const AESTHETIC_FALLBACKS = [
+        {
+          src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+          title: `Queen ${name} ♥`,
+          caption: `Casual, effortlessly stylish, and stunning as always! 💙✨`
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+          title: `Sweet Angel ${name} ♥`,
+          caption: `That adorable innocent smile that lights up my entire world! 🦋💫`
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
+          title: `Timeless Beauty ♥`,
+          caption: `Timeless, elegant, and breathtaking in every single way! 🌸✨`
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80',
+          title: `My Whole Heart ♥`,
+          caption: `The girl who stole my heart and made life feel like magic! 💖🐱`
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+          title: `Million Dollar Smile ♥`,
+          caption: `The million-dollar smile that makes my heart skip a beat every time! 🌹✨`
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80',
+          title: `My Dream Girl ♥`,
+          caption: `Lost in your thoughts... the prettiest soul in the universe 🥺🌙`
+        }
+      ];
+
+      if (customList.length === 0) {
+        this.photos = AESTHETIC_FALLBACKS;
+      } else {
+        // If user uploaded 1 or more photos, cycle through THEM so user's own photos fill the album!
+        const userCount = customList.length;
+        while (customList.length < 6) {
+          const dup = customList[customList.length % userCount];
+          customList.push({
+            src: dup.src,
+            title: `${name}'s Special Memory #${customList.length + 1} ♥`,
+            caption: dup.caption
+          });
+        }
+        this.photos = customList;
+      }
+    }
+
+    this.currentIndex = 0;
+    this.renderDots();
+    this.renderThumbnails();
+    this.showPhoto(0, false);
+    this.refreshDynamicGifts();
+
+    // 4. Romantic Video Reel update for this profile
+    if (this.videoEl) {
+      const reelUrl = cfg.reel?.url || (cfg.customPhotos && (cfg.customPhotos.reelVideo || cfg.customPhotos.reel)) || '';
+      const portrait = cfg.customPhotos?.mainPortrait || cfg.customPhotos?.portrait;
+      if (portrait) {
+        this.videoEl.poster = portrait;
+      }
+      if (reelUrl) {
+        if (this.videoEl.src !== reelUrl && (!isMisty || !reelUrl.includes('misty_video.mp4'))) {
+          this.videoEl.src = reelUrl;
+          this.videoEl.load();
+        }
+      } else if (isMisty) {
+        this.videoEl.src = './images/misty_video.mp4';
+        this.videoEl.load();
+      }
+    }
+    const videoBadge = document.querySelector('.video-badge-tag');
+    if (videoBadge) videoBadge.textContent = `${name} In Motion`;
+    const reelNote = document.querySelector('.video-caption-box .polaroid-note');
+    if (reelNote && cfg.reel?.caption) {
+      reelNote.textContent = `"${cfg.reel.caption.replace(/Misty/g, name).replace(/Yuvi/g, boyName)}"`;
     }
   }
 
@@ -512,13 +888,17 @@ class BirthdayGifts {
 
       const dx = (Math.random() - 0.5) * 220;
       const dy = (Math.random() - 0.7) * 250;
-      el.animate([
-        { transform: 'translate(0,0) scale(0.6)', opacity: 1 },
-        { transform: `translate(${dx}px, ${dy}px) scale(1.4)`, opacity: 0 }
-      ], {
-        duration: 900 + Math.random() * 400,
-        easing: 'ease-out'
-      }).onfinish = () => el.remove();
+      if (typeof el.animate === 'function') {
+        el.animate([
+          { transform: 'translate(0,0) scale(0.6)', opacity: 1 },
+          { transform: `translate(${dx}px, ${dy}px) scale(1.4)`, opacity: 0 }
+        ], {
+          duration: 900 + Math.random() * 400,
+          easing: 'ease-out'
+        }).onfinish = () => el.remove();
+      } else {
+        setTimeout(() => el.remove?.(), 1200);
+      }
     }
   }
 
@@ -534,18 +914,49 @@ class BirthdayGifts {
       document.body.appendChild(el);
 
       const dy = -(Math.random() * 200 + 100);
-      el.animate([
-        { transform: 'translate(0, 0) scale(0.2)', opacity: 0 },
-        { transform: 'translate(0, -50px) scale(1.2)', opacity: 1, offset: 0.3 },
-        { transform: `translate(${(Math.random() - 0.5) * 80}px, ${dy}px) scale(0.8)`, opacity: 0 }
-      ], {
-        duration: 2000 + Math.random() * 1000,
-        easing: 'ease-out'
-      }).onfinish = () => el.remove();
+      if (typeof el.animate === 'function') {
+        el.animate([
+          { transform: 'translate(0, 0) scale(0.2)', opacity: 0 },
+          { transform: 'translate(0, -50px) scale(1.2)', opacity: 1, offset: 0.3 },
+          { transform: `translate(${(Math.random() - 0.5) * 80}px, ${dy}px) scale(0.8)`, opacity: 0 }
+        ], {
+          duration: 2000 + Math.random() * 1000,
+          easing: 'ease-out'
+        }).onfinish = () => el.remove();
+      } else {
+        setTimeout(() => el.remove?.(), 2000);
+      }
     }
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  window.birthdayGifts = new BirthdayGifts();
-});
+function initBirthdayGifts() {
+  if (!window.birthdayGifts && typeof BirthdayGifts !== 'undefined') {
+    window.birthdayGifts = new BirthdayGifts();
+  } else if (window.birthdayGifts) {
+    window.birthdayGifts.ensureElements();
+  }
+  return window.birthdayGifts;
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initBirthdayGifts();
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('open_modal') === 'gifts' || params.get('jump') === 'gifts') {
+      setTimeout(() => {
+        window.birthdayGifts?.open();
+      }, 400);
+    }
+  });
+} else {
+  initBirthdayGifts();
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('open_modal') === 'gifts' || params.get('jump') === 'gifts') {
+    setTimeout(() => {
+      window.birthdayGifts?.open();
+    }, 400);
+  }
+}
+
+window.initBirthdayGifts = initBirthdayGifts;

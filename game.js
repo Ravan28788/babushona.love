@@ -36,13 +36,75 @@ const YUVI_QUESTIONS = [
   }
 ];
 
+// Randomized Family Obstacle Excuses (Bahane) for Mode 3 Dodge (Expanded 20+ Hilarious Excuses)
+const PAPA_BAHANE = [
+  "Newspaper kahan hai?! 🗞️",
+  "Sharma ji dekh rahe hain! 👓",
+  "Kahan chali akele?! 🧐",
+  "Dhoop mein kahan jaa rahi?! 🕶️",
+  "Dahi leke aana jaldi! 🥦",
+  "Mobile band karo pehle! 📱",
+  "Bike pe kaun tha?! 🚴‍♂️",
+  "Itni saj-dhaj ke kahan?! 🎀",
+  "Sabzi mandi kaun jayega?! 🥬",
+  "Padhai ho gayi poori?! 📚",
+  "Meter reading check ki tune?! ⚡",
+  "Bank ka chalan kaun bharega?! 🏦",
+  "Itna muskura kyun rahi ho?! 🧐",
+  "Dukan se bread leke aao! 🍞",
+  "Bike ki chabi kahan rakhi?! 🔑",
+  "Sharma ji ke ladke ko dekho! 👨‍💼"
+];
+
+const MUMMY_BAHANE = [
+  "Roti kaun banayega?! 🥖",
+  "Itna ready kiske liye?! 💄",
+  "Phone niche rakh abhi! 📲",
+  "Chakkar kiske sath hai?! 🌸",
+  "Papa ko bataungi sab! 🧕",
+  "Babu shona se milne?! 🙈",
+  "Ghar pe mehmaan hain! ☕",
+  "Almirah saaf ki tune?! 👗",
+  "Doodh ubal raha hai! 🥛",
+  "Itni der kahan thi?! ⌚",
+  "Karele ki sabzi banayi hai! 🥒",
+  "Aankhon mein kajal kiske liye?! 👁️",
+  "Dupatta kahan gaya tera?! 🧕",
+  "Mausi ji ka phone aaya tha! 📞",
+  "Shaam ko jaldi ghar aana! ⏰",
+  "Subah se phone pe lagi hai! 📱"
+];
+
+const BHAI_BAHANE = [
+  "Photo le li maine! 📸",
+  "Video bana li live! 🎥",
+  "Jiju se milne chali na?! 🛵",
+  "500 rupaye de chup rahunga! 💵",
+  "Main peeche aa raha hoon! 🚲",
+  "Chat padh li maine sab! 😂",
+  "Jiju se PS5 dila pehle! 🎮",
+  "Mummy ko bata doon kya?! 😈",
+  "Dairy Milk Silk de tabhi jaana! 🍫",
+  "Secret outing pakdi gayi! 🕵️‍♂️",
+  "Jiju ki bike ki drive chahiye! 🏍️",
+  "Momos khila tabhi rasta dunga! 🥟",
+  "Instagram screenshot le liya! 📱",
+  "Papa ko abhi call mila raha hoon! 📞",
+  "Treat de pehle tab jaane dunga! 🍕",
+  "Story pe mention kar mujhe! 🤳"
+];
+
 const GAME_MODES = {
   1: {
     id: 1,
     name: "Love Car",
     itemName: "Coins",
     itemEmoji: "💖",
-    vehicleName: "Misty's Sports Car",
+    get vehicleName() {
+      const g = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      return `${g}'s Sports Car`;
+    },
+    set vehicleName(v) {},
     roadBg: ["#fff0f5", "#ffe4ee", "#ffd6e7"],
     roadColor: "#ffffff",
     borderGlow: "#ff4d88",
@@ -85,16 +147,30 @@ const GAME_MODES = {
       { at: 45, tag: "🏰 VICTORY IS WAITING! 👑", photo: "./images/misty9.jpg", msg: "Final 5 badges meri jaan! Get ready to meet Yuvi with the red rose! 🌹🏰" }
     ],
     winTitle: "THAR 4x4 EXPEDITION COMPLETED! 🚙🏔️",
-    winMsg: "Mera babu shona, meri world! You conquered the rocky mountain roads in your dream Mahindra Thar 4x4! 🚙👑✨",
-    nextBtnText: "➡️ Next Mission: Misty & Yuvi Couple Game! 👩‍❤️‍👨",
+    winMsg: "Mera babu shona, meri world! You conquered the rugged mountain trails in your dream Mahindra Thar 4x4! 🚙👑✨",
+    get nextBtnText() {
+      const g = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const b = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+      return `➡️ Next Mission: ${g} & ${b} Couple Game! 👩‍❤️‍👨`;
+    },
+    set nextBtnText(v) {},
     nextMode: 3
   },
   3: {
     id: 3,
-    name: "Misty & Yuvi",
+    get name() {
+      const g = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const b = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+      return `${g} & ${b}`;
+    },
+    set name(v) {},
     itemName: "Love Stars",
     itemEmoji: "⭐",
-    vehicleName: "Queen Misty",
+    get vehicleName() {
+      const g = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      return `Queen ${g}`;
+    },
+    set vehicleName(v) {},
     roadBg: ["#fff5f8", "#ffe6f1", "#ffd6e7"],
     roadColor: "#ffffff",
     borderGlow: "#ff2a70",
@@ -110,8 +186,18 @@ const GAME_MODES = {
       { at: 40, tag: "🚀 40 STARS REACHED! 🏰", photo: "./images/misty8.jpg", msg: "Bas 10 stars aur babu! Yuvi gazebo mein rose liye muskura raha hai! 🏰✨" },
       { at: 45, tag: "🏰 YUVI'S PALACE GATE! 🌹", photo: "./images/misty9.jpg", msg: "Queen Misty! Only 5 stars left! Yuvi samne khada hai red rose liye huye! 🌹🏰❤️" }
     ],
-    winTitle: "YUVI & MISTY REUNITED! 👩‍❤️‍💋‍👨💖",
-    winMsg: "Misty my babe, meri girlfriend, meri world, mera babu shona, my love... You crossed every obstacle, collected all 50 love stars, and finally reached Yuvi's arms! 🏰❤️💋",
+    get winTitle() {
+      const g = (window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty').toUpperCase();
+      const b = (window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi').toUpperCase();
+      return `${b} & ${g} REUNITED! 👩‍❤️‍💋‍👨💖`;
+    },
+    set winTitle(v) {},
+    get winMsg() {
+      const g = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const b = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+      return `${g} my babe, meri girlfriend, meri world, mera babu shona, my love... You crossed every obstacle, collected all 50 love stars, and finally reached ${b}'s arms! 🏰❤️💋`;
+    },
+    set winMsg(v) {},
     nextBtnText: "🎁 Claim Grand Gifts (PS5 + GTA 6 & Your Yuvi!) ✨",
     nextMode: null
   }
@@ -218,8 +304,85 @@ class LoveCarGame {
 
     this.bindControls();
     this.bindTabs();
+    this.updateTabUI();
     this.resize();
     window.addEventListener('resize', () => this.resize());
+  }
+
+  getModeData(mode = this.currentMode) {
+    const raw = GAME_MODES[mode];
+    if (!raw) return null;
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const rep = (str) => {
+      if (!str) return str;
+      return str
+        .replace(/Misty/g, girlName)
+        .replace(/MISTY/g, girlName.toUpperCase())
+        .replace(/Yuvi/g, boyName)
+        .replace(/YUVI/g, boyName.toUpperCase());
+    };
+    return {
+      ...raw,
+      name: mode === 3 ? `${girlName} & ${boyName}` : (mode === 1 ? 'Love Car' : (mode === 2 ? 'Thar 4x4' : rep(raw.name))),
+      vehicleName: mode === 3 ? `Queen ${girlName}` : (mode === 1 ? `${girlName}'s Sports Car` : (mode === 2 ? 'Mahindra Thar 4x4' : rep(raw.vehicleName))),
+      winTitle: rep(raw.winTitle),
+      winMsg: rep(raw.winMsg),
+      nextBtnText: rep(raw.nextBtnText),
+      milestones: (raw.milestones || []).map(m => ({
+        ...m,
+        tag: rep(m.tag),
+        msg: rep(m.msg)
+      }))
+    };
+  }
+
+  onProfileChange(cfg) {
+    this.updateTabUI();
+    const modeData = this.getModeData(this.currentMode);
+    if (this.missionNameEl && modeData) {
+      this.missionNameEl.textContent = modeData.name;
+    }
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const careTitleEl = document.querySelector('.care-title');
+    if (careTitleEl) careTitleEl.textContent = `${girlName} babu dhyaan se aao! 🥰💋`;
+    const roseLabel = document.querySelector('.rose-label');
+    if (roseLabel) roseLabel.textContent = `${boyName} 🌹`;
+
+    const isMisty = (!girlName || girlName.toLowerCase() === 'misty');
+    let customPortrait = null;
+    if (!isMisty) {
+      const p = cfg?.customPhotos || {};
+      const giftPhotos = (window.birthdayGifts?.photos || []).map(item => (typeof item === 'object' ? item.src : item));
+      const pool = [
+        p.mainPortrait, p.portrait,
+        ...(Array.isArray(cfg?.albumPhotos) ? cfg.albumPhotos : []),
+        ...giftPhotos,
+        ...(Array.isArray(cfg?.puzzleImages) ? cfg.puzzleImages : []),
+        p.puzzlePhoto, p.puzzle,
+        p.liveHug, p.hug,
+        p.bgTheme, p.bg
+      ].filter(img => img && typeof img === 'string' && img.trim() && (img.startsWith('data:image') || (!img.includes('./images/misty') && !img.includes('yuvi_misty_theme_bg') && !img.includes('gift_dress') && !img.includes('favicon.png'))));
+
+      customPortrait = pool[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80';
+    }
+    if (customPortrait) {
+      if (this.milestonePhotoImg) this.milestonePhotoImg.src = customPortrait;
+      document.querySelectorAll('.care-misty-img, .win-misty-img, #winMistyImg').forEach(el => el.src = customPortrait);
+    }
+
+    const rep = (str) => {
+      if (!str) return str;
+      return str
+        .replace(/Misty/g, girlName)
+        .replace(/MISTY/g, girlName.toUpperCase())
+        .replace(/Yuvi/g, boyName)
+        .replace(/YUVI/g, boyName.toUpperCase());
+    };
+    if (this.winTitle && modeData) this.winTitle.textContent = rep(modeData.winTitle);
+    if (this.winLoveWords && modeData) this.winLoveWords.innerHTML = `"${rep(modeData.winMsg)}"`;
+    if (this.winNextMissionBtn && modeData) this.winNextMissionBtn.textContent = rep(modeData.nextBtnText);
   }
 
   resize() {
@@ -241,12 +404,17 @@ class LoveCarGame {
     document.querySelectorAll('.mission-tab-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const mode = parseInt(btn.dataset.mission, 10);
-        this.switchMode(mode);
+        if (mode) this.switchMode(mode);
       });
     });
 
+    document.getElementById('tabMissionPiano')?.addEventListener('click', () => {
+      this.close();
+      window.lovePiano?.open();
+    });
+
     this.winNextMissionBtn?.addEventListener('click', () => {
-      const modeData = GAME_MODES[this.currentMode];
+      const modeData = this.getModeData(this.currentMode);
       if (modeData && modeData.nextMode) {
         this.switchMode(modeData.nextMode);
       } else {
@@ -332,9 +500,11 @@ class LoveCarGame {
     if (!GAME_MODES[mode]) return;
     if (!this.unlockedGameModes.has(mode)) {
       if (window.soundFX) window.soundFX.boing();
+      const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
       const msg = mode === 2 
         ? "🔒 Pehle Love Car (Mission 1) mein 50 Coins collect karo babu! 🚗💖" 
-        : "🔒 Pehle Thar 4x4 (Mission 2) mein 50 Badges collect karo babu! 🚙💖";
+        : `🔒 Pehle Thar 4x4 (Mission 2) mein 50 Badges collect karo babu! Tabhi ${girlName} & ${boyName} Couple Game unlock hoga! 🚙💖`;
       this.showModeLockToast(msg);
       return;
     }
@@ -369,6 +539,12 @@ class LoveCarGame {
       this.car.maxSpeed = 6.8;
     }
 
+    // Update HUD Mission Name immediately
+    const modeData = this.getModeData(mode);
+    if (this.missionNameEl && modeData) {
+      this.missionNameEl.textContent = modeData.name;
+    }
+
     // Directly start running the selected mission immediately!
     this.start();
   }
@@ -393,15 +569,24 @@ class LoveCarGame {
 
     if (tab3) {
       const isUnlocked = this.unlockedGameModes.has(3);
-      tab3.innerHTML = isUnlocked ? '👩‍❤️‍👨 3. Misty &amp; Yuvi' : '🔒 3. Misty &amp; Yuvi';
+      const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+      tab3.innerHTML = isUnlocked ? `👩‍❤️‍👨 3. ${girlName} &amp; ${boyName}` : `🔒 3. ${girlName} &amp; ${boyName}`;
       tab3.classList.toggle('active', this.currentMode === 3);
       tab3.classList.toggle('is-locked', !isUnlocked);
     }
   }
 
   showModeLockToast(msg) {
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const isMisty = (!girlName || girlName.toLowerCase() === 'misty');
+    let photo = './images/misty2.jpg';
+    if (!isMisty) {
+      const cfg = window.SiteConfig || {};
+      photo = cfg.customPhotos?.mainPortrait || cfg.customPhotos?.portrait || (cfg.puzzleImages && cfg.puzzleImages[0]) || photo;
+    }
     this.showMilestone({
-      photo: './images/misty2.jpg',
+      photo: photo,
       tag: '🔒 MISSION LOCKED! 💖',
       msg: msg
     });
@@ -482,6 +667,16 @@ class LoveCarGame {
 
     // Update mission tabs UI and locked status
     this.updateTabUI();
+    const modeData = this.getModeData(this.currentMode);
+    if (this.missionNameEl && modeData) {
+      this.missionNameEl.textContent = modeData.name;
+    }
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const careTitleEl = document.querySelector('.care-title');
+    if (careTitleEl) careTitleEl.textContent = `${girlName} babu dhyaan se aao! 🥰💋`;
+    const roseLabel = document.querySelector('.rose-label');
+    if (roseLabel) roseLabel.textContent = `${boyName} 🌹`;
 
     this.resize();
     this.start();
@@ -537,10 +732,14 @@ class LoveCarGame {
     this.car.y = this.H - 120;
     this.car.speed = this.car.baseSpeed;
 
-    const modeData = GAME_MODES[this.currentMode];
+    const modeData = this.getModeData(this.currentMode);
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
     if (this.hudItemLabel) this.hudItemLabel.textContent = `${modeData.itemEmoji} ${modeData.itemName}:`;
-    if (this.missionNameEl) this.missionNameEl.textContent = modeData.name;
+    if (this.missionNameEl) this.missionNameEl.textContent = this.currentMode === 3 ? `${girlName} & ${boyName}` : (this.currentMode === 2 ? 'Thar 4x4' : 'Love Car');
     if (this.coinCountEl) this.coinCountEl.textContent = `0 / ${this.targetCoins}`;
+    const finishLabel = document.querySelector('.rose-label');
+    if (finishLabel) finishLabel.textContent = `${boyName} 🌹`;
 
     // Init road markers
     for (let y = 0; y < this.H + 100; y += 70) {
@@ -592,14 +791,23 @@ class LoveCarGame {
 
   spawnObstacle(y = -90) {
     const laneOffset = (Math.random() - 0.5) * (this.roadWidth * 0.72);
-    // Misty's 3 Family Obstacles to dodge in Mission 3: Mummy, Papa, Bhai!
+    // Family Obstacles to dodge in Mission 3: Mummy, Papa, Bhai with random bahane!
     const types = ['mummy', 'papa', 'bhai'];
     const type = types[Math.floor(Math.random() * types.length)];
+    let speech = '';
+    if (type === 'mummy') {
+      speech = MUMMY_BAHANE[Math.floor(Math.random() * MUMMY_BAHANE.length)];
+    } else if (type === 'papa') {
+      speech = PAPA_BAHANE[Math.floor(Math.random() * PAPA_BAHANE.length)];
+    } else {
+      speech = BHAI_BAHANE[Math.floor(Math.random() * BHAI_BAHANE.length)];
+    }
     this.obstacles.push({
       x: this.W / 2 + laneOffset,
       y,
       r: 26,
       type,
+      speech,
       sway: Math.random() * Math.PI * 2,
       rot: 0
     });
@@ -723,9 +931,9 @@ class LoveCarGame {
         obs.x += Math.sin(this.animTimer * 1.6 + obs.sway) * 14 * dt;
         obs.x = Math.max(this.roadLeft + 35, Math.min(this.roadRight - 35, obs.x));
 
-        // Collision with Misty -> triggers sweet care popup ("Misty babu dhyaan se aao!")
+        // Collision with player -> triggers sweet care popup ("babu dhyaan se aao!")
         if (this.invincibleTimer <= 0 && Math.hypot(obs.x - this.car.x, obs.y - this.car.y) < 35) {
-          this.triggerEnemyCollision(obs.type);
+          this.triggerEnemyCollision(obs.type, obs.speech);
           return;
         }
       }
@@ -756,12 +964,13 @@ class LoveCarGame {
 
         // Checkpoints in Mode 3
         if (this.currentMode === 3) {
+          const boyName = window.SiteConfig?.senderName || 'Yuvi';
           if (this.coinsCollected >= 15 && this.lastCheckpointCoins < 15) {
             this.setCheckpoint(15, "🌸 Rose Garden Checkpoint");
           } else if (this.coinsCollected >= 30 && this.lastCheckpointCoins < 30) {
             this.setCheckpoint(30, "🌙 Starlight Bridge Checkpoint");
           } else if (this.coinsCollected >= 45 && this.lastCheckpointCoins < 45) {
-            this.setCheckpoint(45, "🏰 Yuvi's Palace Gate Checkpoint");
+            this.setCheckpoint(45, `🏰 ${boyName}'s Palace Gate Checkpoint`);
           }
         }
 
@@ -782,7 +991,7 @@ class LoveCarGame {
 
     // Vehicle exhaust / speed particles
     if (Math.random() < 0.5) {
-      const modeData = GAME_MODES[this.currentMode];
+      const modeData = this.getModeData(this.currentMode);
       this.particles.push({
         x: this.car.x + (Math.random() - 0.5) * (this.currentMode === 3 ? 8 : 16),
         y: this.car.y + this.car.h / 2,
@@ -820,7 +1029,7 @@ class LoveCarGame {
   }
 
   checkMilestones() {
-    const modeData = GAME_MODES[this.currentMode];
+    const modeData = this.getModeData(this.currentMode);
     if (!modeData?.milestones) return;
 
     for (const m of modeData.milestones) {
@@ -834,10 +1043,67 @@ class LoveCarGame {
 
   showMilestone(m) {
     if (!this.milestoneToast) return;
-    if (this.milestonePhotoImg) this.milestonePhotoImg.src = m.photo;
-    if (this.milestoneTag) this.milestoneTag.textContent = m.tag;
-    if (this.milestoneMsg) this.milestoneMsg.textContent = m.msg;
-    if (this.milestoneNext) this.milestoneNext.textContent = `Target: ${this.targetCoins} ${GAME_MODES[this.currentMode].itemName}! 🚀`;
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const rep = (str) => {
+      if (!str) return str;
+      return str
+        .replace(/Misty/g, girlName)
+        .replace(/MISTY/g, girlName.toUpperCase())
+        .replace(/Yuvi/g, boyName)
+        .replace(/YUVI/g, boyName.toUpperCase());
+    };
+
+    let photoToShow = m.photo;
+    const isMisty = (!girlName || girlName.toLowerCase() === 'misty');
+    if (!isMisty) {
+      const cfg = window.SiteConfig || {};
+      const giftPhotos = (window.birthdayGifts?.photos || []).map(item => (typeof item === 'object' ? item.src : item));
+      const albumPool = (Array.isArray(cfg.albumPhotos) ? cfg.albumPhotos : []).filter(p => p && typeof p === 'string' && p.trim() && (p.startsWith('data:image') || (!p.includes('./images/misty') && !p.includes('yuvi_misty_theme_bg') && !p.includes('gift_dress') && !p.includes('favicon.png'))));
+      const customPool = [
+        ...albumPool,
+        cfg.customPhotos?.mainPortrait,
+        cfg.customPhotos?.portrait,
+        ...giftPhotos,
+        ...(Array.isArray(cfg.puzzleImages) ? cfg.puzzleImages : []),
+        cfg.customPhotos?.puzzlePhoto,
+        cfg.customPhotos?.puzzle,
+        cfg.customPhotos?.liveHug,
+        cfg.customPhotos?.hug,
+        cfg.customPhotos?.bgTheme,
+        cfg.customPhotos?.bg
+      ].filter(p => p && typeof p === 'string' && p.trim() && (p.startsWith('data:image') || (!p.includes('./images/misty') && !p.includes('yuvi_misty_theme_bg') && !p.includes('gift_dress') && !p.includes('favicon.png'))));
+
+      const AESTHETIC_NOTIF_FALLBACKS = [
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80'
+      ];
+
+      if (albumPool.length > 0) {
+        const idx = Math.floor(((m.at || 5) / 5 - 1)) % albumPool.length;
+        photoToShow = albumPool[idx];
+      } else if (customPool.length > 0) {
+        const idx = Math.floor(((m.at || 5) / 5 - 1)) % customPool.length;
+        photoToShow = customPool[Math.max(0, idx)] || customPool[0];
+      } else {
+        const idx = Math.floor(((m.at || 5) / 5 - 1)) % AESTHETIC_NOTIF_FALLBACKS.length;
+        photoToShow = AESTHETIC_NOTIF_FALLBACKS[idx];
+      }
+    }
+
+    if (this.milestonePhotoImg) {
+      this.milestonePhotoImg.onerror = () => {
+        this.milestonePhotoImg.onerror = null;
+        this.milestonePhotoImg.src = './images/misty1.jpg';
+      };
+      this.milestonePhotoImg.src = photoToShow;
+    }
+    if (this.milestoneTag) this.milestoneTag.textContent = rep(m.tag);
+    if (this.milestoneMsg) this.milestoneMsg.textContent = rep(m.msg);
+    if (this.milestoneNext) this.milestoneNext.textContent = `Target: ${this.targetCoins} ${this.getModeData(this.currentMode).itemName}! 🚀`;
 
     this.milestoneToast.classList.add('is-shown');
     if (window.soundFX) {
@@ -852,8 +1118,8 @@ class LoveCarGame {
     }, 8500);
   }
 
-  // Misty Care Collision Popup ("Misty babu dhyaan se aao!")
-  triggerEnemyCollision(enemyType = 'mummy') {
+  // Care Collision Popup ("babu dhyaan se aao!") with randomized excuses & sweet dialogue
+  triggerEnemyCollision(enemyType = 'mummy', speech = '') {
     if (this.isPausedForCare) return;
     this.isPausedForCare = true;
 
@@ -861,14 +1127,39 @@ class LoveCarGame {
     this.spawnBurst(this.car.x, this.car.y);
     this.spawnCollisionStars(this.car.x, this.car.y);
 
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+
+    const careTitleEl = document.querySelector('.care-title');
+    if (careTitleEl) careTitleEl.textContent = `${girlName} babu dhyaan se aao! 🥰💋`;
+
     const careTextEl = document.getElementById('careModalText');
     if (careTextEl) {
+      const excuseHint = speech ? `(${speech})` : '';
+      const mummyDialogues = [
+        `"Arey ${girlName} babu dhyaan se aao! 🥰 🧕 Mummy samne khadi hain ${excuseHint}! Sambhal ke chalo meri jaan! ${boyName} samne aapke liye red rose leke wait kar raha hai! 🌹<br><br>Aapke sabhi points <strong>100% safe</strong> hain! Ab aaram se aao!"`,
+        `"Ohh meri sweetheart ${girlName}! 🙈 Mummy ne dekh liya lagta hai ${excuseHint}! Ghabrao mat meri princess, thoda side se nikal jao! ${boyName} aapka wait kar raha hai! 💖<br><br>Coins <strong>100% safe</strong> hain, koi tension nahi babu!"`,
+        `"Dhyaan se meri jaan ${girlName}! 🧕 Mummy bol rahi hain ${excuseHint}! Chupke se bypass karo, ${boyName} samne gift box leke khada hai! 🎁✨<br><br>Aapke points <strong>safe</strong> hain babu!"`
+      ];
+
+      const papaDialogues = [
+        `"Arey ${girlName} babu dhyaan se aao! 🥰 👓 Papa samne hain ${excuseHint}! Unse bach ke aage badho meri princess! ${boyName} samne baahein failaye khada hai! 💖<br><br>Aapke sabhi points <strong>100% safe</strong> hain! Chalo ab sambhal ke aao meri jaan!"`,
+        `"Sambhal ke meri pyari ${girlName}! 🧐 Papa ne toka: ${excuseHint}! Unhe nazar na aao aise chupke se aage chalo! Samne ${boyName} aapke intezaar mein khada hai! 🏰🌹<br><br>Aapke sabhi coins <strong>100% safe</strong> hain!"`,
+        `"Aww ${girlName} rani! 👓 Papa chashma theek karke pooch rahe hain ${excuseHint}! Koi baat nahi meri jaan, slow and steady chalo! ${boyName} aage khada hai! 🌸💞<br><br>Coins <strong>100% safe</strong> hain!"`
+      ];
+
+      const bhaiDialogues = [
+        `"Arey ${girlName} babu dhyaan se aao! 🥰 😜 Bhai peeche pada hai: ${excuseHint}! Usse bach ke aage aao meri cute girlfriend! ${boyName} wait kar raha hai! 🏰<br><br>Sabhi points <strong>100% safe</strong> hain! Aaram se continue karo babu!"`,
+        `"Hahaha naughty bhai ne pakad liya: ${excuseHint}! 📸 ${girlName} babu usko chocolate baad mein denge, pehle daud ke apne ${boyName} ke paas aao! 🛵💨<br><br>Coins <strong>100% safe</strong> hain meri jaan!"`,
+        `"Oho meri pyari ${girlName}! 😜 Bhai sneak peek leke bola: ${excuseHint}! Jaldi se steer karo meri jaan, samne ${boyName} surprise leke ready hai! 🌟🎉<br><br>Coins <strong>100% safe</strong> hain babu!"`
+      ];
+
       if (enemyType === 'mummy') {
-        careTextEl.innerHTML = '"Arey babu dhyaan se aao! 🥰 🧕 Mummy belan leke khadi hain! Sambhal ke chalo meri jaan! Yuvi samne aapke liye red rose leke wait kar raha hai! 🌹<br><br>Aapke sabhi coins <strong>100% safe</strong> hain! Ab aaram se aao!"';
+        careTextEl.innerHTML = mummyDialogues[Math.floor(Math.random() * mummyDialogues.length)];
       } else if (enemyType === 'papa') {
-        careTextEl.innerHTML = '"Arey babu dhyaan se aao! 🥰 👓 Papa newspaper padh rahe hain! Unse bach ke aage badho meri princess! Yuvi samne baahein failaye khada hai! 💖<br><br>Aapke sabhi coins <strong>100% safe</strong> hain! Chalo ab sambhal ke aao meri jaan!"';
+        careTextEl.innerHTML = papaDialogues[Math.floor(Math.random() * papaDialogues.length)];
       } else {
-        careTextEl.innerHTML = '"Arey babu dhyaan se aao! 🥰 😜 Bhai phone leke photo lene ki taak mein hai! Usse bach ke aage aao meri cute girlfriend! Yuvi wait kar raha hai! 🏰<br><br>Sabhi coins <strong>100% safe</strong> hain! Aaram se continue karo babu!"';
+        careTextEl.innerHTML = bhaiDialogues[Math.floor(Math.random() * bhaiDialogues.length)];
       }
     }
 
@@ -933,9 +1224,10 @@ class LoveCarGame {
 
   openNitroKissModal() {
     if (!this.nitroKissModal) return;
+    const boyName = window.SiteConfig?.senderName || 'Yuvi';
     const speech = document.getElementById('nitroSpeech');
     if (speech) {
-      speech.innerHTML = '"Pehle apne Yuvi ko sweet sweet kiss do babu, tabhi aapki car ko <strong>Super Nitro Booster</strong> milega! 🚀🔥"';
+      speech.innerHTML = `"Pehle apne ${boyName} ko sweet sweet kiss do babu, tabhi aapki car ko <strong>Super Nitro Booster</strong> milega! 🚀🔥"`;
     }
     this.nitroKissModal.style.display = 'flex';
   }
@@ -1022,11 +1314,27 @@ class LoveCarGame {
     this.lastCheckpointCoins = coins;
     this.lastCheckpointName = name;
     if (window.soundFX) window.soundFX.chime(1.5);
-    const photo = coins === 15 ? './images/misty1.jpg' : (coins === 30 ? './images/misty6.jpg' : './images/misty7.jpg');
+    const girlName = window.SiteConfig?.recipientName || 'Misty';
+    const isMisty = (!girlName || girlName.toLowerCase() === 'misty');
+    let photo = coins === 15 ? './images/misty1.jpg' : (coins === 30 ? './images/misty6.jpg' : './images/misty7.jpg');
+    if (!isMisty) {
+      const cfg = window.SiteConfig || {};
+      const pool = [
+        cfg.customPhotos?.mainPortrait,
+        cfg.customPhotos?.portrait,
+        ...(Array.isArray(cfg.puzzleImages) ? cfg.puzzleImages : []),
+        cfg.customPhotos?.puzzlePhoto,
+        cfg.customPhotos?.liveHug
+      ].filter(p => p && typeof p === 'string' && (p.startsWith('data:image') || (!p.includes('./images/misty') && !p.includes('yuvi_misty_theme_bg'))));
+      if (pool.length > 0) {
+        photo = pool[coins === 15 ? 0 : (coins === 30 ? (1 % pool.length) : (2 % pool.length))] || pool[0];
+      }
+    }
+    const boyName = window.SiteConfig?.senderName || 'Yuvi';
     this.showMilestone({
       photo,
       tag: 'CHECKPOINT SAVED! 🚩✨',
-      msg: `${name} reached! ${coins} Stars saved! Yuvi is waiting ahead! 💖`
+      msg: `${name} reached! ${coins} Stars saved! ${boyName} is waiting ahead! 💖`
     });
   }
 
@@ -1043,6 +1351,19 @@ class LoveCarGame {
     this.currentYuviQIndex = 0;
     if (this.yuviDialogueBox) this.yuviDialogueBox.style.display = 'block';
     if (this.yuviActionsRow) this.yuviActionsRow.style.display = 'none';
+
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+
+    const yuviReunionTitle = document.getElementById('yuviReunionTitle');
+    if (yuviReunionTitle) yuviReunionTitle.textContent = `${girlName} Reached ${boyName}! 👩‍❤️‍💋‍👨💋`;
+    const reunionBadge = document.querySelector('#yuviReunionModal .win-badge');
+    if (reunionBadge) reunionBadge.textContent = `👑 ${girlName.toUpperCase()} & ${boyName.toUpperCase()} REUNITED! 👩‍❤️‍💋‍👨`;
+    const yuviSpeakerTag = document.querySelector('.yuvi-speaker-tag strong');
+    if (yuviSpeakerTag) yuviSpeakerTag.textContent = `${boyName} says:`;
+    const reunionHugToast = document.getElementById('reunionHugToast');
+    if (reunionHugToast) reunionHugToast.innerHTML = `🌹 ${boyName} presented a Red Rose &amp; sealed with tight Hugs &amp; Flying Kisses! 💋🥰`;
+
     this.loadYuviQuestion(0);
     this.spawnHeartBalloons();
     this.spawnFlyingKisses();
@@ -1052,10 +1373,20 @@ class LoveCarGame {
   loadYuviQuestion(idx) {
     const q = YUVI_QUESTIONS[idx];
     if (!q) return;
-    if (this.yuviQuestionText) this.yuviQuestionText.textContent = `"${q.q}"`;
-    if (this.btnYuviYes) this.btnYuviYes.textContent = q.yes;
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const rep = (str) => {
+      if (!str) return str;
+      return str
+        .replace(/Misty/g, girlName)
+        .replace(/MISTY/g, girlName.toUpperCase())
+        .replace(/Yuvi/g, boyName)
+        .replace(/YUVI/g, boyName.toUpperCase());
+    };
+    if (this.yuviQuestionText) this.yuviQuestionText.textContent = `"${rep(q.q)}"`;
+    if (this.btnYuviYes) this.btnYuviYes.textContent = rep(q.yes);
     if (this.btnYuviNo) {
-      this.btnYuviNo.textContent = q.no;
+      this.btnYuviNo.textContent = rep(q.no);
       this.btnYuviNo.style.transform = 'translate(0, 0) rotate(0deg)';
     }
   }
@@ -1115,20 +1446,34 @@ class LoveCarGame {
       setTimeout(() => window.soundFX.kissSound?.(), 1000);
     }
 
-    // 3. Unlock Next Mission sequentially!
+    // 3. Unlock Next Mission sequentially & track event!
     if (this.currentMode === 1) {
       this.unlockedGameModes.add(2);
+      if (window.trackMissionEvent) window.trackMissionEvent('car1', '50 stars');
     } else if (this.currentMode === 2) {
       this.unlockedGameModes.add(3);
+      if (window.trackMissionEvent) window.trackMissionEvent('car2', '50 badges');
+    } else if (this.currentMode === 3) {
+      if (window.trackMissionEvent) window.trackMissionEvent('car3', 'reunited');
     }
     this.updateTabUI();
 
     // 4. Update Win Modal Content for Current Mode
-    const modeData = GAME_MODES[this.currentMode];
-    if (this.winTitle) this.winTitle.textContent = modeData.winTitle;
-    if (this.winLoveWords) this.winLoveWords.innerHTML = `"${modeData.winMsg}"`;
+    const modeData = this.getModeData(this.currentMode);
+    const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+    const boyName = window.SiteConfig?.senderName || window.SiteConfig?.sender || 'Yuvi';
+    const rep = (str) => {
+      if (!str) return str;
+      return str
+        .replace(/Misty/g, girlName)
+        .replace(/MISTY/g, girlName.toUpperCase())
+        .replace(/Yuvi/g, boyName)
+        .replace(/YUVI/g, boyName.toUpperCase());
+    };
+    if (this.winTitle) this.winTitle.textContent = rep(modeData.winTitle);
+    if (this.winLoveWords) this.winLoveWords.innerHTML = `"${rep(modeData.winMsg)}"`;
     if (this.winNextMissionBtn) {
-      this.winNextMissionBtn.textContent = modeData.nextBtnText;
+      this.winNextMissionBtn.textContent = rep(modeData.nextBtnText);
     }
 
     // 5. Show Celebration Modal
@@ -1232,7 +1577,7 @@ class LoveCarGame {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.W, this.H);
     const mode = this.currentMode;
-    const modeData = GAME_MODES[mode];
+    const modeData = this.getModeData(mode);
 
     // 1. Background Gradient per Mode
     const bgGrad = ctx.createLinearGradient(0, 0, 0, this.H);
@@ -1499,13 +1844,14 @@ class LoveCarGame {
     ctx.shadowBlur = 0;
 
     // License Plate
+    const girlUpper = (window.SiteConfig?.recipientName || 'Misty').toUpperCase();
     ctx.fillStyle = '#fff';
     ctx.fillRect(-14, 34, 28, 7);
     ctx.fillStyle = '#d81159';
     ctx.font = 'bold 5px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('MISTY ♥', 0, 37.5);
+    ctx.fillText(`${girlUpper} ♥`, 0, 37.5);
 
     ctx.restore();
   }
@@ -1608,7 +1954,8 @@ class LoveCarGame {
     ctx.fillRect(-14, 32, 28, 6);
     ctx.fillStyle = '#000';
     ctx.font = 'bold 5px sans-serif';
-    ctx.fillText('THAR ♥ MISTY', 0, 35);
+    const girlUpper = (window.SiteConfig?.recipientName || 'MISTY').toUpperCase();
+    ctx.fillText(`THAR ♥ ${girlUpper}`, 0, 35);
 
     ctx.restore();
   }
@@ -1760,10 +2107,12 @@ class LoveCarGame {
     });
 
     // Banner: "YUVI'S HEART & CASTLE 🏰❤️"
+    const boyUpper = (window.SiteConfig?.senderName || 'Yuvi').toUpperCase();
+    const girlUpper = (window.SiteConfig?.recipientName || 'Misty').toUpperCase();
     ctx.fillStyle = '#b81446';
     ctx.font = 'bold 11px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText("YUVI'S HEART 🏰❤️", 0, -18);
+    ctx.fillText(`${boyUpper}'S HEART 🏰❤️`, 0, -18);
 
     if (isHugged) {
       // Live Hug & Kiss in Gazebo with Swaying & Flying Kiss Marks!
@@ -1787,7 +2136,7 @@ class LoveCarGame {
 
       ctx.fillStyle = '#ff2a70';
       ctx.font = 'bold 11.5px sans-serif';
-      ctx.fillText('MISTY & YUVI HUGGED & KISSED! 💋🥰', 0, 68);
+      ctx.fillText(`${girlUpper} & ${boyUpper} HUGGED & KISSED! 💋🥰`, 0, 68);
       ctx.restore();
     } else {
       // Yuvi standing holding a sparkling RED ROSE 🌹 for Misty!
@@ -1831,7 +2180,8 @@ class LoveCarGame {
       // Speech badge: "Rose for Queen Misty! 🌹💖"
       ctx.fillStyle = '#ff2a70';
       ctx.font = 'bold 10px sans-serif';
-      ctx.fillText('Rose for Queen Misty! 🌹💖', 0, 52);
+      const girlName = window.SiteConfig?.recipientName || 'Misty';
+      ctx.fillText(`Rose for Queen ${girlName}! 🌹💖`, 0, 52);
     }
 
     ctx.restore();
@@ -1919,32 +2269,39 @@ class LoveCarGame {
       ctx.fillRect(-1.5, -16, 3, 32);
       ctx.restore();
 
-      // Little speech bubble: "Ghar aa! 🥖"
+      // Dynamic Speech bubble with random excuse
+      const speechText = obs.speech || 'Roti banao! 🥖';
+      ctx.font = 'bold 8.5px sans-serif';
+      const textWidth = ctx.measureText(speechText).width;
+      const bubbleW = Math.max(54, textWidth + 14);
       ctx.fillStyle = '#fff';
       ctx.strokeStyle = '#b83280';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.roundRect(14, -28, 48, 15, 6);
+      ctx.roundRect(14, -28, bubbleW, 16, 6);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#b83280';
-      ctx.font = 'bold 8.5px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Ghar aa! 🥖', 38, -18);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(speechText, 14 + bubbleW / 2, -20);
 
-      // Top Floating Badge: [ 🧕 ENEMY: Misty ki Mummy ]
+      // Top Floating Badge: [ 🧕 ENEMY: <Girl> ki Mummy ]
+      const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const badgeText = `🧕 ENEMY: ${girlName} ki Mummy`;
+      ctx.font = 'bold 9.5px sans-serif';
+      const badgeW = Math.max(126, ctx.measureText(badgeText).width + 18);
       ctx.fillStyle = '#e84393';
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.roundRect(-68, -44, 136, 18, 9);
+      ctx.roundRect(-badgeW / 2, -44, badgeW, 18, 9);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 9.5px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('🧕 ENEMY: Misty ki Mummy', 0, -35);
+      ctx.fillText(badgeText, 0, -35);
 
     } else if (type === 'papa') {
       // 👓 Misty ke Papa
@@ -2005,32 +2362,40 @@ class LoveCarGame {
       ctx.fillRect(14, 5, 10, 1.5);
       ctx.fillRect(14, 8, 8, 1.5);
 
-      // Little speech bubble: "Kahan chali?! 🧐"
+      // Dynamic Speech bubble with random excuse
+      const speechText = obs.speech || 'Kahan chali?! 🧐';
+      ctx.font = 'bold 8.5px sans-serif';
+      const textWidth = ctx.measureText(speechText).width;
+      const bubbleW = Math.max(54, textWidth + 14);
       ctx.fillStyle = '#fff';
       ctx.strokeStyle = '#0984e3';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.roundRect(14, -28, 56, 15, 6);
+      ctx.roundRect(14, -28, bubbleW, 16, 6);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#0984e3';
-      ctx.font = 'bold 8px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Kahan chali?! 🧐', 42, -18);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(speechText, 14 + bubbleW / 2, -20);
 
-      // Top Floating Badge: [ 👓 ENEMY: Misty ke Papa ]
+      // Top Floating Badge: [ 👓 ENEMY: <Girl> ke Papa ]
+      const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const badgeText = `👓 ENEMY: ${girlName} ke Papa`;
+      ctx.font = 'bold 9.5px sans-serif';
+      const badgeW = Math.max(124, ctx.measureText(badgeText).width + 18);
       ctx.fillStyle = '#0984e3';
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.roundRect(-66, -44, 132, 18, 9);
+      ctx.roundRect(-badgeW / 2, -44, badgeW, 18, 9);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 9.5px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('👓 ENEMY: Misty ke Papa', 0, -35);
+      ctx.fillText(badgeText, 0, -35);
 
     } else {
       // 😜 Misty ka Bhai
@@ -2090,32 +2455,39 @@ class LoveCarGame {
       ctx.closePath();
       ctx.fill();
 
-      // Little speech bubble: "Photo le li! 📸"
+      // Dynamic Speech bubble with random excuse
+      const speechText = obs.speech || 'Photo le li! 📸';
+      ctx.font = 'bold 8.5px sans-serif';
+      const textWidth = ctx.measureText(speechText).width;
+      const bubbleW = Math.max(54, textWidth + 14);
       ctx.fillStyle = '#fff';
       ctx.strokeStyle = '#e67e22';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.roundRect(14, -28, 54, 15, 6);
+      ctx.roundRect(14, -28, bubbleW, 16, 6);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#d35400';
-      ctx.font = 'bold 8px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Photo le li! 📸', 41, -18);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(speechText, 14 + bubbleW / 2, -20);
 
-      // Top Floating Badge: [ 😜 ENEMY: Misty ka Bhai ]
+      // Top Floating Badge: [ 😜 ENEMY: <Girl> ka Bhai ]
+      const girlName = window.SiteConfig?.recipientName || window.SiteConfig?.name || 'Misty';
+      const badgeText = `😜 ENEMY: ${girlName} ka Bhai`;
+      ctx.font = 'bold 9.5px sans-serif';
+      const badgeW = Math.max(124, ctx.measureText(badgeText).width + 18);
       ctx.fillStyle = '#e67e22';
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.roundRect(-64, -44, 128, 18, 9);
+      ctx.roundRect(-badgeW / 2, -44, badgeW, 18, 9);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 9.5px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('😜 ENEMY: Misty ka Bhai', 0, -35);
+      ctx.fillText(badgeText, 0, -35);
     }
 
     ctx.restore();
@@ -2124,4 +2496,31 @@ class LoveCarGame {
 
 document.addEventListener('DOMContentLoaded', () => {
   window.loveGame = new LoveCarGame();
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('test_care')) {
+    const type = params.get('test_care');
+    setTimeout(() => {
+      window.loveGame?.open();
+      window.loveGame.unlockedGameModes.add(3);
+      window.loveGame.switchMode(3);
+      const excuse = type === 'papa' ? PAPA_BAHANE[0] : (type === 'mummy' ? MUMMY_BAHANE[0] : BHAI_BAHANE[0]);
+      window.loveGame.triggerEnemyCollision(type, excuse);
+    }, 500);
+  } else if (params.get('open_game') === '1') {
+    const targetMode = parseInt(params.get('mode') || '1', 10);
+    setTimeout(() => {
+      window.loveGame?.open();
+      if (targetMode > 1) {
+        window.loveGame.unlockedGameModes.add(targetMode);
+        window.loveGame.switchMode(targetMode);
+      }
+      if (params.get('show_obs') === '1') {
+        // Place visible obstacles on road for inspection
+        window.loveGame.obstacles = [
+          { x: window.loveGame.W / 2 - 60, y: 180, r: 26, type: 'papa', speech: PAPA_BAHANE[1], sway: 0, rot: 0 },
+          { x: window.loveGame.W / 2 + 60, y: 320, r: 26, type: 'bhai', speech: BHAI_BAHANE[0], sway: 0, rot: 0 }
+        ];
+      }
+    }, 400);
+  }
 });
