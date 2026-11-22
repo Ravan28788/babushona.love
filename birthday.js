@@ -142,6 +142,27 @@ window.ActivePlaylist = PLAYLIST;
 
 let currentTrackIndex = 0;
 const bgMusic = $('bgMusic');
+
+if (bgMusic && DEFAULT_PLAYLIST.length) {
+  bgMusic.preload = 'auto';
+  bgMusic.src = DEFAULT_PLAYLIST[0].src;
+
+  const setFirstHook = () => {
+    try {
+      bgMusic.currentTime =
+        Number(DEFAULT_PLAYLIST[0].startTime) || 0;
+    } catch (e) {}
+  };
+
+  bgMusic.addEventListener(
+    'loadedmetadata',
+    setFirstHook,
+    { once: true }
+  );
+
+  bgMusic.load();
+}
+
 const mpPlayBtn = $('mpPlayBtn');
 const mpPrevBtn = $('mpPrevBtn');
 const mpNextBtn = $('mpNextBtn');
@@ -368,6 +389,18 @@ function loadTrack(idx, autoPlay = true) {
 }
 
 function playMusic() {
+  if (bgMusic && PLAYLIST[currentTrackIndex]?.type === 'local') {
+    const track = PLAYLIST[currentTrackIndex];
+    const start = Number(track.startTime) || 0;
+
+    if (start > 0 && bgMusic.readyState >= 1 &&
+        bgMusic.currentTime < start) {
+      try {
+        bgMusic.currentTime = start;
+      } catch (e) {}
+    }
+  }
+
   if (userMuted) return;
 
   const track = PLAYLIST[currentTrackIndex];
