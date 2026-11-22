@@ -54,73 +54,73 @@ const DEFAULT_PLAYLIST = [
     id: "default_2",
     title: "Dilruba Dilnasheen 🌹",
     artist: "Rito Riba",
-    src: "./music/Dilruba Dilnasheen(Official Audio) I Dilfek EP I Rito Riba.mp4",
+    src: "./music/highlights/default_2.m4a",
     type: "local",
-    startTime: 20,
-    endTime: 78
+    startTime: 0,
+    endTime: 58
   },
   {
     id: "default_1",
     title: "Ho Gaya Hai Pyaar ❤️",
     artist: "Yasser Desai",
-    src: "./music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp4",
+    src: "./music/highlights/default_1.m4a",
     type: "local",
-    startTime: 42,
-    endTime: 95
+    startTime: 0,
+    endTime: 53
   },
   {
     id: "default_3",
     title: "Teri Meri Kahaani 💕",
     artist: "Arijit Singh",
-    src: "./music/vidssave.com Teri Meri Kahaani Hai Baarishon Ka Paani - Arijit Singh _ Gabbar Is Back _ Akshay Kumar & Kareena K💕 480P.mp4",
+    src: "./music/highlights/default_3.m4a",
     type: "local",
-    startTime: 38,
-    endTime: 98
+    startTime: 0,
+    endTime: 60
   },
   {
     id: "default_4",
     title: "Kalyani (8D Audio) 🎶",
     artist: "Shreya Ghoshal",
-    src: "./music/8D Audio - KALYANI (with Shreya Ghoshal)  ARJN _ KDS _ FIFTY4 _ RONN _ Use Headphones.mp4",
+    src: "./music/highlights/default_4.m4a",
     type: "local",
-    startTime: 32,
-    endTime: 85
+    startTime: 0,
+    endTime: 53
   },
   {
     id: "default_5",
     title: "Naina Banjare ✨",
     artist: "Arijit Singh",
-    src: "./music/vidssave.com Arijit Singh - Naina Banjare _ Sanya Malhotra & Radhika Madan _ Lyrical _ Pataakha 480P.mp4",
+    src: "./music/highlights/default_5.m4a",
     type: "local",
-    startTime: 28,
-    endTime: 80
+    startTime: 0,
+    endTime: 52
   },
   {
     id: "default_6",
     title: "Kaho Na Kaho 🥀",
     artist: "Amir Jamal",
-    src: "./music/vidssave.com Kaho Na Kaho - 8K_4K Music Video _ Emraan Hashmi, Mallika Sherawat _ Amir Jamal _ Anu Malik _ Murder 360P.mp4",
+    src: "./music/highlights/default_6.m4a",
     type: "local",
-    startTime: 45,
-    endTime: 105
+    startTime: 0,
+    endTime: 60
   },
   {
     id: "default_7",
     title: "Guzarish 🌙",
     artist: "Satinder Sartaaj",
-    src: "./music/vidssave.com GUZARISH (गुज़ारिश) - SATINDER SARTAAJ _ BHUSHAN KUMAR 480P.mp4",
+    src: "./music/highlights/default_7.m4a",
     type: "local",
-    startTime: 36,
-    endTime: 95
+    startTime: 0,
+    endTime: 59
   },
   {
     id: "default_8",
     title: "Aashiq Banaya Aapne 🔥",
     artist: "Himesh Reshammiya",
-    src: "./music/Aashiq-Banaya-Aapne-SnapYT.App.mp4",
+    src: "./music/highlights/default_8.m4a",
     type: "local",
-    startTime: 48,
-    endTime: 110
+    startTime: 0,
+    endTime: 62
   }
 ];
 
