@@ -51,15 +51,6 @@ const replay = $('replay');
 // Romantic Music Playlist Engine with YouTube Support & Snippet Player
 const DEFAULT_PLAYLIST = [
   {
-    id: "default_1",
-    title: "Ho Gaya Hai Pyaar ❤️",
-    artist: "Yasser Desai",
-    src: "./music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp4",
-    type: "local",
-    startTime: 42,
-    endTime: 95
-  },
-  {
     id: "default_2",
     title: "Dilruba Dilnasheen 🌹",
     artist: "Rito Riba",
@@ -67,6 +58,15 @@ const DEFAULT_PLAYLIST = [
     type: "local",
     startTime: 20,
     endTime: 78
+  },
+  {
+    id: "default_1",
+    title: "Ho Gaya Hai Pyaar ❤️",
+    artist: "Yasser Desai",
+    src: "./music/Ho Gaya Hai Pyaar Song _ Yasser Desai _ Arjun Bijlani _ Surbhi Chandna _Jeet Gannguli _ Kunaal Verma.mp4",
+    type: "local",
+    startTime: 42,
+    endTime: 95
   },
   {
     id: "default_3",
@@ -137,7 +137,7 @@ function getStoredCustomPlaylist() {
   return [];
 }
 
-let PLAYLIST = [...getStoredCustomPlaylist(), ...DEFAULT_PLAYLIST];
+let PLAYLIST = [...DEFAULT_PLAYLIST, ...getStoredCustomPlaylist()];
 window.ActivePlaylist = PLAYLIST;
 
 let currentTrackIndex = 0;
@@ -1547,6 +1547,13 @@ function autoFire() {
 }
 
 archery.addEventListener('pointerdown', (e) => {
+  if (bgMusic && bgMusic.paused) {
+    userMuted = false;
+    bgMusic.muted = false;
+    bgMusic.volume = 1;
+    playMusic();
+  }
+
   if (played) return;
   drawing = true;
   userMuted = false;
