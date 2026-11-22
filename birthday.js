@@ -329,6 +329,8 @@ function loadTrack(idx, autoPlay = true) {
     // Local Audio Track Playback
     if (!bgMusic) return;
     bgMusic.src = track.src;
+    bgMusic.preload = 'auto';
+    bgMusic.load();
 
     const applyStartAndPlay = () => {
       try {
@@ -367,26 +369,42 @@ function loadTrack(idx, autoPlay = true) {
 
 function playMusic() {
   if (userMuted) return;
+
   const track = PLAYLIST[currentTrackIndex];
   if (!track) return;
 
   if (track.type === 'youtube' && track.youtubeId) {
-    if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+    if (ytPlayerReady && ytPlayer) {
       ytPlayer.playVideo();
-      updatePlayState(true);
     } else {
       loadTrack(currentTrackIndex, true);
     }
-  } else {
-    if (bgMusic) {
-      const startSec = track?.startTime || 0;
-      if (startSec && bgMusic.currentTime < 2) {
-        try { bgMusic.currentTime = startSec; } catch (e) {}
-      }
-      bgMusic.play().then(() => {
-        updatePlayState(true);
-      }).catch(() => {});
-    }
+    return;
+  }
+
+  if (!bgMusic) return;
+
+  bgMusic.muted = false;
+  bgMusic.volume = 1;
+  bgMusic.preload = 'auto';
+
+  const selectedUrl = new URL(track.src, document.baseURI).href;
+
+  if (bgMusic.currentSrc !== selectedUrl &&
+      bgMusic.src !== selectedUrl) {
+    bgMusic.src = track.src;
+    bgMusic.load();
+  }
+
+  const promise = bgMusic.play();
+
+  if (promise && typeof promise.then === 'function') {
+    promise.then(() => {
+      updatePlayState(true);
+    }).catch(err => {
+      console.warn('Music playback blocked:', err);
+      updatePlayState(false);
+    });
   }
 }
 
